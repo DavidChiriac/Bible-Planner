@@ -1,12 +1,7 @@
-<button (click)="login()">Login with Google</button>
-<button (click)="logout()">Logout</button>
-
-@for (p of (plans$ | async); track $index) {
-<div>
-  <label>
-    <input type="checkbox" [checked]="p.done" />
-    {{ p.title }}
-  </label>
-  <small>({{ p.progress }})</small>
-</div>
+@if (!utils.loading()) {
+  @if (!(auth.isLoggedIn() | async)) {
+      <button (click)="auth.login()">Login with Google</button>
+  } @else {
+      <app-home-page></app-home-page>
+  }
 }

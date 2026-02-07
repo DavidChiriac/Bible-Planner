@@ -1,20 +1,18 @@
-import { Component, inject } from '@angular/core';
-import { FirebaseService } from './firebase.service';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Utils } from './shared/services/utils.service';
+import { AuthService } from './shared/services/auth.service';
+import { HomePage } from './home-page/home-page';
 import { AsyncPipe } from '@angular/common';
-
 @Component({
   selector: 'app-root',
-  imports: [AsyncPipe],
+  imports: [HomePage, AsyncPipe],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   title = 'bible-planner';
 
-  private readonly firebase = inject(FirebaseService);
-
-  plans$ = this.firebase.getPlans();
-
-  login() { this.firebase.loginWithGoogle(); }
-  logout() { this.firebase.logout(); }
+  utils = inject(Utils);
+  auth = inject(AuthService);
 }
