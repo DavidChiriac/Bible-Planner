@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { AuthService } from '../shared/services/auth.service';
+import { Component, inject } from '@angular/core';
 import CHAPTERS from '../../../assets/cornilescu_prefix_carte_capitol.json';
+import { AuthService } from '../shared/services/auth.service';
 import { Utils } from '../shared/services/utils.service';
 import { NgClass } from '@angular/common';
 
@@ -9,11 +9,9 @@ import { NgClass } from '@angular/common';
   imports: [NgClass],
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomePage {
-  auth = inject(AuthService);
-  utils = inject(Utils);
-
   CHAPTERS = CHAPTERS;
+  utils = inject(Utils);
+  auth = inject(AuthService);
 }

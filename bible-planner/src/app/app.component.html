@@ -1,7 +1,3 @@
 @if (!utils.loading()) {
-  @if (!(auth.isLoggedIn() | async)) {
-      <button (click)="auth.login()">Login with Google</button>
-  } @else {
-      <app-home-page></app-home-page>
-  }
+  <router-outlet></router-outlet>
 }
