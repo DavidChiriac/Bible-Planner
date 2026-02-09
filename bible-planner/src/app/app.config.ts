@@ -8,6 +8,8 @@ import { provideDatabase, getDatabase } from '@angular/fire/database';
 import { environment } from '../../environment';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAuth, getAuth } from '@angular/fire/auth';
+import { providePrimeNG } from 'primeng/config';
+import Aura from '@primeuix/themes/aura';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,5 +19,14 @@ export const appConfig: ApplicationConfig = {
     provideDatabase(() => getDatabase()),
     provideHttpClient(),
     provideAuth(() => getAuth()),
+    providePrimeNG({
+            theme: {
+                preset: Aura,
+                options: {
+                    prefix: 'p',
+                    cssLayer: false
+                }
+            },
+        }),
   ]
 };
