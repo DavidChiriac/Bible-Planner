@@ -6,9 +6,10 @@ import {
   signOut,
   user,
 } from '@angular/fire/auth';
-import { Database, listVal } from '@angular/fire/database';
+import { Database } from '@angular/fire/database';
 import { get, ref, remove, runTransaction, set } from 'firebase/database';
 import { Observable, switchMap, of } from 'rxjs';
+import { listVal } from 'rxfire/database';
 
 @Injectable({ providedIn: 'root' })
 export class FirebaseService {
@@ -31,7 +32,7 @@ export class FirebaseService {
       switchMap((u) => {
         if (!u) return of([]);
         const chaptersRef = ref(this.db, `users/${u.uid}/chapters`);
-        return listVal<string>(chaptersRef, { keyField: 'id' });
+        return listVal<string>(chaptersRef);
       }),
     );
   }
@@ -104,5 +105,14 @@ export class FirebaseService {
 
     await set(chaptersRef, chapters);
     return 'deleted';
+  }
+
+  async resetProgress() {
+    const u = this.auth.currentUser;
+    if (!u) throw new Error('Not logged in');
+
+    const chaptersRef = ref(this.db, `users/${u.uid}/chapters`);
+    await remove(chaptersRef);
+    return 'progress reset';
   }
 }

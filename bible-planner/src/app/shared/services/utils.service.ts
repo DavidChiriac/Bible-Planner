@@ -14,9 +14,9 @@ export class Utils {
 
   constructor() {
       this.firebase.getChapters().pipe(take(1)).subscribe((chapters) => {
-      this.readChapters.set(chapters ?? []);
-      this.readSet.set(new Set(this.readChapters()));
-      this.loading.set(false);
+        this.readChapters.set(chapters ?? []);
+        this.readSet.set(new Set(this.readChapters()));
+        this.loading.set(false);
     });
   }
 
