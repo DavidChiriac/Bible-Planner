@@ -3,8 +3,8 @@
 <br/>
 
 @for (p of CHAPTERS; track $index) {
-    <input type="checkbox" [checked]="utils.readSet().has(p)" (change)="utils.toggleChapter(p)"/>
-    <div (click)="utils.toggleChapter(p)" onkeydown="" [ngClass]="{'selected': utils.readSet().has(p)}">
+    <div class="flex gap-2 cursor-pointer" [ngClass]="{'selected': utils.readSet().has(p)}" (click)="utils.toggleChapter(p)" onkeydown="">
+        <input type="checkbox" [checked]="utils.readSet().has(p)" (change)="utils.toggleChapter(p)"/>
         {{p}}
     </div>
 }
