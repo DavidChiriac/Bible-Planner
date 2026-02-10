@@ -10,7 +10,7 @@ import {
 import { Database } from '@angular/fire/database';
 import { ref, remove, runTransaction } from 'firebase/database';
 import { Observable, switchMap, of } from 'rxjs';
-import { listVal } from 'rxfire/database';
+import { listVal, objectVal } from 'rxfire/database';
 
 @Injectable({ providedIn: 'root' })
 export class FirebaseService {
@@ -32,6 +32,52 @@ export class FirebaseService {
     return getAuth();
   }
 
+  getStartDate(): Observable<string> {
+    return this.user$.pipe(
+      switchMap((u) => {
+        if (!u) return of('');
+        const startDateRef = ref(this.db, `users/${u.uid}/startDate`);
+        return objectVal<string>(startDateRef);
+      }),
+    );
+  }
+
+  async setStartDate(date: string): Promise<string> {
+    const u = this.auth.currentUser;
+    if (!u) throw new Error('Not logged in');
+
+    const startDateRef = ref(this.db, `users/${u.uid}/startDate`);
+
+    await runTransaction(startDateRef, () => {
+      return date;
+    });
+
+    return 'added';
+  }
+
+  getMonths(): Observable<number> {
+    return this.user$.pipe(
+      switchMap((u) => {
+        if (!u) return of(0);
+        const monthsRef = ref(this.db, `users/${u.uid}/months`);
+        return objectVal<number>(monthsRef);
+      }),
+    );
+  }
+
+  async setMonths(months: number): Promise<string> {
+    const u = this.auth.currentUser;
+    if (!u) throw new Error('Not logged in');
+
+    const monthsRef = ref(this.db, `users/${u.uid}/months`);
+
+    await runTransaction(monthsRef, () => {
+      return months;
+    });
+
+    return 'added';
+  }
+
   getChapters(): Observable<string[]> {
     return this.user$.pipe(
       switchMap((u) => {
@@ -42,7 +88,7 @@ export class FirebaseService {
     );
   }
 
-  async addChapters(newChapters: string[]) {
+  async addChapters(newChapters: string[]): Promise<string> {
     const u = this.auth.currentUser;
     if (!u) throw new Error('Not logged in');
 
@@ -60,7 +106,7 @@ export class FirebaseService {
     return 'added';
   }
 
-  async deleteChapters(chaptersToDelete: string[]) {
+  async deleteChapters(chaptersToDelete: string[]): Promise<string> {
     const u = this.auth.currentUser;
     if (!u) throw new Error('Not logged in');
 
@@ -84,12 +130,12 @@ export class FirebaseService {
     return result.snapshot.exists() ? 'deleted' : 'deleted (empty)';
   }
 
-    async resetProgress() {
-    const u = this.auth.currentUser;
-    if (!u) throw new Error('Not logged in');
+    async resetProgress(): Promise<string> {
+      const u = this.auth.currentUser;
+      if (!u) throw new Error('Not logged in');
 
-    const chaptersRef = ref(this.db, `users/${u.uid}/chapters`);
-    await remove(chaptersRef);
-    return 'progress reset';
-  }
+      const chaptersRef = ref(this.db, `users/${u.uid}/chapters`);
+      await remove(chaptersRef);
+      return 'progress reset';
+    }
 }

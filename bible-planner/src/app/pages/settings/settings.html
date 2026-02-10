@@ -1,5 +1,25 @@
 <div class="container">
-    <div class="w-100 flex justify-content-center mt-5">
-        <p-button (click)="resetProgress()" onkeydown="">Reset Progress</p-button>
+    <div class="w-100 flex flex-column align-items-center gap-3 justify-content-center mt-5">
+        <div class="flex align-items-center gap-3">
+            <label for="start-date">Data de început:</label>
+            <input id="start-date" type="date" pInputText [ngModel]="startDate" (ngModelChange)="setStartDate($event)"
+                autocomplete="off" />
+        </div>
+        <div class="flex align-items-center gap-3">
+            <label for="number-of-months">Numărul de luni:</label>
+            <input id="number-of-months" type="number" min="1" max="12" pInputText [ngModel]="months" (ngModelChange)="setMonths($event)"
+                autocomplete="off" />
+        </div>
+        <div class="">
+            <button pButton (click)="resetProgress()" severity="danger" onkeydown="">Reset Progress</button>
+        </div>
     </div>
 </div>
+
+<p-dialog header="Reset Progress" [modal]="true" [(visible)]="resetConfirmationVisible" [style]="{ width: '25rem' }">
+    <span class="p-text-secondary block mb-8">Ești sigur că vrei să resetezi progresul?</span>
+    <div class="flex justify-end gap-2">
+        <button pButton label="Cancel" (click)="resetConfirmationVisible = false" onkeydown=""></button>
+        <button pButton label="Confirm" severity="danger" (click)="confirmResetProgress()" onkeydown=""></button>
+    </div>
+</p-dialog>

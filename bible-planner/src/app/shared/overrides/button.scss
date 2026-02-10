@@ -1,14 +1,10 @@
 .p-button {
-  background-color: white !important;
   border: none !important;
-
-  &:hover {
-    background-color: gray !important;
-  }
 }
 
 .plan-selector-button {
     .p-button{
+        background-color: white !important;
         border-radius: 0 !important;
         border: none !important;
         width: 300px;
@@ -34,4 +30,8 @@
         background-color: gray !important;
         color: white !important;
     }
+}
+
+.logout .p-button {
+    background-color: white !important;
 }
