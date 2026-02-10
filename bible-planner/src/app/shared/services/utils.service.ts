@@ -22,17 +22,28 @@ export class Utils {
 
   toggleChapter(chapter: string) {
     if (this.readSet().has(chapter)) {
-      this.firebase.deleteChapter(chapter);
+      this.firebase.deleteChapters([chapter]);
       const newSet = new Set(this.readSet());
       newSet.delete(chapter);
       this.readSet.set(newSet);
     } else {
-      this.firebase.addChapter(chapter);
+      this.firebase.addChapters([chapter]);
       const newSet = new Set(this.readSet());
       newSet.add(chapter);
       this.readSet.set(newSet);
     }
   }
 
-  isSelectedFast = (chapter: string) => this.readSet().has(chapter);
+  isSelected = (chapter: string) => this.readSet().has(chapter);
+
+  isEntireDayRead = (dayChapters: string[]) => dayChapters.every(chapter => this.readSet().has(chapter));
+
+  setEntireDayRead(chapters: string[]) {
+    const value = !this.isEntireDayRead(chapters);
+    if (value) {
+      this.firebase.addChapters(chapters);
+    } else {
+      this.firebase.deleteChapters(chapters);
+    }
+  }
 }

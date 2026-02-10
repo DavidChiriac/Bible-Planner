@@ -5,9 +5,10 @@ import {
   signInWithPopup,
   signOut,
   user,
+  getAuth,
 } from '@angular/fire/auth';
 import { Database } from '@angular/fire/database';
-import { get, ref, remove, runTransaction, set } from 'firebase/database';
+import { ref, remove, runTransaction } from 'firebase/database';
 import { Observable, switchMap, of } from 'rxjs';
 import { listVal } from 'rxfire/database';
 
@@ -27,6 +28,10 @@ export class FirebaseService {
     await signOut(this.auth);
   }
 
+  getAuth() {
+    return getAuth();
+  }
+
   getChapters(): Observable<string[]> {
     return this.user$.pipe(
       switchMap((u) => {
@@ -37,30 +42,7 @@ export class FirebaseService {
     );
   }
 
-  async addChapter(chapter: string) {
-    const u = this.auth.currentUser;
-    if (!u) throw new Error('Not logged in');
-
-    const chaptersRef = ref(this.db, `users/${u.uid}/chapters`);
-    const snap = await get(chaptersRef);
-
-    let chapters: string[] = [];
-
-    if (snap.exists()) {
-      chapters = snap.val();
-
-      if (chapters.includes(chapter)) {
-        return 'already exists';
-      }
-    }
-
-    chapters.push(chapter);
-
-    await set(chaptersRef, chapters);
-    return 'added';
-  }
-
-  async addMultipleChapters(newChapters: string[]) {
+  async addChapters(newChapters: string[]) {
     const u = this.auth.currentUser;
     if (!u) throw new Error('Not logged in');
 
@@ -78,36 +60,31 @@ export class FirebaseService {
     return 'added';
   }
 
-  async deleteChapter(chapter: string) {
+  async deleteChapters(chaptersToDelete: string[]) {
     const u = this.auth.currentUser;
     if (!u) throw new Error('Not logged in');
 
     const chaptersRef = ref(this.db, `users/${u.uid}/chapters`);
-    const snap = await get(chaptersRef);
+    const toDelete = new Set(chaptersToDelete);
 
-    if (!snap.exists()) {
-      return 'nothing to delete';
-    }
+    const result = await runTransaction(chaptersRef, (current) => {
+      if (current == null) return current;
 
-    const chapters: string[] = snap.val();
+      const arr: string[] = Array.isArray(current)
+        ? current
+        : Object.values(current as Record<string, string>);
 
-    const index = chapters.indexOf(chapter);
-    if (index === -1) {
-      return 'not found';
-    }
+      const remaining = arr.filter((ch) => !toDelete.has(ch));
 
-    chapters.splice(index, 1);
+      return remaining.length === 0 ? null : remaining;
+    });
 
-    if (chapters.length === 0) {
-      await remove(chaptersRef);
-      return 'deleted (empty)';
-    }
+    if (!result.committed) return 'nothing to delete';
 
-    await set(chaptersRef, chapters);
-    return 'deleted';
+    return result.snapshot.exists() ? 'deleted' : 'deleted (empty)';
   }
 
-  async resetProgress() {
+    async resetProgress() {
     const u = this.auth.currentUser;
     if (!u) throw new Error('Not logged in');
 
