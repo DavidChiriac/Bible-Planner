@@ -1,8 +1,37 @@
 .p-button {
-    background-color: white !important;
-    border: none !important;
+  background-color: white !important;
+  border: none !important;
 
-    &:hover {
+  &:hover {
+    background-color: gray !important;
+  }
+}
+
+.plan-selector-button {
+    .p-button{
+        border-radius: 0 !important;
+        border: none !important;
+        width: 300px;
+    }
+
+  &:first-child {
+    .p-button {
+      border-top-left-radius: 15px !important;
+      border-bottom-left-radius: 15px !important;
+    }
+  }
+
+  &:last-child {
+    .p-button {
+      border-top-right-radius: 15px !important;
+      border-bottom-right-radius: 15px !important;
+    }
+  }
+}
+
+.plan-selector-button.selected {
+    .p-button {
         background-color: gray !important;
+        color: white !important;
     }
 }

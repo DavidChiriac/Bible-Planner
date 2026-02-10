@@ -1,20 +1,28 @@
 <div class="container">
+    <div class="plan-selector">
+        @for (tab of tabs; track tab) {
+            <p-button (click)="selectedTab.set(tab)" onkeydown="" class="plan-selector-button" [ngClass]="{'selected': selectedTab() === tab}">{{ tab }}</p-button>
+        }
+    </div>
+
     <div class="card">
-        <p-accordion [value]="['0']">
-            @for (tab of tabs; track $index) {
+        <p-accordion [multiple]="true">
+            @for (tab of weeks(); track tab.week) {
                 <p-accordion-panel [value]="tab.week">
-                    <p-accordion-header>
+                    <p-accordion-header (click)="addWeekToOpen(tab.week)" onkeydown="">
                         <div class="w-full flex justify-content-between pr-5">
                             {{ 'Săptămâna ' + tab.week }}
-                            <span class="w-6">{{tab.label}}</span>
+                            <span class="w-6 text-right gray">{{tab.label}}</span>
                         </div>
                     </p-accordion-header>
                     <p-accordion-content >
-                        @for (day of tab.days; track day.label) {
-                            <div class="flex gap-2 align-items-center mb-2">
-                                <p-checkbox [ngModel]="utils.isEntireDayRead(day.chapters)" (ngModelChange)="utils.setEntireDayRead(day.chapters)"></p-checkbox>
-                                <p class="m-0">{{ day.label }}</p>
-                            </div>
+                        @if (openWeeks().includes(tab.week)) {
+                            @for (day of tab.days; track day.label) {
+                                <div class="flex gap-2 align-items-center mb-2 day" [ngClass]="{'read': utils.isEntireDayRead(day.chapters)}">
+                                    <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)" (ngModelChange)="utils.setEntireDayRead(day.chapters)"></p-checkbox>
+                                    <p class="m-0">{{ day.label }}</p>
+                                </div>
+                            }
                         }
                     </p-accordion-content>
                 </p-accordion-panel>
