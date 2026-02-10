@@ -4,6 +4,17 @@
             <p-button (click)="selectedTab.set(tab)" onkeydown="" class="plan-selector-button" [ngClass]="{'selected': selectedTab() === tab}">{{ tab }}</p-button>
         }
     </div>
+    <div class="details w-100">
+        <div class="flex justify-content-center w-100">
+            @if (currentStatus() > 0) {
+                <p class="status positive">Ești cu {{ currentStatus() }} zile citite înainte!</p>
+            } @else if (currentStatus() < 0) {
+                <p class="status negative">Ești cu {{ (currentStatus() * -1) }} zile citite în urmă!</p>
+            } @else {
+                <p class="status neutral">Ești la zi cu planul de citire!</p>
+            }
+        </div>
+    </div>
 
     <div class="card">
         <p-accordion [multiple]="true">

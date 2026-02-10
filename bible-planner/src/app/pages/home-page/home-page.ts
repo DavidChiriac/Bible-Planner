@@ -17,7 +17,14 @@ export enum TABS {
 
 @Component({
   selector: 'app-home-page',
-  imports: [ReactiveFormsModule, FormsModule, AccordionModule, CheckboxModule, ButtonModule, NgClass],
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    AccordionModule,
+    CheckboxModule,
+    ButtonModule,
+    NgClass,
+  ],
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss',
 })
@@ -29,6 +36,25 @@ export class HomePage {
     return this.selectedTab() === TABS.CRONOLOGIC ? CRONOLOGIC : INORDINE;
   });
 
+  numbersOfDaysRead = computed(() => {
+    let readDays = 0;
+
+    for (const day of this.weeks().flatMap((p) => p.days)) {
+      if (
+        day.chapters.every((chapter: string) =>
+          this.utils.readSet().has(chapter),
+        )
+      ) {
+        readDays++;
+      }
+    }
+    return readDays;
+  });
+
+  currentStatus = computed(() => {
+    return this.numbersOfDaysRead() - (new Date().getDate() + 1 - new Date(this.utils.startDate()).getDate()) * 12 / this.utils.months()!;
+  });
+
   openWeeks = signal<number[]>([]);
 
   utils = inject(Utils);
@@ -37,7 +63,7 @@ export class HomePage {
 
   addWeekToOpen(week: number) {
     if (!this.openWeeks().includes(week)) {
-      this.openWeeks.update(weeks => [...weeks, week]);
+      this.openWeeks.update((weeks) => [...weeks, week]);
     }
   }
 }
