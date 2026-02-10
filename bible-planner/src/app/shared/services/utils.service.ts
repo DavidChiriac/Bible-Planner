@@ -6,7 +6,6 @@ import { take } from 'rxjs';
   providedIn: 'root',
 })
 export class Utils {
-  readChapters = signal<string[]>([]);
   readSet = signal(new Set<string>());
   loading = signal(true);
 
@@ -14,8 +13,7 @@ export class Utils {
 
   constructor() {
       this.firebase.getChapters().pipe(take(1)).subscribe((chapters) => {
-        this.readChapters.set(chapters ?? []);
-        this.readSet.set(new Set(this.readChapters()));
+        this.readSet.set(new Set(chapters ?? []));
         this.loading.set(false);
     });
   }
@@ -42,8 +40,10 @@ export class Utils {
     const value = !this.isEntireDayRead(chapters);
     if (value) {
       this.firebase.addChapters(chapters);
+      this.readSet.set(new Set([...this.readSet(), ...chapters]));
     } else {
       this.firebase.deleteChapters(chapters);
+      this.readSet.set(new Set([...this.readSet()].filter(c => !chapters.includes(c))));
     }
   }
 }
