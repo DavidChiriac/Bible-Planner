@@ -1,1 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+@use "primeicons/primeicons.css";
+@use "app/shared/overrides/overrides.scss";
+
+body {
+    margin: 0;
+}
+
+.container {
+    height: calc(100vh - 85px - 18px);
+    width: 100%;
+    overflow: auto;
+}

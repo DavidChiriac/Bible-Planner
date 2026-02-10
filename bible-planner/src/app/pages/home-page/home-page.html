@@ -1,0 +1,24 @@
+<div class="container">
+    <div class="card">
+        <p-accordion [value]="['0']">
+            @for (tab of tabs; track $index) {
+                <p-accordion-panel [value]="tab.week">
+                    <p-accordion-header>
+                        <div class="w-full flex justify-content-between pr-5">
+                            {{ 'Săptămâna ' + tab.week }}
+                            <span class="w-6">{{tab.label}}</span>
+                        </div>
+                    </p-accordion-header>
+                    <p-accordion-content >
+                        @for (day of tab.days; track day.label) {
+                            <div class="flex gap-2 align-items-center mb-2">
+                                <p-checkbox [ngModel]="utils.isEntireDayRead(day.chapters)" (ngModelChange)="utils.setEntireDayRead(day.chapters)"></p-checkbox>
+                                <p class="m-0">{{ day.label }}</p>
+                            </div>
+                        }
+                    </p-accordion-content>
+                </p-accordion-panel>
+            }
+        </p-accordion>
+    </div>
+</div>

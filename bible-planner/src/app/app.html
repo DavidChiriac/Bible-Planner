@@ -1,0 +1,9 @@
+@if (auth.isLoggedIn()) {
+  <app-navbar></app-navbar>
+}
+
+@if (!utils.loading()) {
+  <router-outlet></router-outlet>
+}
+
+<app-footer></app-footer>
