@@ -29,9 +29,8 @@ jobs:
           cache: 'npm'
 
       - name: Install Dependencies
-        run: npm ci
+        run: npm install
 
-      # 🔥 Inject Firebase secrets into environment.prod.ts
       - name: Replace Environment Variables
         run: |
           cat <<EOF > src/environments/environment.prod.ts
@@ -49,7 +48,6 @@ jobs:
           };
           EOF
 
-      # 🔧 Build Angular for GitHub Pages
       - name: Build
         run: |
           npm run build -- --configuration production --base-href "/YOUR_REPO_NAME/"
