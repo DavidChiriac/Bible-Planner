@@ -1,0 +1,3339 @@
+[
+  {
+    "week": 1,
+    "label": "Geneza 1-22",
+    "days": [
+      {
+        "chapters": [
+          "Geneza 1",
+          "Geneza 2"
+        ],
+        "label": "Geneza 1-2"
+      },
+      {
+        "chapters": [
+          "Geneza 3",
+          "Geneza 4",
+          "Geneza 5"
+        ],
+        "label": "Geneza 3-5"
+      },
+      {
+        "chapters": [
+          "Geneza 6",
+          "Geneza 7",
+          "Geneza 8",
+          "Geneza 9"
+        ],
+        "label": "Geneza 6-9"
+      },
+      {
+        "chapters": [
+          "Geneza 10",
+          "Geneza 11"
+        ],
+        "label": "Geneza 10-11"
+      },
+      {
+        "chapters": [
+          "Geneza 12",
+          "Geneza 13",
+          "Geneza 14",
+          "Geneza 15"
+        ],
+        "label": "Geneza 12-15"
+      },
+      {
+        "chapters": [
+          "Geneza 16",
+          "Geneza 17",
+          "Geneza 18",
+          "Geneza 19"
+        ],
+        "label": "Geneza 16-19"
+      },
+      {
+        "chapters": [
+          "Geneza 20",
+          "Geneza 21",
+          "Geneza 22"
+        ],
+        "label": "Geneza 20-22"
+      }
+    ]
+  },
+  {
+    "week": 2,
+    "label": "Geneza 23-46",
+    "days": [
+      {
+        "chapters": [
+          "Geneza 23",
+          "Geneza 24",
+          "Geneza 25",
+          "Geneza 26"
+        ],
+        "label": "Geneza 23-26"
+      },
+      {
+        "chapters": [
+          "Geneza 27",
+          "Geneza 28",
+          "Geneza 29"
+        ],
+        "label": "Geneza 27-29"
+      },
+      {
+        "chapters": [
+          "Geneza 30",
+          "Geneza 31",
+          "Geneza 32"
+        ],
+        "label": "Geneza 30-32"
+      },
+      {
+        "chapters": [
+          "Geneza 33",
+          "Geneza 34",
+          "Geneza 35",
+          "Geneza 36"
+        ],
+        "label": "Geneza 33-36"
+      },
+      {
+        "chapters": [
+          "Geneza 37",
+          "Geneza 38",
+          "Geneza 39"
+        ],
+        "label": "Geneza 37-39"
+      },
+      {
+        "chapters": [
+          "Geneza 40",
+          "Geneza 41",
+          "Geneza 42"
+        ],
+        "label": "Geneza 40-42"
+      },
+      {
+        "chapters": [
+          "Geneza 43",
+          "Geneza 44",
+          "Geneza 45",
+          "Geneza 46"
+        ],
+        "label": "Geneza 43-46"
+      }
+    ]
+  },
+  {
+    "week": 3,
+    "label": "Geneza 47-50, Exodul 1-20",
+    "days": [
+      {
+        "chapters": [
+          "Geneza 47",
+          "Geneza 48",
+          "Geneza 49",
+          "Geneza 50"
+        ],
+        "label": "Geneza 47-50"
+      },
+      {
+        "chapters": [
+          "Exodul 1",
+          "Exodul 2",
+          "Exodul 3",
+          "Exodul 4"
+        ],
+        "label": "Exodul 1-4"
+      },
+      {
+        "chapters": [
+          "Exodul 5",
+          "Exodul 6",
+          "Exodul 7"
+        ],
+        "label": "Exodul 5-7"
+      },
+      {
+        "chapters": [
+          "Exodul 8",
+          "Exodul 9",
+          "Exodul 10"
+        ],
+        "label": "Exodul 8-10"
+      },
+      {
+        "chapters": [
+          "Exodul 11",
+          "Exodul 12",
+          "Exodul 13"
+        ],
+        "label": "Exodul 11-13"
+      },
+      {
+        "chapters": [
+          "Exodul 14",
+          "Exodul 15",
+          "Exodul 16",
+          "Exodul 17"
+        ],
+        "label": "Exodul 14-17"
+      },
+      {
+        "chapters": [
+          "Exodul 18",
+          "Exodul 19",
+          "Exodul 20"
+        ],
+        "label": "Exodul 18-20"
+      }
+    ]
+  },
+  {
+    "week": 4,
+    "label": "Exodul 21-40, Leviticul 1-4",
+    "days": [
+      {
+        "chapters": [
+          "Exodul 21",
+          "Exodul 22",
+          "Exodul 23",
+          "Exodul 24"
+        ],
+        "label": "Exodul 21-24"
+      },
+      {
+        "chapters": [
+          "Exodul 25",
+          "Exodul 26",
+          "Exodul 27"
+        ],
+        "label": "Exodul 25-27"
+      },
+      {
+        "chapters": [
+          "Exodul 28",
+          "Exodul 29",
+          "Exodul 30",
+          "Exodul 31"
+        ],
+        "label": "Exodul 28-31"
+      },
+      {
+        "chapters": [
+          "Exodul 32",
+          "Exodul 33",
+          "Exodul 34"
+        ],
+        "label": "Exodul 32-34"
+      },
+      {
+        "chapters": [
+          "Exodul 35",
+          "Exodul 36",
+          "Exodul 37"
+        ],
+        "label": "Exodul 35-37"
+      },
+      {
+        "chapters": [
+          "Exodul 38",
+          "Exodul 39",
+          "Exodul 40"
+        ],
+        "label": "Exodul 38-40"
+      },
+      {
+        "chapters": [
+          "Leviticul 1",
+          "Leviticul 2",
+          "Leviticul 3",
+          "Leviticul 4"
+        ],
+        "label": "Leviticul 1-4"
+      }
+    ]
+  },
+  {
+    "week": 5,
+    "label": "Leviticul 5-27",
+    "days": [
+      {
+        "chapters": [
+          "Leviticul 5",
+          "Leviticul 6",
+          "Leviticul 7"
+        ],
+        "label": "Leviticul 5-7"
+      },
+      {
+        "chapters": [
+          "Leviticul 8",
+          "Leviticul 9",
+          "Leviticul 10"
+        ],
+        "label": "Leviticul 8-10"
+      },
+      {
+        "chapters": [
+          "Leviticul 11",
+          "Leviticul 12",
+          "Leviticul 13"
+        ],
+        "label": "Leviticul 11-13"
+      },
+      {
+        "chapters": [
+          "Leviticul 14",
+          "Leviticul 15",
+          "Leviticul 16"
+        ],
+        "label": "Leviticul 14-16"
+      },
+      {
+        "chapters": [
+          "Leviticul 17",
+          "Leviticul 18",
+          "Leviticul 19"
+        ],
+        "label": "Leviticul 17-19"
+      },
+      {
+        "chapters": [
+          "Leviticul 20",
+          "Leviticul 21",
+          "Leviticul 22",
+          "Leviticul 23"
+        ],
+        "label": "Leviticul 20-23"
+      },
+      {
+        "chapters": [
+          "Leviticul 24",
+          "Leviticul 25",
+          "Leviticul 26",
+          "Leviticul 27"
+        ],
+        "label": "Leviticul 24-27"
+      }
+    ]
+  },
+  {
+    "week": 6,
+    "label": "Numeri 1-24",
+    "days": [
+      {
+        "chapters": [
+          "Numeri 1",
+          "Numeri 2",
+          "Numeri 3"
+        ],
+        "label": "Numeri 1-3"
+      },
+      {
+        "chapters": [
+          "Numeri 4",
+          "Numeri 5",
+          "Numeri 6"
+        ],
+        "label": "Numeri 4-6"
+      },
+      {
+        "chapters": [
+          "Numeri 7",
+          "Numeri 8",
+          "Numeri 9",
+          "Numeri 10"
+        ],
+        "label": "Numeri 7-10"
+      },
+      {
+        "chapters": [
+          "Numeri 11",
+          "Numeri 12",
+          "Numeri 13",
+          "Numeri 14"
+        ],
+        "label": "Numeri 11-14"
+      },
+      {
+        "chapters": [
+          "Numeri 15",
+          "Numeri 16",
+          "Numeri 17"
+        ],
+        "label": "Numeri 15-17"
+      },
+      {
+        "chapters": [
+          "Numeri 18",
+          "Numeri 19",
+          "Numeri 20"
+        ],
+        "label": "Numeri 18-20"
+      },
+      {
+        "chapters": [
+          "Numeri 21",
+          "Numeri 22",
+          "Numeri 23",
+          "Numeri 24"
+        ],
+        "label": "Numeri 21-24"
+      }
+    ]
+  },
+  {
+    "week": 7,
+    "label": "Numeri 25-36, Deuteronomul 1-9",
+    "days": [
+      {
+        "chapters": [
+          "Numeri 25",
+          "Numeri 26",
+          "Numeri 27"
+        ],
+        "label": "Numeri 25-27"
+      },
+      {
+        "chapters": [
+          "Numeri 28",
+          "Numeri 29",
+          "Numeri 30"
+        ],
+        "label": "Numeri 28-30"
+      },
+      {
+        "chapters": [
+          "Numeri 31",
+          "Numeri 32",
+          "Numeri 33"
+        ],
+        "label": "Numeri 31-33"
+      },
+      {
+        "chapters": [
+          "Numeri 34",
+          "Numeri 35",
+          "Numeri 36"
+        ],
+        "label": "Numeri 34-36"
+      },
+      {
+        "chapters": [
+          "Deuteronomul 1",
+          "Deuteronomul 2",
+          "Deuteronomul 3"
+        ],
+        "label": "Deuteronomul 1-3"
+      },
+      {
+        "chapters": [
+          "Deuteronomul 4",
+          "Deuteronomul 5",
+          "Deuteronomul 6"
+        ],
+        "label": "Deuteronomul 4-6"
+      },
+      {
+        "chapters": [
+          "Deuteronomul 7",
+          "Deuteronomul 8",
+          "Deuteronomul 9"
+        ],
+        "label": "Deuteronomul 7-9"
+      }
+    ]
+  },
+  {
+    "week": 8,
+    "label": "Deuteronomul 10-31",
+    "days": [
+      {
+        "chapters": [
+          "Deuteronomul 10",
+          "Deuteronomul 11",
+          "Deuteronomul 12"
+        ],
+        "label": "Deuteronomul 10-12"
+      },
+      {
+        "chapters": [
+          "Deuteronomul 13",
+          "Deuteronomul 14",
+          "Deuteronomul 15",
+          "Deuteronomul 16"
+        ],
+        "label": "Deuteronomul 13-16"
+      },
+      {
+        "chapters": [
+          "Deuteronomul 17",
+          "Deuteronomul 18",
+          "Deuteronomul 19"
+        ],
+        "label": "Deuteronomul 17-19"
+      },
+      {
+        "chapters": [
+          "Deuteronomul 20",
+          "Deuteronomul 21",
+          "Deuteronomul 22"
+        ],
+        "label": "Deuteronomul 20-22"
+      },
+      {
+        "chapters": [
+          "Deuteronomul 23",
+          "Deuteronomul 24",
+          "Deuteronomul 25"
+        ],
+        "label": "Deuteronomul 23-25"
+      },
+      {
+        "chapters": [
+          "Deuteronomul 26",
+          "Deuteronomul 27",
+          "Deuteronomul 28"
+        ],
+        "label": "Deuteronomul 26-28"
+      },
+      {
+        "chapters": [
+          "Deuteronomul 29",
+          "Deuteronomul 30",
+          "Deuteronomul 31"
+        ],
+        "label": "Deuteronomul 29-31"
+      }
+    ]
+  },
+  {
+    "week": 9,
+    "label": "Deuteronomul 32-34, Iosua 1-18",
+    "days": [
+      {
+        "chapters": [
+          "Deuteronomul 32",
+          "Deuteronomul 33",
+          "Deuteronomul 34"
+        ],
+        "label": "Deuteronomul 32-34"
+      },
+      {
+        "chapters": [
+          "Iosua 1",
+          "Iosua 2",
+          "Iosua 3"
+        ],
+        "label": "Iosua 1-3"
+      },
+      {
+        "chapters": [
+          "Iosua 4",
+          "Iosua 5",
+          "Iosua 6"
+        ],
+        "label": "Iosua 4-6"
+      },
+      {
+        "chapters": [
+          "Iosua 7",
+          "Iosua 8",
+          "Iosua 9"
+        ],
+        "label": "Iosua 7-9"
+      },
+      {
+        "chapters": [
+          "Iosua 10",
+          "Iosua 11",
+          "Iosua 12"
+        ],
+        "label": "Iosua 10-12"
+      },
+      {
+        "chapters": [
+          "Iosua 13",
+          "Iosua 14",
+          "Iosua 15"
+        ],
+        "label": "Iosua 13-15"
+      },
+      {
+        "chapters": [
+          "Iosua 16",
+          "Iosua 17",
+          "Iosua 18"
+        ],
+        "label": "Iosua 16-18"
+      }
+    ]
+  },
+  {
+    "week": 10,
+    "label": "Iosua 19-24, Judecători 1-18",
+    "days": [
+      {
+        "chapters": [
+          "Iosua 19",
+          "Iosua 20",
+          "Iosua 21"
+        ],
+        "label": "Iosua 19-21"
+      },
+      {
+        "chapters": [
+          "Iosua 22",
+          "Iosua 23",
+          "Iosua 24"
+        ],
+        "label": "Iosua 22-24"
+      },
+      {
+        "chapters": [
+          "Judecători 1",
+          "Judecători 2",
+          "Judecători 3",
+          "Judecători 4"
+        ],
+        "label": "Judecători 1-4"
+      },
+      {
+        "chapters": [
+          "Judecători 5",
+          "Judecători 6",
+          "Judecători 7",
+          "Judecători 8"
+        ],
+        "label": "Judecători 5-8"
+      },
+      {
+        "chapters": [
+          "Judecători 9",
+          "Judecători 10",
+          "Judecători 11",
+          "Judecători 12"
+        ],
+        "label": "Judecători 9-12"
+      },
+      {
+        "chapters": [
+          "Judecători 13",
+          "Judecători 14",
+          "Judecători 15"
+        ],
+        "label": "Judecători 13-15"
+      },
+      {
+        "chapters": [
+          "Judecători 16",
+          "Judecători 17",
+          "Judecători 18"
+        ],
+        "label": "Judecători 16-18"
+      }
+    ]
+  },
+  {
+    "week": 11,
+    "label": "Judecători 19-21, Rut 1-4, 1 Samuel 1-16",
+    "days": [
+      {
+        "chapters": [
+          "Judecători 19",
+          "Judecători 20",
+          "Judecători 21"
+        ],
+        "label": "Judecători 19-21"
+      },
+      {
+        "chapters": [
+          "Rut 1",
+          "Rut 2",
+          "Rut 3",
+          "Rut 4"
+        ],
+        "label": "Rut 1-4"
+      },
+      {
+        "chapters": [
+          "1 Samuel 1",
+          "1 Samuel 2",
+          "1 Samuel 3"
+        ],
+        "label": "1 Samuel 1-3"
+      },
+      {
+        "chapters": [
+          "1 Samuel 4",
+          "1 Samuel 5",
+          "1 Samuel 6",
+          "1 Samuel 7"
+        ],
+        "label": "1 Samuel 4-7"
+      },
+      {
+        "chapters": [
+          "1 Samuel 8",
+          "1 Samuel 9",
+          "1 Samuel 10"
+        ],
+        "label": "1 Samuel 8-10"
+      },
+      {
+        "chapters": [
+          "1 Samuel 11",
+          "1 Samuel 12",
+          "1 Samuel 13"
+        ],
+        "label": "1 Samuel 11-13"
+      },
+      {
+        "chapters": [
+          "1 Samuel 14",
+          "1 Samuel 15",
+          "1 Samuel 16"
+        ],
+        "label": "1 Samuel 14-16"
+      }
+    ]
+  },
+  {
+    "week": 12,
+    "label": "1 Samuel 17-31, 2 Samuel 1-12",
+    "days": [
+      {
+        "chapters": [
+          "1 Samuel 17",
+          "1 Samuel 18",
+          "1 Samuel 19",
+          "1 Samuel 20"
+        ],
+        "label": "1 Samuel 17-20"
+      },
+      {
+        "chapters": [
+          "1 Samuel 21",
+          "1 Samuel 22",
+          "1 Samuel 23",
+          "1 Samuel 24"
+        ],
+        "label": "1 Samuel 21-24"
+      },
+      {
+        "chapters": [
+          "1 Samuel 25",
+          "1 Samuel 26",
+          "1 Samuel 27",
+          "1 Samuel 28"
+        ],
+        "label": "1 Samuel 25-28"
+      },
+      {
+        "chapters": [
+          "1 Samuel 29",
+          "1 Samuel 30",
+          "1 Samuel 31"
+        ],
+        "label": "1 Samuel 29-31"
+      },
+      {
+        "chapters": [
+          "2 Samuel 1",
+          "2 Samuel 2",
+          "2 Samuel 3",
+          "2 Samuel 4"
+        ],
+        "label": "2 Samuel 1-4"
+      },
+      {
+        "chapters": [
+          "2 Samuel 5",
+          "2 Samuel 6",
+          "2 Samuel 7",
+          "2 Samuel 8"
+        ],
+        "label": "2 Samuel 5-8"
+      },
+      {
+        "chapters": [
+          "2 Samuel 9",
+          "2 Samuel 10",
+          "2 Samuel 11",
+          "2 Samuel 12"
+        ],
+        "label": "2 Samuel 9-12"
+      }
+    ]
+  },
+  {
+    "week": 13,
+    "label": "2 Samuel 13-24, 1 Împărati 1-10",
+    "days": [
+      {
+        "chapters": [
+          "2 Samuel 13",
+          "2 Samuel 14",
+          "2 Samuel 15"
+        ],
+        "label": "2 Samuel 13-15"
+      },
+      {
+        "chapters": [
+          "2 Samuel 16",
+          "2 Samuel 17",
+          "2 Samuel 18"
+        ],
+        "label": "2 Samuel 16-18"
+      },
+      {
+        "chapters": [
+          "2 Samuel 19",
+          "2 Samuel 20",
+          "2 Samuel 21"
+        ],
+        "label": "2 Samuel 19-21"
+      },
+      {
+        "chapters": [
+          "2 Samuel 22",
+          "2 Samuel 23",
+          "2 Samuel 24"
+        ],
+        "label": "2 Samuel 22-24"
+      },
+      {
+        "chapters": [
+          "1 Împărati 1",
+          "1 Împărati 2",
+          "1 Împărati 3",
+          "1 Împărati 4"
+        ],
+        "label": "1 Împărati 1-4"
+      },
+      {
+        "chapters": [
+          "1 Împărati 5",
+          "1 Împărati 6",
+          "1 Împărati 7"
+        ],
+        "label": "1 Împărati 5-7"
+      },
+      {
+        "chapters": [
+          "1 Împărati 8",
+          "1 Împărati 9",
+          "1 Împărati 10"
+        ],
+        "label": "1 Împărati 8-10"
+      }
+    ]
+  },
+  {
+    "week": 14,
+    "label": "1 Împărati 11-22, 2 Împărati 1-10",
+    "days": [
+      {
+        "chapters": [
+          "1 Împărati 11",
+          "1 Împărati 12",
+          "1 Împărati 13"
+        ],
+        "label": "1 Împărati 11-13"
+      },
+      {
+        "chapters": [
+          "1 Împărati 14",
+          "1 Împărati 15",
+          "1 Împărati 16"
+        ],
+        "label": "1 Împărati 14-16"
+      },
+      {
+        "chapters": [
+          "1 Împărati 17",
+          "1 Împărati 18",
+          "1 Împărati 19"
+        ],
+        "label": "1 Împărati 17-19"
+      },
+      {
+        "chapters": [
+          "1 Împărati 20",
+          "1 Împărati 21",
+          "1 Împărati 22"
+        ],
+        "label": "1 Împărati 20-22"
+      },
+      {
+        "chapters": [
+          "2 Împărati 1",
+          "2 Împărati 2",
+          "2 Împărati 3"
+        ],
+        "label": "2 Împărati 1-3"
+      },
+      {
+        "chapters": [
+          "2 Împărati 4",
+          "2 Împărati 5",
+          "2 Împărati 6"
+        ],
+        "label": "2 Împărati 4-6"
+      },
+      {
+        "chapters": [
+          "2 Împărati 7",
+          "2 Împărati 8",
+          "2 Împărati 9",
+          "2 Împărati 10"
+        ],
+        "label": "2 Împărati 7-10"
+      }
+    ]
+  },
+  {
+    "week": 15,
+    "label": "2 Împărati 11-25, 1 Cronici 1-6",
+    "days": [
+      {
+        "chapters": [
+          "2 Împărati 11",
+          "2 Împărati 12",
+          "2 Împărati 13",
+          "2 Împărati 14"
+        ],
+        "label": "2 Împărati 11-14"
+      },
+      {
+        "chapters": [
+          "2 Împărati 15",
+          "2 Împărati 16",
+          "2 Împărati 17"
+        ],
+        "label": "2 Împărati 15-17"
+      },
+      {
+        "chapters": [
+          "2 Împărati 18",
+          "2 Împărati 19",
+          "2 Împărati 20"
+        ],
+        "label": "2 Împărati 18-20"
+      },
+      {
+        "chapters": [
+          "2 Împărati 21",
+          "2 Împărati 22"
+        ],
+        "label": "2 Împărati 21-22"
+      },
+      {
+        "chapters": [
+          "2 Împărati 23",
+          "2 Împărati 24",
+          "2 Împărati 25"
+        ],
+        "label": "2 Împărati 23-25"
+      },
+      {
+        "chapters": [
+          "1 Cronici 1",
+          "1 Cronici 2",
+          "1 Cronici 3"
+        ],
+        "label": "1 Cronici 1-3"
+      },
+      {
+        "chapters": [
+          "1 Cronici 4",
+          "1 Cronici 5",
+          "1 Cronici 6"
+        ],
+        "label": "1 Cronici 4-6"
+      }
+    ]
+  },
+  {
+    "week": 16,
+    "label": "1 Cronici 7-29",
+    "days": [
+      {
+        "chapters": [
+          "1 Cronici 7",
+          "1 Cronici 8",
+          "1 Cronici 9"
+        ],
+        "label": "1 Cronici 7-9"
+      },
+      {
+        "chapters": [
+          "1 Cronici 10",
+          "1 Cronici 11",
+          "1 Cronici 12",
+          "1 Cronici 13"
+        ],
+        "label": "1 Cronici 10-13"
+      },
+      {
+        "chapters": [
+          "1 Cronici 14",
+          "1 Cronici 15",
+          "1 Cronici 16"
+        ],
+        "label": "1 Cronici 14-16"
+      },
+      {
+        "chapters": [
+          "1 Cronici 17",
+          "1 Cronici 18",
+          "1 Cronici 19"
+        ],
+        "label": "1 Cronici 17-19"
+      },
+      {
+        "chapters": [
+          "1 Cronici 20",
+          "1 Cronici 21",
+          "1 Cronici 22",
+          "1 Cronici 23"
+        ],
+        "label": "1 Cronici 20-23"
+      },
+      {
+        "chapters": [
+          "1 Cronici 24",
+          "1 Cronici 25",
+          "1 Cronici 26"
+        ],
+        "label": "1 Cronici 24-26"
+      },
+      {
+        "chapters": [
+          "1 Cronici 27",
+          "1 Cronici 28",
+          "1 Cronici 29"
+        ],
+        "label": "1 Cronici 27-29"
+      }
+    ]
+  },
+  {
+    "week": 17,
+    "label": "2 Cronici 1-22",
+    "days": [
+      {
+        "chapters": [
+          "2 Cronici 1",
+          "2 Cronici 2",
+          "2 Cronici 3"
+        ],
+        "label": "2 Cronici 1-3"
+      },
+      {
+        "chapters": [
+          "2 Cronici 4",
+          "2 Cronici 5",
+          "2 Cronici 6"
+        ],
+        "label": "2 Cronici 4-6"
+      },
+      {
+        "chapters": [
+          "2 Cronici 7",
+          "2 Cronici 8",
+          "2 Cronici 9"
+        ],
+        "label": "2 Cronici 7-9"
+      },
+      {
+        "chapters": [
+          "2 Cronici 10",
+          "2 Cronici 11",
+          "2 Cronici 12",
+          "2 Cronici 13"
+        ],
+        "label": "2 Cronici 10-13"
+      },
+      {
+        "chapters": [
+          "2 Cronici 14",
+          "2 Cronici 15",
+          "2 Cronici 16"
+        ],
+        "label": "2 Cronici 14-16"
+      },
+      {
+        "chapters": [
+          "2 Cronici 17",
+          "2 Cronici 18",
+          "2 Cronici 19"
+        ],
+        "label": "2 Cronici 17-19"
+      },
+      {
+        "chapters": [
+          "2 Cronici 20",
+          "2 Cronici 21",
+          "2 Cronici 22"
+        ],
+        "label": "2 Cronici 20-22"
+      }
+    ]
+  },
+  {
+    "week": 18,
+    "label": "2 Cronici 23-36, Ezra 1-10",
+    "days": [
+      {
+        "chapters": [
+          "2 Cronici 23",
+          "2 Cronici 24",
+          "2 Cronici 25"
+        ],
+        "label": "2 Cronici 23-25"
+      },
+      {
+        "chapters": [
+          "2 Cronici 26",
+          "2 Cronici 27",
+          "2 Cronici 28",
+          "2 Cronici 29"
+        ],
+        "label": "2 Cronici 26-29"
+      },
+      {
+        "chapters": [
+          "2 Cronici 30",
+          "2 Cronici 31",
+          "2 Cronici 32"
+        ],
+        "label": "2 Cronici 30-32"
+      },
+      {
+        "chapters": [
+          "2 Cronici 33",
+          "2 Cronici 34",
+          "2 Cronici 35",
+          "2 Cronici 36"
+        ],
+        "label": "2 Cronici 33-36"
+      },
+      {
+        "chapters": [
+          "Ezra 1",
+          "Ezra 2",
+          "Ezra 3",
+          "Ezra 4"
+        ],
+        "label": "Ezra 1-4"
+      },
+      {
+        "chapters": [
+          "Ezra 5",
+          "Ezra 6",
+          "Ezra 7"
+        ],
+        "label": "Ezra 5-7"
+      },
+      {
+        "chapters": [
+          "Ezra 8",
+          "Ezra 9",
+          "Ezra 10"
+        ],
+        "label": "Ezra 8-10"
+      }
+    ]
+  },
+  {
+    "week": 19,
+    "label": "Neemia 1-13, Estera 1-10",
+    "days": [
+      {
+        "chapters": [
+          "Neemia 1",
+          "Neemia 2",
+          "Neemia 3"
+        ],
+        "label": "Neemia 1-3"
+      },
+      {
+        "chapters": [
+          "Neemia 4",
+          "Neemia 5",
+          "Neemia 6"
+        ],
+        "label": "Neemia 4-6"
+      },
+      {
+        "chapters": [
+          "Neemia 7",
+          "Neemia 8",
+          "Neemia 9"
+        ],
+        "label": "Neemia 7-9"
+      },
+      {
+        "chapters": [
+          "Neemia 10",
+          "Neemia 11",
+          "Neemia 12",
+          "Neemia 13"
+        ],
+        "label": "Neemia 10-13"
+      },
+      {
+        "chapters": [
+          "Estera 1",
+          "Estera 2",
+          "Estera 3"
+        ],
+        "label": "Estera 1-3"
+      },
+      {
+        "chapters": [
+          "Estera 4",
+          "Estera 5",
+          "Estera 6",
+          "Estera 7"
+        ],
+        "label": "Estera 4-7"
+      },
+      {
+        "chapters": [
+          "Estera 8",
+          "Estera 9",
+          "Estera 10"
+        ],
+        "label": "Estera 8-10"
+      }
+    ]
+  },
+  {
+    "week": 20,
+    "label": "Iov 1-24",
+    "days": [
+      {
+        "chapters": [
+          "Iov 1",
+          "Iov 2",
+          "Iov 3",
+          "Iov 4"
+        ],
+        "label": "Iov 1-4"
+      },
+      {
+        "chapters": [
+          "Iov 5",
+          "Iov 6",
+          "Iov 7"
+        ],
+        "label": "Iov 5-7"
+      },
+      {
+        "chapters": [
+          "Iov 8",
+          "Iov 9",
+          "Iov 10"
+        ],
+        "label": "Iov 8-10"
+      },
+      {
+        "chapters": [
+          "Iov 11",
+          "Iov 12",
+          "Iov 13"
+        ],
+        "label": "Iov 11-13"
+      },
+      {
+        "chapters": [
+          "Iov 14",
+          "Iov 15",
+          "Iov 16",
+          "Iov 17"
+        ],
+        "label": "Iov 14-17"
+      },
+      {
+        "chapters": [
+          "Iov 18",
+          "Iov 19",
+          "Iov 20"
+        ],
+        "label": "Iov 18-20"
+      },
+      {
+        "chapters": [
+          "Iov 21",
+          "Iov 22",
+          "Iov 23",
+          "Iov 24"
+        ],
+        "label": "Iov 21-24"
+      }
+    ]
+  },
+  {
+    "week": 21,
+    "label": "Iov 25-42, Psalmii 1-6",
+    "days": [
+      {
+        "chapters": [
+          "Iov 25",
+          "Iov 26",
+          "Iov 27"
+        ],
+        "label": "Iov 25-27"
+      },
+      {
+        "chapters": [
+          "Iov 28",
+          "Iov 29",
+          "Iov 30",
+          "Iov 31"
+        ],
+        "label": "Iov 28-31"
+      },
+      {
+        "chapters": [
+          "Iov 32",
+          "Iov 33",
+          "Iov 34"
+        ],
+        "label": "Iov 32-34"
+      },
+      {
+        "chapters": [
+          "Iov 35",
+          "Iov 36",
+          "Iov 37"
+        ],
+        "label": "Iov 35-37"
+      },
+      {
+        "chapters": [
+          "Iov 38",
+          "Iov 39",
+          "Iov 40",
+          "Iov 41",
+          "Iov 42"
+        ],
+        "label": "Iov 38-42"
+      },
+      {
+        "chapters": [
+          "Psalmii 1",
+          "Psalmii 2",
+          "Psalmii 3"
+        ],
+        "label": "Psalmii 1-3"
+      },
+      {
+        "chapters": [
+          "Psalmii 4",
+          "Psalmii 5",
+          "Psalmii 6"
+        ],
+        "label": "Psalmii 4-6"
+      }
+    ]
+  },
+  {
+    "week": 22,
+    "label": "Psalmii 7-27",
+    "days": [
+      {
+        "chapters": [
+          "Psalmii 7",
+          "Psalmii 8",
+          "Psalmii 9"
+        ],
+        "label": "Psalmii 7-9"
+      },
+      {
+        "chapters": [
+          "Psalmii 10",
+          "Psalmii 11",
+          "Psalmii 12"
+        ],
+        "label": "Psalmii 10-12"
+      },
+      {
+        "chapters": [
+          "Psalmii 13",
+          "Psalmii 14",
+          "Psalmii 15"
+        ],
+        "label": "Psalmii 13-15"
+      },
+      {
+        "chapters": [
+          "Psalmii 16",
+          "Psalmii 17",
+          "Psalmii 18"
+        ],
+        "label": "Psalmii 16-18"
+      },
+      {
+        "chapters": [
+          "Psalmii 19",
+          "Psalmii 20",
+          "Psalmii 21"
+        ],
+        "label": "Psalmii 19-21"
+      },
+      {
+        "chapters": [
+          "Psalmii 22",
+          "Psalmii 23",
+          "Psalmii 24"
+        ],
+        "label": "Psalmii 22-24"
+      },
+      {
+        "chapters": [
+          "Psalmii 25",
+          "Psalmii 26",
+          "Psalmii 27"
+        ],
+        "label": "Psalmii 25-27"
+      }
+    ]
+  },
+  {
+    "week": 23,
+    "label": "Psalmii 28-48",
+    "days": [
+      {
+        "chapters": [
+          "Psalmii 28",
+          "Psalmii 29",
+          "Psalmii 30"
+        ],
+        "label": "Psalmii 28-30"
+      },
+      {
+        "chapters": [
+          "Psalmii 31",
+          "Psalmii 32",
+          "Psalmii 33"
+        ],
+        "label": "Psalmii 31-33"
+      },
+      {
+        "chapters": [
+          "Psalmii 34",
+          "Psalmii 35",
+          "Psalmii 36"
+        ],
+        "label": "Psalmii 34-36"
+      },
+      {
+        "chapters": [
+          "Psalmii 37",
+          "Psalmii 38",
+          "Psalmii 39"
+        ],
+        "label": "Psalmii 37-39"
+      },
+      {
+        "chapters": [
+          "Psalmii 40",
+          "Psalmii 41",
+          "Psalmii 42"
+        ],
+        "label": "Psalmii 40-42"
+      },
+      {
+        "chapters": [
+          "Psalmii 43",
+          "Psalmii 44",
+          "Psalmii 45"
+        ],
+        "label": "Psalmii 43-45"
+      },
+      {
+        "chapters": [
+          "Psalmii 46",
+          "Psalmii 47",
+          "Psalmii 48"
+        ],
+        "label": "Psalmii 46-48"
+      }
+    ]
+  },
+  {
+    "week": 24,
+    "label": "Psalmii 49-69",
+    "days": [
+      {
+        "chapters": [
+          "Psalmii 49",
+          "Psalmii 50",
+          "Psalmii 51"
+        ],
+        "label": "Psalmii 49-51"
+      },
+      {
+        "chapters": [
+          "Psalmii 52",
+          "Psalmii 53",
+          "Psalmii 54"
+        ],
+        "label": "Psalmii 52-54"
+      },
+      {
+        "chapters": [
+          "Psalmii 55",
+          "Psalmii 56",
+          "Psalmii 57"
+        ],
+        "label": "Psalmii 55-57"
+      },
+      {
+        "chapters": [
+          "Psalmii 58",
+          "Psalmii 59",
+          "Psalmii 60"
+        ],
+        "label": "Psalmii 58-60"
+      },
+      {
+        "chapters": [
+          "Psalmii 61",
+          "Psalmii 62",
+          "Psalmii 63"
+        ],
+        "label": "Psalmii 61-63"
+      },
+      {
+        "chapters": [
+          "Psalmii 64",
+          "Psalmii 65",
+          "Psalmii 66"
+        ],
+        "label": "Psalmii 64-66"
+      },
+      {
+        "chapters": [
+          "Psalmii 67",
+          "Psalmii 68",
+          "Psalmii 69"
+        ],
+        "label": "Psalmii 67-69"
+      }
+    ]
+  },
+  {
+    "week": 25,
+    "label": "Psalmii 70-90",
+    "days": [
+      {
+        "chapters": [
+          "Psalmii 70",
+          "Psalmii 71",
+          "Psalmii 72"
+        ],
+        "label": "Psalmii 70-72"
+      },
+      {
+        "chapters": [
+          "Psalmii 73",
+          "Psalmii 74",
+          "Psalmii 75"
+        ],
+        "label": "Psalmii 73-75"
+      },
+      {
+        "chapters": [
+          "Psalmii 76",
+          "Psalmii 77",
+          "Psalmii 78"
+        ],
+        "label": "Psalmii 76-78"
+      },
+      {
+        "chapters": [
+          "Psalmii 79",
+          "Psalmii 80",
+          "Psalmii 81"
+        ],
+        "label": "Psalmii 79-81"
+      },
+      {
+        "chapters": [
+          "Psalmii 82",
+          "Psalmii 83",
+          "Psalmii 84"
+        ],
+        "label": "Psalmii 82-84"
+      },
+      {
+        "chapters": [
+          "Psalmii 85",
+          "Psalmii 86",
+          "Psalmii 87"
+        ],
+        "label": "Psalmii 85-87"
+      },
+      {
+        "chapters": [
+          "Psalmii 88",
+          "Psalmii 89",
+          "Psalmii 90"
+        ],
+        "label": "Psalmii 88-90"
+      }
+    ]
+  },
+  {
+    "week": 26,
+    "label": "Psalmii 91-111",
+    "days": [
+      {
+        "chapters": [
+          "Psalmii 91",
+          "Psalmii 92",
+          "Psalmii 93"
+        ],
+        "label": "Psalmii 91-93"
+      },
+      {
+        "chapters": [
+          "Psalmii 94",
+          "Psalmii 95",
+          "Psalmii 96"
+        ],
+        "label": "Psalmii 94-96"
+      },
+      {
+        "chapters": [
+          "Psalmii 97",
+          "Psalmii 98",
+          "Psalmii 99"
+        ],
+        "label": "Psalmii 97-99"
+      },
+      {
+        "chapters": [
+          "Psalmii 100",
+          "Psalmii 101",
+          "Psalmii 102"
+        ],
+        "label": "Psalmii 100-102"
+      },
+      {
+        "chapters": [
+          "Psalmii 103",
+          "Psalmii 104",
+          "Psalmii 105"
+        ],
+        "label": "Psalmii 103-105"
+      },
+      {
+        "chapters": [
+          "Psalmii 106",
+          "Psalmii 107",
+          "Psalmii 108"
+        ],
+        "label": "Psalmii 106-108"
+      },
+      {
+        "chapters": [
+          "Psalmii 109",
+          "Psalmii 110",
+          "Psalmii 111"
+        ],
+        "label": "Psalmii 109-111"
+      }
+    ]
+  },
+  {
+    "week": 27,
+    "label": "Psalmii 112-136",
+    "days": [
+      {
+        "chapters": [
+          "Psalmii 112",
+          "Psalmii 113",
+          "Psalmii 114"
+        ],
+        "label": "Psalmii 112-114"
+      },
+      {
+        "chapters": [
+          "Psalmii 115",
+          "Psalmii 116",
+          "Psalmii 117",
+          "Psalmii 118"
+        ],
+        "label": "Psalmii 115-118"
+      },
+      {
+        "chapters": [
+          "Psalmii 119"
+        ],
+        "label": "Psalmii 119"
+      },
+      {
+        "chapters": [
+          "Psalmii 120",
+          "Psalmii 121",
+          "Psalmii 122",
+          "Psalmii 123"
+        ],
+        "label": "Psalmii 120-123"
+      },
+      {
+        "chapters": [
+          "Psalmii 124",
+          "Psalmii 125",
+          "Psalmii 126",
+          "Psalmii 127",
+          "Psalmii 128"
+        ],
+        "label": "Psalmii 124-128"
+      },
+      {
+        "chapters": [
+          "Psalmii 129",
+          "Psalmii 130",
+          "Psalmii 131",
+          "Psalmii 132"
+        ],
+        "label": "Psalmii 129-132"
+      },
+      {
+        "chapters": [
+          "Psalmii 133",
+          "Psalmii 134",
+          "Psalmii 135",
+          "Psalmii 136"
+        ],
+        "label": "Psalmii 133-136"
+      }
+    ]
+  },
+  {
+    "week": 28,
+    "label": "Psalmii 137-150, Proverbe 1-11",
+    "days": [
+      {
+        "chapters": [
+          "Psalmii 137",
+          "Psalmii 138",
+          "Psalmii 139"
+        ],
+        "label": "Psalmii 137-139"
+      },
+      {
+        "chapters": [
+          "Psalmii 140",
+          "Psalmii 141",
+          "Psalmii 142",
+          "Psalmii 143",
+          "Psalmii 144"
+        ],
+        "label": "Psalmii 140-144"
+      },
+      {
+        "chapters": [
+          "Psalmii 145",
+          "Psalmii 146",
+          "Psalmii 147"
+        ],
+        "label": "Psalmii 145-147"
+      },
+      {
+        "chapters": [
+          "Psalmii 148",
+          "Psalmii 149",
+          "Psalmii 150"
+        ],
+        "label": "Psalmii 148-150"
+      },
+      {
+        "chapters": [
+          "Proverbe 1",
+          "Proverbe 2",
+          "Proverbe 3"
+        ],
+        "label": "Proverbe 1-3"
+      },
+      {
+        "chapters": [
+          "Proverbe 4",
+          "Proverbe 5",
+          "Proverbe 6",
+          "Proverbe 7"
+        ],
+        "label": "Proverbe 4-7"
+      },
+      {
+        "chapters": [
+          "Proverbe 8",
+          "Proverbe 9",
+          "Proverbe 10",
+          "Proverbe 11"
+        ],
+        "label": "Proverbe 8-11"
+      }
+    ]
+  },
+  {
+    "week": 29,
+    "label": "Proverbe 12-31, Eclesiastul 1-3",
+    "days": [
+      {
+        "chapters": [
+          "Proverbe 12",
+          "Proverbe 13",
+          "Proverbe 14"
+        ],
+        "label": "Proverbe 12-14"
+      },
+      {
+        "chapters": [
+          "Proverbe 15",
+          "Proverbe 16",
+          "Proverbe 17",
+          "Proverbe 18"
+        ],
+        "label": "Proverbe 15-18"
+      },
+      {
+        "chapters": [
+          "Proverbe 19",
+          "Proverbe 20",
+          "Proverbe 21"
+        ],
+        "label": "Proverbe 19-21"
+      },
+      {
+        "chapters": [
+          "Proverbe 22",
+          "Proverbe 23",
+          "Proverbe 24"
+        ],
+        "label": "Proverbe 22-24"
+      },
+      {
+        "chapters": [
+          "Proverbe 25",
+          "Proverbe 26",
+          "Proverbe 27",
+          "Proverbe 28"
+        ],
+        "label": "Proverbe 25-28"
+      },
+      {
+        "chapters": [
+          "Proverbe 29",
+          "Proverbe 30",
+          "Proverbe 31"
+        ],
+        "label": "Proverbe 29-31"
+      },
+      {
+        "chapters": [
+          "Eclesiastul 1",
+          "Eclesiastul 2",
+          "Eclesiastul 3"
+        ],
+        "label": "Eclesiastul 1-3"
+      }
+    ]
+  },
+  {
+    "week": 30,
+    "label": "Eclesiastul 4-12, Cântarea Cântărilor 1-8, Isaia 1-6",
+    "days": [
+      {
+        "chapters": [
+          "Eclesiastul 4",
+          "Eclesiastul 5",
+          "Eclesiastul 6"
+        ],
+        "label": "Eclesiastul 4-6"
+      },
+      {
+        "chapters": [
+          "Eclesiastul 7",
+          "Eclesiastul 8",
+          "Eclesiastul 9"
+        ],
+        "label": "Eclesiastul 7-9"
+      },
+      {
+        "chapters": [
+          "Eclesiastul 10",
+          "Eclesiastul 11",
+          "Eclesiastul 12"
+        ],
+        "label": "Eclesiastul 10-12"
+      },
+      {
+        "chapters": [
+          "Cântarea Cântărilor 1",
+          "Cântarea Cântărilor 2",
+          "Cântarea Cântărilor 3",
+          "Cântarea Cântărilor 4"
+        ],
+        "label": "Cântarea Cântărilor 1-4"
+      },
+      {
+        "chapters": [
+          "Cântarea Cântărilor 5",
+          "Cântarea Cântărilor 6",
+          "Cântarea Cântărilor 7",
+          "Cântarea Cântărilor 8"
+        ],
+        "label": "Cântarea Cântărilor 5-8"
+      },
+      {
+        "chapters": [
+          "Isaia 1",
+          "Isaia 2",
+          "Isaia 3"
+        ],
+        "label": "Isaia 1-3"
+      },
+      {
+        "chapters": [
+          "Isaia 4",
+          "Isaia 5",
+          "Isaia 6"
+        ],
+        "label": "Isaia 4-6"
+      }
+    ]
+  },
+  {
+    "week": 31,
+    "label": "Isaia 7-27",
+    "days": [
+      {
+        "chapters": [
+          "Isaia 7",
+          "Isaia 8",
+          "Isaia 9"
+        ],
+        "label": "Isaia 7-9"
+      },
+      {
+        "chapters": [
+          "Isaia 10",
+          "Isaia 11",
+          "Isaia 12"
+        ],
+        "label": "Isaia 10-12"
+      },
+      {
+        "chapters": [
+          "Isaia 13",
+          "Isaia 14",
+          "Isaia 15"
+        ],
+        "label": "Isaia 13-15"
+      },
+      {
+        "chapters": [
+          "Isaia 16",
+          "Isaia 17",
+          "Isaia 18"
+        ],
+        "label": "Isaia 16-18"
+      },
+      {
+        "chapters": [
+          "Isaia 19",
+          "Isaia 20",
+          "Isaia 21"
+        ],
+        "label": "Isaia 19-21"
+      },
+      {
+        "chapters": [
+          "Isaia 22",
+          "Isaia 23",
+          "Isaia 24"
+        ],
+        "label": "Isaia 22-24"
+      },
+      {
+        "chapters": [
+          "Isaia 25",
+          "Isaia 26",
+          "Isaia 27"
+        ],
+        "label": "Isaia 25-27"
+      }
+    ]
+  },
+  {
+    "week": 32,
+    "label": "Isaia 28-48",
+    "days": [
+      {
+        "chapters": [
+          "Isaia 28",
+          "Isaia 29",
+          "Isaia 30"
+        ],
+        "label": "Isaia 28-30"
+      },
+      {
+        "chapters": [
+          "Isaia 31",
+          "Isaia 32",
+          "Isaia 33"
+        ],
+        "label": "Isaia 31-33"
+      },
+      {
+        "chapters": [
+          "Isaia 34",
+          "Isaia 35",
+          "Isaia 36"
+        ],
+        "label": "Isaia 34-36"
+      },
+      {
+        "chapters": [
+          "Isaia 37",
+          "Isaia 38",
+          "Isaia 39"
+        ],
+        "label": "Isaia 37-39"
+      },
+      {
+        "chapters": [
+          "Isaia 40",
+          "Isaia 41",
+          "Isaia 42"
+        ],
+        "label": "Isaia 40-42"
+      },
+      {
+        "chapters": [
+          "Isaia 43",
+          "Isaia 44",
+          "Isaia 45"
+        ],
+        "label": "Isaia 43-45"
+      },
+      {
+        "chapters": [
+          "Isaia 46",
+          "Isaia 47",
+          "Isaia 48"
+        ],
+        "label": "Isaia 46-48"
+      }
+    ]
+  },
+  {
+    "week": 33,
+    "label": "Isaia 49-66, Ieremia 1-2",
+    "days": [
+      {
+        "chapters": [
+          "Isaia 49",
+          "Isaia 50",
+          "Isaia 51"
+        ],
+        "label": "Isaia 49-51"
+      },
+      {
+        "chapters": [
+          "Isaia 52",
+          "Isaia 53",
+          "Isaia 54"
+        ],
+        "label": "Isaia 52-54"
+      },
+      {
+        "chapters": [
+          "Isaia 55",
+          "Isaia 56",
+          "Isaia 57"
+        ],
+        "label": "Isaia 55-57"
+      },
+      {
+        "chapters": [
+          "Isaia 58",
+          "Isaia 59",
+          "Isaia 60"
+        ],
+        "label": "Isaia 58-60"
+      },
+      {
+        "chapters": [
+          "Isaia 61",
+          "Isaia 62",
+          "Isaia 63"
+        ],
+        "label": "Isaia 61-63"
+      },
+      {
+        "chapters": [
+          "Isaia 64",
+          "Isaia 65",
+          "Isaia 66"
+        ],
+        "label": "Isaia 64-66"
+      },
+      {
+        "chapters": [
+          "Ieremia 1",
+          "Ieremia 2"
+        ],
+        "label": "Ieremia 1-2"
+      }
+    ]
+  },
+  {
+    "week": 34,
+    "label": "Ieremia 3-26",
+    "days": [
+      {
+        "chapters": [
+          "Ieremia 3",
+          "Ieremia 4",
+          "Ieremia 5"
+        ],
+        "label": "Ieremia 3-5"
+      },
+      {
+        "chapters": [
+          "Ieremia 6",
+          "Ieremia 7",
+          "Ieremia 8"
+        ],
+        "label": "Ieremia 6-8"
+      },
+      {
+        "chapters": [
+          "Ieremia 9",
+          "Ieremia 10",
+          "Ieremia 11",
+          "Ieremia 12"
+        ],
+        "label": "Ieremia 9-12"
+      },
+      {
+        "chapters": [
+          "Ieremia 13",
+          "Ieremia 14",
+          "Ieremia 15",
+          "Ieremia 16"
+        ],
+        "label": "Ieremia 13-16"
+      },
+      {
+        "chapters": [
+          "Ieremia 17",
+          "Ieremia 18",
+          "Ieremia 19",
+          "Ieremia 20"
+        ],
+        "label": "Ieremia 17-20"
+      },
+      {
+        "chapters": [
+          "Ieremia 21",
+          "Ieremia 22",
+          "Ieremia 23"
+        ],
+        "label": "Ieremia 21-23"
+      },
+      {
+        "chapters": [
+          "Ieremia 24",
+          "Ieremia 25",
+          "Ieremia 26"
+        ],
+        "label": "Ieremia 24-26"
+      }
+    ]
+  },
+  {
+    "week": 35,
+    "label": "Ieremia 27-49",
+    "days": [
+      {
+        "chapters": [
+          "Ieremia 27",
+          "Ieremia 28",
+          "Ieremia 29"
+        ],
+        "label": "Ieremia 27-29"
+      },
+      {
+        "chapters": [
+          "Ieremia 30",
+          "Ieremia 31",
+          "Ieremia 32"
+        ],
+        "label": "Ieremia 30-32"
+      },
+      {
+        "chapters": [
+          "Ieremia 33",
+          "Ieremia 34",
+          "Ieremia 35",
+          "Ieremia 36"
+        ],
+        "label": "Ieremia 33-36"
+      },
+      {
+        "chapters": [
+          "Ieremia 37",
+          "Ieremia 38",
+          "Ieremia 39"
+        ],
+        "label": "Ieremia 37-39"
+      },
+      {
+        "chapters": [
+          "Ieremia 40",
+          "Ieremia 41",
+          "Ieremia 42"
+        ],
+        "label": "Ieremia 40-42"
+      },
+      {
+        "chapters": [
+          "Ieremia 43",
+          "Ieremia 44",
+          "Ieremia 45",
+          "Ieremia 46"
+        ],
+        "label": "Ieremia 43-46"
+      },
+      {
+        "chapters": [
+          "Ieremia 47",
+          "Ieremia 48",
+          "Ieremia 49"
+        ],
+        "label": "Ieremia 47-49"
+      }
+    ]
+  },
+  {
+    "week": 36,
+    "label": "Ieremia 50-52, Plângeri 1-5, Ezechiel 1-18",
+    "days": [
+      {
+        "chapters": [
+          "Ieremia 50",
+          "Ieremia 51",
+          "Ieremia 52"
+        ],
+        "label": "Ieremia 50-52"
+      },
+      {
+        "chapters": [
+          "Plângeri 1",
+          "Plângeri 2",
+          "Plângeri 3",
+          "Plângeri 4",
+          "Plângeri 5"
+        ],
+        "label": "Plângeri 1-5"
+      },
+      {
+        "chapters": [
+          "Ezechiel 1",
+          "Ezechiel 2",
+          "Ezechiel 3"
+        ],
+        "label": "Ezechiel 1-3"
+      },
+      {
+        "chapters": [
+          "Ezechiel 4",
+          "Ezechiel 5",
+          "Ezechiel 6",
+          "Ezechiel 7"
+        ],
+        "label": "Ezechiel 4-7"
+      },
+      {
+        "chapters": [
+          "Ezechiel 8",
+          "Ezechiel 9",
+          "Ezechiel 10",
+          "Ezechiel 11"
+        ],
+        "label": "Ezechiel 8-11"
+      },
+      {
+        "chapters": [
+          "Ezechiel 12",
+          "Ezechiel 13",
+          "Ezechiel 14"
+        ],
+        "label": "Ezechiel 12-14"
+      },
+      {
+        "chapters": [
+          "Ezechiel 15",
+          "Ezechiel 16",
+          "Ezechiel 17",
+          "Ezechiel 18"
+        ],
+        "label": "Ezechiel 15-18"
+      }
+    ]
+  },
+  {
+    "week": 37,
+    "label": "Ezechiel 19-39",
+    "days": [
+      {
+        "chapters": [
+          "Ezechiel 19",
+          "Ezechiel 20",
+          "Ezechiel 21"
+        ],
+        "label": "Ezechiel 19-21"
+      },
+      {
+        "chapters": [
+          "Ezechiel 22",
+          "Ezechiel 23",
+          "Ezechiel 24"
+        ],
+        "label": "Ezechiel 22-24"
+      },
+      {
+        "chapters": [
+          "Ezechiel 25",
+          "Ezechiel 26",
+          "Ezechiel 27"
+        ],
+        "label": "Ezechiel 25-27"
+      },
+      {
+        "chapters": [
+          "Ezechiel 28",
+          "Ezechiel 29",
+          "Ezechiel 30"
+        ],
+        "label": "Ezechiel 28-30"
+      },
+      {
+        "chapters": [
+          "Ezechiel 31",
+          "Ezechiel 32",
+          "Ezechiel 33"
+        ],
+        "label": "Ezechiel 31-33"
+      },
+      {
+        "chapters": [
+          "Ezechiel 34",
+          "Ezechiel 35",
+          "Ezechiel 36"
+        ],
+        "label": "Ezechiel 34-36"
+      },
+      {
+        "chapters": [
+          "Ezechiel 37",
+          "Ezechiel 38",
+          "Ezechiel 39"
+        ],
+        "label": "Ezechiel 37-39"
+      }
+    ]
+  },
+  {
+    "week": 38,
+    "label": "Ezechiel 40-48, Daniel 1-12",
+    "days": [
+      {
+        "chapters": [
+          "Ezechiel 40",
+          "Ezechiel 41",
+          "Ezechiel 42"
+        ],
+        "label": "Ezechiel 40-42"
+      },
+      {
+        "chapters": [
+          "Ezechiel 43",
+          "Ezechiel 44",
+          "Ezechiel 45"
+        ],
+        "label": "Ezechiel 43-45"
+      },
+      {
+        "chapters": [
+          "Ezechiel 46",
+          "Ezechiel 47",
+          "Ezechiel 48"
+        ],
+        "label": "Ezechiel 46-48"
+      },
+      {
+        "chapters": [
+          "Daniel 1",
+          "Daniel 2",
+          "Daniel 3"
+        ],
+        "label": "Daniel 1-3"
+      },
+      {
+        "chapters": [
+          "Daniel 4",
+          "Daniel 5",
+          "Daniel 6"
+        ],
+        "label": "Daniel 4-6"
+      },
+      {
+        "chapters": [
+          "Daniel 7",
+          "Daniel 8",
+          "Daniel 9"
+        ],
+        "label": "Daniel 7-9"
+      },
+      {
+        "chapters": [
+          "Daniel 10",
+          "Daniel 11",
+          "Daniel 12"
+        ],
+        "label": "Daniel 10-12"
+      }
+    ]
+  },
+  {
+    "week": 39,
+    "label": "Osea 1-14, Ioel 1-3, Amos 1-6",
+    "days": [
+      {
+        "chapters": [
+          "Osea 1",
+          "Osea 2",
+          "Osea 3",
+          "Osea 4"
+        ],
+        "label": "Osea 1-4"
+      },
+      {
+        "chapters": [
+          "Osea 5",
+          "Osea 6",
+          "Osea 7"
+        ],
+        "label": "Osea 5-7"
+      },
+      {
+        "chapters": [
+          "Osea 8",
+          "Osea 9",
+          "Osea 10"
+        ],
+        "label": "Osea 8-10"
+      },
+      {
+        "chapters": [
+          "Osea 11",
+          "Osea 12",
+          "Osea 13",
+          "Osea 14"
+        ],
+        "label": "Osea 11-14"
+      },
+      {
+        "chapters": [
+          "Ioel 1",
+          "Ioel 2",
+          "Ioel 3"
+        ],
+        "label": "Ioel 1-3"
+      },
+      {
+        "chapters": [
+          "Amos 1",
+          "Amos 2",
+          "Amos 3"
+        ],
+        "label": "Amos 1-3"
+      },
+      {
+        "chapters": [
+          "Amos 4",
+          "Amos 5",
+          "Amos 6"
+        ],
+        "label": "Amos 4-6"
+      }
+    ]
+  },
+  {
+    "week": 40,
+    "label": "Amos 7-9, Obadia 1, Iona 1-4, Mica 1-7, Naum 1-3, Habacuc 1-3, Tefania 1-3",
+    "days": [
+      {
+        "chapters": [
+          "Amos 7",
+          "Amos 8",
+          "Amos 9"
+        ],
+        "label": "Amos 7-9"
+      },
+      {
+        "chapters": [
+          "Obadia 1",
+          "Iona 1",
+          "Iona 2",
+          "Iona 3",
+          "Iona 4"
+        ],
+        "label": "Obadia 1, Iona 1-4"
+      },
+      {
+        "chapters": [
+          "Mica 1",
+          "Mica 2",
+          "Mica 3",
+          "Mica 4"
+        ],
+        "label": "Mica 1-4"
+      },
+      {
+        "chapters": [
+          "Mica 5",
+          "Mica 6",
+          "Mica 7"
+        ],
+        "label": "Mica 5-7"
+      },
+      {
+        "chapters": [
+          "Naum 1",
+          "Naum 2",
+          "Naum 3"
+        ],
+        "label": "Naum 1-3"
+      },
+      {
+        "chapters": [
+          "Habacuc 1",
+          "Habacuc 2",
+          "Habacuc 3"
+        ],
+        "label": "Habacuc 1-3"
+      },
+      {
+        "chapters": [
+          "Tefania 1",
+          "Tefania 2",
+          "Tefania 3"
+        ],
+        "label": "Tefania 1-3"
+      }
+    ]
+  },
+  {
+    "week": 41,
+    "label": "Hagai 1-2, Zaharia 1-14, Maleahi 1-4, Matei 1-4",
+    "days": [
+      {
+        "chapters": [
+          "Hagai 1",
+          "Hagai 2"
+        ],
+        "label": "Hagai 1-2"
+      },
+      {
+        "chapters": [
+          "Zaharia 1",
+          "Zaharia 2"
+        ],
+        "label": "Zaharia 1-2"
+      },
+      {
+        "chapters": [
+          "Zaharia 3",
+          "Zaharia 4",
+          "Zaharia 5",
+          "Zaharia 6"
+        ],
+        "label": "Zaharia 3-6"
+      },
+      {
+        "chapters": [
+          "Zaharia 7",
+          "Zaharia 8",
+          "Zaharia 9",
+          "Zaharia 10"
+        ],
+        "label": "Zaharia 7-10"
+      },
+      {
+        "chapters": [
+          "Zaharia 11",
+          "Zaharia 12",
+          "Zaharia 13",
+          "Zaharia 14"
+        ],
+        "label": "Zaharia 11-14"
+      },
+      {
+        "chapters": [
+          "Maleahi 1",
+          "Maleahi 2",
+          "Maleahi 3",
+          "Maleahi 4"
+        ],
+        "label": "Maleahi 1-4"
+      },
+      {
+        "chapters": [
+          "Matei 1",
+          "Matei 2",
+          "Matei 3",
+          "Matei 4"
+        ],
+        "label": "Matei 1-4"
+      }
+    ]
+  },
+  {
+    "week": 42,
+    "label": "Matei 5-28",
+    "days": [
+      {
+        "chapters": [
+          "Matei 5",
+          "Matei 6",
+          "Matei 7"
+        ],
+        "label": "Matei 5-7"
+      },
+      {
+        "chapters": [
+          "Matei 8",
+          "Matei 9",
+          "Matei 10",
+          "Matei 11"
+        ],
+        "label": "Matei 8-11"
+      },
+      {
+        "chapters": [
+          "Matei 12",
+          "Matei 13",
+          "Matei 14",
+          "Matei 15"
+        ],
+        "label": "Matei 12-15"
+      },
+      {
+        "chapters": [
+          "Matei 16",
+          "Matei 17",
+          "Matei 18",
+          "Matei 19"
+        ],
+        "label": "Matei 16-19"
+      },
+      {
+        "chapters": [
+          "Matei 20",
+          "Matei 21",
+          "Matei 22"
+        ],
+        "label": "Matei 20-22"
+      },
+      {
+        "chapters": [
+          "Matei 23",
+          "Matei 24",
+          "Matei 25"
+        ],
+        "label": "Matei 23-25"
+      },
+      {
+        "chapters": [
+          "Matei 26",
+          "Matei 27",
+          "Matei 28"
+        ],
+        "label": "Matei 26-28"
+      }
+    ]
+  },
+  {
+    "week": 43,
+    "label": "Marcu 1-16, Luca 1-6",
+    "days": [
+      {
+        "chapters": [
+          "Marcu 1",
+          "Marcu 2",
+          "Marcu 3"
+        ],
+        "label": "Marcu 1-3"
+      },
+      {
+        "chapters": [
+          "Marcu 4",
+          "Marcu 5",
+          "Marcu 6"
+        ],
+        "label": "Marcu 4-6"
+      },
+      {
+        "chapters": [
+          "Marcu 7",
+          "Marcu 8",
+          "Marcu 9",
+          "Marcu 10"
+        ],
+        "label": "Marcu 7-10"
+      },
+      {
+        "chapters": [
+          "Marcu 11",
+          "Marcu 12",
+          "Marcu 13"
+        ],
+        "label": "Marcu 11-13"
+      },
+      {
+        "chapters": [
+          "Marcu 14",
+          "Marcu 15",
+          "Marcu 16"
+        ],
+        "label": "Marcu 14-16"
+      },
+      {
+        "chapters": [
+          "Luca 1",
+          "Luca 2",
+          "Luca 3"
+        ],
+        "label": "Luca 1-3"
+      },
+      {
+        "chapters": [
+          "Luca 4",
+          "Luca 5",
+          "Luca 6"
+        ],
+        "label": "Luca 4-6"
+      }
+    ]
+  },
+  {
+    "week": 44,
+    "label": "Luca 7-24, Ioan 1-6",
+    "days": [
+      {
+        "chapters": [
+          "Luca 7",
+          "Luca 8",
+          "Luca 9"
+        ],
+        "label": "Luca 7-9"
+      },
+      {
+        "chapters": [
+          "Luca 10",
+          "Luca 11",
+          "Luca 12",
+          "Luca 13"
+        ],
+        "label": "Luca 10-13"
+      },
+      {
+        "chapters": [
+          "Luca 14",
+          "Luca 15",
+          "Luca 16",
+          "Luca 17"
+        ],
+        "label": "Luca 14-17"
+      },
+      {
+        "chapters": [
+          "Luca 18",
+          "Luca 19",
+          "Luca 20",
+          "Luca 21"
+        ],
+        "label": "Luca 18-21"
+      },
+      {
+        "chapters": [
+          "Luca 22",
+          "Luca 23",
+          "Luca 24"
+        ],
+        "label": "Luca 22-24"
+      },
+      {
+        "chapters": [
+          "Ioan 1",
+          "Ioan 2",
+          "Ioan 3"
+        ],
+        "label": "Ioan 1-3"
+      },
+      {
+        "chapters": [
+          "Ioan 4",
+          "Ioan 5",
+          "Ioan 6"
+        ],
+        "label": "Ioan 4-6"
+      }
+    ]
+  },
+  {
+    "week": 45,
+    "label": "Ioan 7-21, Faptele Apostolilor 1-9",
+    "days": [
+      {
+        "chapters": [
+          "Ioan 7",
+          "Ioan 8",
+          "Ioan 9",
+          "Ioan 10"
+        ],
+        "label": "Ioan 7-10"
+      },
+      {
+        "chapters": [
+          "Ioan 11",
+          "Ioan 12",
+          "Ioan 13"
+        ],
+        "label": "Ioan 11-13"
+      },
+      {
+        "chapters": [
+          "Ioan 14",
+          "Ioan 15",
+          "Ioan 16",
+          "Ioan 17"
+        ],
+        "label": "Ioan 14-17"
+      },
+      {
+        "chapters": [
+          "Ioan 18",
+          "Ioan 19",
+          "Ioan 20",
+          "Ioan 21"
+        ],
+        "label": "Ioan 18-21"
+      },
+      {
+        "chapters": [
+          "Faptele Apostolilor 1",
+          "Faptele Apostolilor 2"
+        ],
+        "label": "Faptele Apostolilor 1-2"
+      },
+      {
+        "chapters": [
+          "Faptele Apostolilor 3",
+          "Faptele Apostolilor 4",
+          "Faptele Apostolilor 5"
+        ],
+        "label": "Faptele Apostolilor 3-5"
+      },
+      {
+        "chapters": [
+          "Faptele Apostolilor 6",
+          "Faptele Apostolilor 7",
+          "Faptele Apostolilor 8",
+          "Faptele Apostolilor 9"
+        ],
+        "label": "Faptele Apostolilor 6-9"
+      }
+    ]
+  },
+  {
+    "week": 46,
+    "label": "Faptele Apostolilor 10-26",
+    "days": [
+      {
+        "chapters": [
+          "Faptele Apostolilor 10",
+          "Faptele Apostolilor 11",
+          "Faptele Apostolilor 12"
+        ],
+        "label": "Faptele Apostolilor 10-12"
+      },
+      {
+        "chapters": [
+          "Faptele Apostolilor 13",
+          "Faptele Apostolilor 14"
+        ],
+        "label": "Faptele Apostolilor 13-14"
+      },
+      {
+        "chapters": [
+          "Faptele Apostolilor 15",
+          "Faptele Apostolilor 16"
+        ],
+        "label": "Faptele Apostolilor 15-16"
+      },
+      {
+        "chapters": [
+          "Faptele Apostolilor 17",
+          "Faptele Apostolilor 18"
+        ],
+        "label": "Faptele Apostolilor 17-18"
+      },
+      {
+        "chapters": [
+          "Faptele Apostolilor 19",
+          "Faptele Apostolilor 20",
+          "Faptele Apostolilor 21"
+        ],
+        "label": "Faptele Apostolilor 19-21"
+      },
+      {
+        "chapters": [
+          "Faptele Apostolilor 22",
+          "Faptele Apostolilor 23",
+          "Faptele Apostolilor 24"
+        ],
+        "label": "Faptele Apostolilor 22-24"
+      },
+      {
+        "chapters": [
+          "Faptele Apostolilor 25",
+          "Faptele Apostolilor 26"
+        ],
+        "label": "Faptele Apostolilor 25-26"
+      }
+    ]
+  },
+  {
+    "week": 47,
+    "label": "Faptele Apostolilor 27-28, Romani 1-16, 1 Corinteni 1-8",
+    "days": [
+      {
+        "chapters": [
+          "Faptele Apostolilor 27",
+          "Faptele Apostolilor 28"
+        ],
+        "label": "Faptele Apostolilor 27-28"
+      },
+      {
+        "chapters": [
+          "Romani 1",
+          "Romani 2",
+          "Romani 3",
+          "Romani 4"
+        ],
+        "label": "Romani 1-4"
+      },
+      {
+        "chapters": [
+          "Romani 5",
+          "Romani 6",
+          "Romani 7",
+          "Romani 8"
+        ],
+        "label": "Romani 5-8"
+      },
+      {
+        "chapters": [
+          "Romani 9",
+          "Romani 10",
+          "Romani 11"
+        ],
+        "label": "Romani 9-11"
+      },
+      {
+        "chapters": [
+          "Romani 12",
+          "Romani 13",
+          "Romani 14",
+          "Romani 15",
+          "Romani 16"
+        ],
+        "label": "Romani 12-16"
+      },
+      {
+        "chapters": [
+          "1 Corinteni 1",
+          "1 Corinteni 2",
+          "1 Corinteni 3",
+          "1 Corinteni 4"
+        ],
+        "label": "1 Corinteni 1-4"
+      },
+      {
+        "chapters": [
+          "1 Corinteni 5",
+          "1 Corinteni 6",
+          "1 Corinteni 7",
+          "1 Corinteni 8"
+        ],
+        "label": "1 Corinteni 5-8"
+      }
+    ]
+  },
+  {
+    "week": 48,
+    "label": "1 Corinteni 9-16, 2 Corinteni 1-13, Galateni 1-3",
+    "days": [
+      {
+        "chapters": [
+          "1 Corinteni 9",
+          "1 Corinteni 10",
+          "1 Corinteni 11",
+          "1 Corinteni 12"
+        ],
+        "label": "1 Corinteni 9-12"
+      },
+      {
+        "chapters": [
+          "1 Corinteni 13",
+          "1 Corinteni 14",
+          "1 Corinteni 15",
+          "1 Corinteni 16"
+        ],
+        "label": "1 Corinteni 13-16"
+      },
+      {
+        "chapters": [
+          "2 Corinteni 1",
+          "2 Corinteni 2",
+          "2 Corinteni 3"
+        ],
+        "label": "2 Corinteni 1-3"
+      },
+      {
+        "chapters": [
+          "2 Corinteni 4",
+          "2 Corinteni 5",
+          "2 Corinteni 6"
+        ],
+        "label": "2 Corinteni 4-6"
+      },
+      {
+        "chapters": [
+          "2 Corinteni 7",
+          "2 Corinteni 8",
+          "2 Corinteni 9"
+        ],
+        "label": "2 Corinteni 7-9"
+      },
+      {
+        "chapters": [
+          "2 Corinteni 10",
+          "2 Corinteni 11",
+          "2 Corinteni 12",
+          "2 Corinteni 13"
+        ],
+        "label": "2 Corinteni 10-13"
+      },
+      {
+        "chapters": [
+          "Galateni 1",
+          "Galateni 2",
+          "Galateni 3"
+        ],
+        "label": "Galateni 1-3"
+      }
+    ]
+  },
+  {
+    "week": 49,
+    "label": "Galateni 4-6, Efeseni 1-6, Filipeni 1-4, Coloseni 1-4, 1 Tesaloniceni 1-5, 2 Tesaloniceni 1-3",
+    "days": [
+      {
+        "chapters": [
+          "Galateni 4",
+          "Galateni 5",
+          "Galateni 6"
+        ],
+        "label": "Galateni 4-6"
+      },
+      {
+        "chapters": [
+          "Efeseni 1",
+          "Efeseni 2",
+          "Efeseni 3"
+        ],
+        "label": "Efeseni 1-3"
+      },
+      {
+        "chapters": [
+          "Efeseni 4",
+          "Efeseni 5",
+          "Efeseni 6"
+        ],
+        "label": "Efeseni 4-6"
+      },
+      {
+        "chapters": [
+          "Filipeni 1",
+          "Filipeni 2",
+          "Filipeni 3",
+          "Filipeni 4"
+        ],
+        "label": "Filipeni 1-4"
+      },
+      {
+        "chapters": [
+          "Coloseni 1",
+          "Coloseni 2",
+          "Coloseni 3",
+          "Coloseni 4"
+        ],
+        "label": "Coloseni 1-4"
+      },
+      {
+        "chapters": [
+          "1 Tesaloniceni 1",
+          "1 Tesaloniceni 2",
+          "1 Tesaloniceni 3",
+          "1 Tesaloniceni 4",
+          "1 Tesaloniceni 5"
+        ],
+        "label": "1 Tesaloniceni 1-5"
+      },
+      {
+        "chapters": [
+          "2 Tesaloniceni 1",
+          "2 Tesaloniceni 2",
+          "2 Tesaloniceni 3"
+        ],
+        "label": "2 Tesaloniceni 1-3"
+      }
+    ]
+  },
+  {
+    "week": 50,
+    "label": "1 Timotei 1-6, 2 Timotei 1-4, Tit 1-3, Filimon, Evrei 1-4, Evrei 5-7",
+    "days": [
+      {
+        "chapters": [
+          "1 Timotei 1",
+          "1 Timotei 2",
+          "1 Timotei 3"
+        ],
+        "label": "1 Timotei 1-3"
+      },
+      {
+        "chapters": [
+          "1 Timotei 4",
+          "1 Timotei 5",
+          "1 Timotei 6"
+        ],
+        "label": "1 Timotei 4-6"
+      },
+      {
+        "chapters": [
+          "2 Timotei 1",
+          "2 Timotei 2",
+          "2 Timotei 3",
+          "2 Timotei 4"
+        ],
+        "label": "2 Timotei 1-4"
+      },
+      {
+        "chapters": [
+          "Tit 1",
+          "Tit 2",
+          "Tit 3"
+        ],
+        "label": "Tit 1-3"
+      },
+      {
+        "chapters": [
+          "Filimon"
+        ],
+        "label": "Filimon"
+      },
+      {
+        "chapters": [
+          "Evrei 1",
+          "Evrei 2",
+          "Evrei 3",
+          "Evrei 4"
+        ],
+        "label": "Evrei 1-4"
+      },
+      {
+        "chapters": [
+          "Evrei 5",
+          "Evrei 6",
+          "Evrei 7"
+        ],
+        "label": "Evrei 5-7"
+      }
+    ]
+  },
+  {
+    "week": 51,
+    "label": "Evrei 8-13, Iacov 1-2, Iacov 3-5, 1 Petru 1-2, 1 Petru 3-5, 2 Petru 1-3",
+    "days": [
+      {
+        "chapters": [
+          "Evrei 8",
+          "Evrei 9",
+          "Evrei 10"
+        ],
+        "label": "Evrei 8-10"
+      },
+      {
+        "chapters": [
+          "Evrei 11",
+          "Evrei 12",
+          "Evrei 13"
+        ],
+        "label": "Evrei 11-13"
+      },
+      {
+        "chapters": [
+          "Iacov 1",
+          "Iacov 2"
+        ],
+        "label": "Iacov 1-2"
+      },
+      {
+        "chapters": [
+          "Iacov 3",
+          "Iacov 4",
+          "Iacov 5"
+        ],
+        "label": "Iacov 3-5"
+      },
+      {
+        "chapters": [
+          "1 Petru 1",
+          "1 Petru 2"
+        ],
+        "label": "1 Petru 1-2"
+      },
+      {
+        "chapters": [
+          "1 Petru 3",
+          "1 Petru 4",
+          "1 Petru 5"
+        ],
+        "label": "1 Petru 3-5"
+      },
+      {
+        "chapters": [
+          "2 Petru 1",
+          "2 Petru 2",
+          "2 Petru 3"
+        ],
+        "label": "2 Petru 1-3"
+      }
+    ]
+  },
+  {
+    "week": 52,
+    "label": "1 Ioan 1-5, 2 Ioan 1, 3 Ioan 1, Iuda 1, Apocalipsa 1-15",
+    "days": [
+      {
+        "chapters": [
+          "1 Ioan 1",
+          "1 Ioan 2"
+        ],
+        "label": "1 Ioan 1-2"
+      },
+      {
+        "chapters": [
+          "1 Ioan 3",
+          "1 Ioan 4",
+          "1 Ioan 5"
+        ],
+        "label": "1 Ioan 3-5"
+      },
+      {
+        "chapters": [
+          "2 Ioan 1",
+          "3 Ioan 1",
+          "Iuda 1"
+        ],
+        "label": "2 Ioan 1, 3 Ioan 1, Iuda 1"
+      },
+      {
+        "chapters": [
+          "Apocalipsa 1",
+          "Apocalipsa 2",
+          "Apocalipsa 3"
+        ],
+        "label": "Apocalipsa 1-3"
+      },
+      {
+        "chapters": [
+          "Apocalipsa 4",
+          "Apocalipsa 5",
+          "Apocalipsa 6",
+          "Apocalipsa 7",
+          "Apocalipsa 8"
+        ],
+        "label": "Apocalipsa 4-8"
+      },
+      {
+        "chapters": [
+          "Apocalipsa 9",
+          "Apocalipsa 10",
+          "Apocalipsa 11",
+          "Apocalipsa 12"
+        ],
+        "label": "Apocalipsa 9-12"
+      },
+      {
+        "chapters": [
+          "Apocalipsa 13",
+          "Apocalipsa 14",
+          "Apocalipsa 15"
+        ],
+        "label": "Apocalipsa 13-15"
+      }
+    ]
+  },
+  {
+    "week": 53,
+    "label": "Apocalipsa 16-22",
+    "days": [
+      {
+        "chapters": [
+          "Apocalipsa 16",
+          "Apocalipsa 17",
+          "Apocalipsa 18"
+        ],
+        "label": "Apocalipsa 16-18"
+      },
+      {
+        "chapters": [
+          "Apocalipsa 19",
+          "Apocalipsa 20",
+          "Apocalipsa 21",
+          "Apocalipsa 22"
+        ],
+        "label": "Apocalipsa 19-22"
+      }
+    ]
+  }
+]
