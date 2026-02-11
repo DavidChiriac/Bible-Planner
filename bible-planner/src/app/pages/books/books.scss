@@ -1,0 +1,13 @@
+.cards-section {
+  width: 700px;
+  margin: auto;
+  margin-top: 1rem;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  gap: 1rem;
+
+  .book {
+    flex: 0 0 23%;
+  }
+}

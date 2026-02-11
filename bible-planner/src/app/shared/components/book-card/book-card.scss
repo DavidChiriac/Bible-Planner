@@ -1,0 +1,47 @@
+.book-card {
+    cursor: pointer;
+    border: 1px solid white;
+    border-radius: 30px;
+
+    .icon {
+        width: 100%;
+        object-fit: contain;
+        display: flex;
+        justify-content: center;
+        overflow: hidden;
+        border-top-left-radius: 28px;
+        border-top-right-radius: 28px;
+        padding: 1rem;
+
+        img {
+            width: 80%;
+            aspect-ratio: 2/1.5;
+            filter: invert(1);
+        }
+    }
+
+    .book-info {
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.book-card:hover {
+    background-color: white;
+
+    .icon {
+        img {
+            filter: invert(0);
+        }
+    }
+
+    .book-info h3 {
+        color: black;
+    }
+}
+
+.completed {
+    background-color: green;
+}
