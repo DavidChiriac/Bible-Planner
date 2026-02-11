@@ -1,7 +1,7 @@
 .cards-section {
   width: 700px;
   margin: auto;
-  margin-top: 1rem;
+  margin-top: 3rem;
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
@@ -10,4 +10,19 @@
   .book {
     flex: 0 0 23%;
   }
+}
+
+.filters {
+    width: 700px;
+    margin: auto;
+    margin-top: 1rem;
+}
+
+.plan-selector{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    border-radius: 5px;
+    overflow: hidden;
 }

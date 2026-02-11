@@ -66,4 +66,13 @@ export class HomePage {
       this.openWeeks.update((weeks) => [...weeks, week]);
     }
   }
+
+  goToDay(chapters: string[]) {
+    const chapterToGo = chapters.find((chapter) => !this.utils.readSet().has(chapter));
+    if (chapterToGo) {
+      const book = chapterToGo.split('-')[0];
+      const chapter = chapterToGo.split('-')[1];
+      globalThis.location.href = `/books/${book}#${chapter}`;
+    }
+  }
 }
