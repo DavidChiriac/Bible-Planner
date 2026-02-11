@@ -22,15 +22,15 @@
                 <p-accordion-panel [value]="tab.week">
                     <p-accordion-header (click)="addWeekToOpen(tab.week)" onkeydown="">
                         <div class="w-full flex justify-content-between pr-5 cursor-pointer">
-                            {{ 'Săptămâna ' + tab.week }}
+                            <span>{{ 'Săptămâna ' + tab.week + ' - ' + utils.countDaysReadInAWeek(tab) + '/' + tab.days.length + ' zile complete'}}</span>
                             <span class="w-6 text-right gray">{{tab.label}}</span>
                         </div>
                     </p-accordion-header>
                     <p-accordion-content >
                         @if (openWeeks().includes(tab.week)) {
                             @for (day of tab.days; track day.label) {
-                                <div class="flex gap-2 align-items-center mb-2 day cursor-pointer" [ngClass]="{'read': utils.isEntireDayRead(day.chapters)}">
-                                    <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)" (ngModelChange)="utils.setEntireDayRead(day.chapters)"></p-checkbox>
+                                <div class="flex gap-2 align-items-center mb-2 day cursor-pointer" [ngClass]="{'read': utils.isEntireDayRead(day.chapters)}" (click)="utils.setEntireDayRead(day.chapters)" onkeydown="">
+                                    <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)"></p-checkbox>
                                     <p class="m-0">{{ day.label }}</p>
                                 </div>
                             }

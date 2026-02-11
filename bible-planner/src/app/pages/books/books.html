@@ -2,7 +2,7 @@
     <div class="filters flex gap-3 align-items-center">
         <input type="text" [(ngModel)]="searchTerm" pInputText class="w-100 search-book" placeholder="Caută cartea"/>
         <p-select [options]="sortOptions" [(ngModel)]="selectedSortOption" optionLabel="label" optionValue="value"></p-select>
-        <p-button label="X" severity="secondary" (onClick)="searchTerm.set(''); selectedSortOption.set('normal');" [disabled]="!searchTerm() && selectedSortOption() === 'normal'" severity="danger"></p-button>
+        <p-button label="X" severity="secondary" (onClick)="searchTerm.set(''); selectedSortOption.set('normal');" [disabled]="!searchTerm() && selectedSortOption() === 'normal'" [severity]="!searchTerm() && selectedSortOption() === 'normal' ? 'secondary' : 'danger'"></p-button>
     </div>
     
     <div class="plan-selector">
