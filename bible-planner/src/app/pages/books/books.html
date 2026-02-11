@@ -1,6 +1,17 @@
 <div class="container">
+    <div class="filters flex gap-3 align-items-center">
+        <input type="text" [(ngModel)]="searchTerm" pInputText class="w-100 search-book" placeholder="Caută cartea"/>
+        <p-select [options]="sortOptions" [(ngModel)]="selectedSortOption" optionLabel="label" optionValue="value"></p-select>
+        <p-button label="X" severity="secondary" (onClick)="searchTerm.set(''); selectedSortOption.set('normal');" [disabled]="!searchTerm() && selectedSortOption() === 'normal'" severity="danger"></p-button>
+    </div>
+    
+    <div class="plan-selector">
+        <p-button (click)="testament.set('old')" onkeydown="" class="plan-selector-button" [ngClass]="{'selected': testament() === 'old'}">Old Testament</p-button>
+        <p-button (click)="testament.set('new')" onkeydown="" class="plan-selector-button" [ngClass]="{'selected': testament() === 'new'}">New Testament</p-button>
+    </div>
+
     <div class="cards-section">
-        @for (item of items; track item.title) {
+        @for (item of items(); track item.title) {
             <div class="book">
                 <app-book-card [book]="item" (click)="navigateToBook(item.title)" onkeydown=""></app-book-card>
             </div>

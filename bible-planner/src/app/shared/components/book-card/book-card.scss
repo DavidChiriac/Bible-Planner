@@ -1,11 +1,12 @@
 .book-card {
+    position: relative;
     cursor: pointer;
     border: 1px solid white;
     border-radius: 30px;
 
     .icon {
         width: 100%;
-        object-fit: contain;
+        object-fit: cover;
         display: flex;
         justify-content: center;
         overflow: hidden;
@@ -44,4 +45,24 @@
 
 .completed {
     background-color: green;
+}
+
+.check {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+
+    i {
+        font-size: 2rem;
+        border: 3px solid black;
+        padding: 0.5rem;
+        border-radius: 50%;
+    }
 }

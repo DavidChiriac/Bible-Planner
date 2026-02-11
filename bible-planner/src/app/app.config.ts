@@ -10,6 +10,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
+import {provideNgxWebstorage, withNgxWebstorageConfig, withSessionStorage} from 'ngx-webstorage';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,5 +29,9 @@ export const appConfig: ApplicationConfig = {
                 }
             },
         }),
+    provideNgxWebstorage(
+		withNgxWebstorageConfig({ separator: ':', caseSensitive: true }),
+		withSessionStorage()
+	)
   ]
 };

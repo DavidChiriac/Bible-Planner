@@ -18,11 +18,10 @@
     color: gray !important;
 }
 
-.day {
-    cursor: pointer;
-    
-}
-
 .read {
     text-decoration: line-through;
+}
+
+.day:hover {
+    background: gray;
 }

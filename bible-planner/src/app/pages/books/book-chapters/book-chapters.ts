@@ -16,4 +16,8 @@ export class BookChapters {
   book = BOOKS.find((b) => b.title.toLocaleLowerCase().replace(/\s/g, '-') === decodeURIComponent(globalThis.location.pathname.split('/').pop()!));
 
   utils = inject(Utils);
+
+  goBack() {
+    globalThis.history.back();
+  }
 }

@@ -2,7 +2,11 @@
   <app-navbar></app-navbar>
 }
 
-@if (!utils.loading()) {
+@if (utils.loading()) {
+  <div class="loading flex justify-center align-items-center">
+      <p-progress-spinner ariaLabel="loading" />
+  </div>
+} @else {
   <router-outlet></router-outlet>
 }
 

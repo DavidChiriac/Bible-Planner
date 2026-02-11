@@ -1,12 +1,18 @@
-<div class="book-card">
-    <div class="icon" [ngClass]="{'completed': isCompleted()}">
-        @if (isCompleted()) {
-            <img [src]="'assets/icons/read-book.png'" alt="Book Cover With Check" />
-        } @else {
+<div class="book-card" [ngClass]="{'completed': isCompleted()}">
+    <div class="icon">
+        <!-- @if (isCompleted()) { -->
+            <!-- <img [src]="'assets/icons/read-book.png'" alt="Book Cover With Check" /> -->
+        <!-- } @else { -->
             <img [src]="'assets/icons/open-book.png'" alt="Book Cover" class="book-cover" />
-        }
+        <!-- } -->
     </div>
     <div class="book-info">
         <h3 class="text-center">{{ book()?.title }}</h3>
     </div>
+
+    @if (isCompleted()) {
+        <div class="check">
+            <i class="pi pi-check"></i>
+        </div>
+    }
 </div>
