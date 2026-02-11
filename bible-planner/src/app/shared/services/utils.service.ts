@@ -1,6 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { take } from 'rxjs';
+import { TABS } from '../../pages/home-page/home-page';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,7 @@ export class Utils {
   loading = signal(true);
   startDate = signal('');
   months = signal<number | null>(null);
+  selectedPlan = signal<TABS>(TABS.CRONOLOGIC);
 
   private readonly firebase = inject(FirebaseService);
 
@@ -24,6 +26,7 @@ export class Utils {
 
     this.getStartDate();
     this.getMonths();
+    this.getSelectedPlan();
   }
 
   getStartDate() {
@@ -46,6 +49,14 @@ export class Utils {
           this.months.set(months);
         }
       });
+  }
+
+  getSelectedPlan() {
+    return this.firebase.getPlan().pipe(take(1)).subscribe(plan => {
+      if (plan) {
+        this.selectedPlan.set(plan);
+      }
+    });
   }
 
   toggleChapter(chapter: string) {
@@ -92,5 +103,20 @@ export class Utils {
   markAllAsUnread(chapters: string[]) {
     this.firebase.deleteChapters(chapters);
     this.readSet.set(new Set([...this.readSet()].filter((c) => !chapters.includes(c))));
+  }
+
+  countDaysReadInAWeek(week: { days: { chapters: string[] }[] }) {
+    let readDays = 0;
+
+    for (const day of week.days) {
+      if (
+        day.chapters.every((chapter: string) =>
+          this.readSet().has(chapter),
+        )
+      ) {
+        readDays++;
+      }
+    }
+    return readDays;
   }
 }

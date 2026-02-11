@@ -11,6 +11,7 @@ import { Database } from '@angular/fire/database';
 import { ref, remove, runTransaction } from 'firebase/database';
 import { Observable, switchMap, of } from 'rxjs';
 import { listVal, objectVal } from 'rxfire/database';
+import { TABS } from '../../pages/home-page/home-page';
 
 @Injectable({ providedIn: 'root' })
 export class FirebaseService {
@@ -137,5 +138,28 @@ export class FirebaseService {
       const chaptersRef = ref(this.db, `users/${u.uid}/chapters`);
       await remove(chaptersRef);
       return 'progress reset';
+    }
+
+    async setSelectedPlan(plan: string): Promise<string> {
+      const u = this.auth.currentUser;
+      if (!u) throw new Error('Not logged in');
+
+      const selectedPlanRef = ref(this.db, `users/${u.uid}/selectedPlan`);
+
+      await runTransaction(selectedPlanRef, () => {
+        return plan;
+      });
+
+      return 'selected plan updated';
+    }
+
+    getPlan(): Observable<TABS> {
+      return this.user$.pipe(
+        switchMap((u) => {
+          if (!u) return of(TABS.CRONOLOGIC);
+          const selectedPlanRef = ref(this.db, `users/${u.uid}/selectedPlan`);
+          return objectVal<TABS>(selectedPlanRef);
+        }),
+      );
     }
 }

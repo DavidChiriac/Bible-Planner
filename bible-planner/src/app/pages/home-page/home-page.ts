@@ -29,10 +29,16 @@ export enum TABS {
   styleUrl: './home-page.scss',
 })
 export class HomePage {
+  utils = inject(Utils);
+  auth = inject(AuthService);
+  firebase = inject(FirebaseService);
+
   tabs = [TABS.CRONOLOGIC, TABS.INORDINE];
-  selectedTab = signal(TABS.CRONOLOGIC);
+  selectedTab = signal(this.utils.selectedPlan());
 
   weeks = computed(() => {
+    this.firebase.setSelectedPlan(this.selectedTab());
+  
     return this.selectedTab() === TABS.CRONOLOGIC ? CRONOLOGIC : INORDINE;
   });
 
@@ -56,10 +62,6 @@ export class HomePage {
   });
 
   openWeeks = signal<number[]>([]);
-
-  utils = inject(Utils);
-  auth = inject(AuthService);
-  firebase = inject(FirebaseService);
 
   addWeekToOpen(week: number) {
     if (!this.openWeeks().includes(week)) {
