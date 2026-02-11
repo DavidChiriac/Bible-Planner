@@ -1,0 +1,37 @@
+name: Build Angular
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - run: npm ci
+
+      - name: Write environment.prod.ts from secrets
+        run: |
+          cat > src/environments/environment.prod.ts <<EOF
+          export const environment = {
+            production: true,
+            firebase: {
+              apiKey: "${{ secrets.APIKEY }}",
+              authDomain: "${{ secrets.AUTHDOMAIN }}",
+              projectId: "${{ secrets.PROJECTID }}",
+              storageBucket: "${{ secrets.STORAGEBUCKET }}",
+              messagingSenderId: "${{ secrets.MESSAGINGSENDERID }}",
+              appId: "${{ secrets.APPID }}",
+              databaseURL: "${{ secrets.DATABASEURL }}"
+            }
+          };
+          EOF
+
+      - run: npm run build -- --configuration production

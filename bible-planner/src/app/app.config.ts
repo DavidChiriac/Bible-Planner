@@ -5,7 +5,7 @@ import { routes } from './app.routes';
 
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideDatabase, getDatabase } from '@angular/fire/database';
-import { environment } from '../../environment';
+import { environment } from '../environments/environment';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { providePrimeNG } from 'primeng/config';
