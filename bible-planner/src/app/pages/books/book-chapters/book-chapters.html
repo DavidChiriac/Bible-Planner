@@ -1,0 +1,16 @@
+<div class="container">
+    <div class="chapters-section">
+        @if (utils.isEntireDayRead(book?.chapters ?? [])) {
+            <p-button label="Mark All as Unread" severity="danger" (onClick)="utils.markAllAsUnread(book?.chapters ?? [])"></p-button>
+        } @else {
+            <p-button label="Mark All as Read" (onClick)="utils.markAllAsRead(book?.chapters ?? [])"></p-button>
+        }
+
+        @for (chapter of book?.chapters; track $index) {
+            <div class="flex gap-2 align-items-center chapter" (click)="utils.toggleChapter(chapter)" onkeydown="" [ngClass]="{'read': utils.isChapterRead(chapter)}">
+                <p-check-box [binary]="true" [ngModel]="utils.isChapterRead(chapter)"></p-check-box>
+                <span class="chapter-name">{{ chapter }}</span>
+            </div>
+        }
+    </div>
+</div>

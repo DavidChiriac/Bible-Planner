@@ -1,3 +1,9 @@
 <div class="container">
-    
+    <div class="cards-section">
+        @for (item of items; track item.title) {
+            <div class="book">
+                <app-book-card [book]="item" (click)="navigateToBook(item.title)" onkeydown=""></app-book-card>
+            </div>
+        }
+    </div>
 </div>

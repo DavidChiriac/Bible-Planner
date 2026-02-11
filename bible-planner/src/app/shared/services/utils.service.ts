@@ -79,4 +79,18 @@ export class Utils {
       );
     }
   }
+
+  isChapterRead(chapter: string) {
+    return this.readSet().has(chapter)
+  }
+
+  markAllAsRead(chapters: string[]) {
+    this.firebase.addChapters(chapters);
+    this.readSet.set(new Set([...this.readSet(), ...chapters]));
+  }
+
+  markAllAsUnread(chapters: string[]) {
+    this.firebase.deleteChapters(chapters);
+    this.readSet.set(new Set([...this.readSet()].filter((c) => !chapters.includes(c))));
+  }
 }
