@@ -14,7 +14,8 @@ export class Navbar {
     {
       label: 'Acasă',
       icon: 'pi pi-home',
-      routerLink: '/home',
+      routerLink: '/',
+      routerLinkActiveOptions: { exact: true }
     },
     {
       label: 'Cărți',
