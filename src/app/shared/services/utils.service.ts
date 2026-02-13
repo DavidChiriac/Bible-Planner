@@ -1,7 +1,8 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { forkJoin, take } from 'rxjs';
 import { TABS } from '../../pages/home-page/home-page';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +15,13 @@ export class Utils {
   selectedPlan = signal<TABS>(TABS.CRONOLOGIC);
 
   private readonly firebase = inject(FirebaseService);
+  private readonly platformId = inject(PLATFORM_ID);
 
   constructor() {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     forkJoin({
       chapters: this.firebase.getChapters().pipe(take(1)),
       startDate: this.firebase.getStartDate().pipe(take(1)),
