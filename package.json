@@ -8,8 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "build:pages": "ng build --configuration production --base-href \"/Bible-Planner/\"",
-    "postbuild:pages": "Copy-Item .\\dist\\bible-planner\\browser\\index.csr.html .\\dist\\bible-planner\\browser\\index.html -Force",
-    "deploy": "npx gh-pages -d dist/bible-planner/browser",
+    "postbuild:pages": "node -e \"require('fs').copyFileSync('dist/bible-planner/browser/index.csr.html','dist/bible-planner/browser/index.html')\"",
+    "deploy": "npm run build:pages && npm run postbuild:pages && gh-pages -d dist/bible-planner/browser",
     "serve:ssr:bible-planner": "node dist/bible-planner/server/server.mjs"
   },
   "private": true,
