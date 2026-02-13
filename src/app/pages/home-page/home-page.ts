@@ -58,7 +58,13 @@ export class HomePage {
   });
 
   currentStatus = computed(() => {
-    return this.numbersOfDaysRead() - (new Date().getDate() + 1 - new Date(this.utils.startDate()).getDate()) * 12 / this.utils.months()!;
+    const today = new Date();
+    const start = new Date(this.utils.startDate());
+
+    const diffInMs = today.getTime() - start.getTime();
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    return this.numbersOfDaysRead() - (diffInDays * 12 / this.utils.months()!);
   });
 
   openWeeks = signal<number[]>([]);
