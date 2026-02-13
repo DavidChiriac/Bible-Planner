@@ -1,17 +1,12 @@
-import { provideServerRendering } from '@angular/ssr';
-import { mergeApplicationConfig, ApplicationConfig } from '@angular/core';
-import { appConfig } from './app.config';
-import { DeviceDetectorService } from 'ngx-device-detector';
-import { UniversalDisplayService } from './shared/services/universal-display-service.service';
+import { RenderMode, ServerRoute } from '@angular/ssr';
 
-const serverConfig: ApplicationConfig = {
-  providers: [
-    provideServerRendering(),
-    {
-      provide: DeviceDetectorService,
-      useClass: UniversalDisplayService
-    },
-  ]
-};
+export const serverRoutes: ServerRoute[] = [
+  { path: 'home', renderMode: RenderMode.Server },
+  { path: 'settings', renderMode: RenderMode.Server },
+  { path: 'books', renderMode: RenderMode.Server },
+  { path: 'books/:id', renderMode: RenderMode.Server },
 
-export const config = mergeApplicationConfig(appConfig, serverConfig);
+  { path: 'login', renderMode: RenderMode.Client },
+
+  { path: '**', renderMode: RenderMode.Server },
+];
