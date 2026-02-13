@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { FirebaseService } from './firebase.service';
-import { take } from 'rxjs';
+import { forkJoin, take } from 'rxjs';
 import { TABS } from '../../pages/home-page/home-page';
 
 @Injectable({
@@ -16,46 +16,18 @@ export class Utils {
   private readonly firebase = inject(FirebaseService);
 
   constructor() {
-    this.firebase
-      .getChapters()
-      .pipe(take(1))
-      .subscribe((chapters) => {
-        this.readSet.set(new Set(chapters ?? []));
-        this.loading.set(false);
-      });
+    forkJoin({
+      chapters: this.firebase.getChapters().pipe(take(1)),
+      startDate: this.firebase.getStartDate().pipe(take(1)),
+      months: this.firebase.getMonths().pipe(take(1)),
+      plan: this.firebase.getPlan().pipe(take(1)),
+    }).subscribe(({ chapters, startDate, months, plan }) => {
+      this.readSet.set(new Set(chapters ?? []));
+      if (startDate?.length) this.startDate.set(startDate);
+      if (months) this.months.set(months);
+      if (plan) this.selectedPlan.set(plan);
 
-    this.getStartDate();
-    this.getMonths();
-    this.getSelectedPlan();
-  }
-
-  getStartDate() {
-    this.firebase
-      .getStartDate()
-      .pipe(take(1))
-      .subscribe((date) => {
-        if (date?.length > 0) {
-          this.startDate.set(date);
-        }
-      });
-  }
-
-  getMonths() {
-    this.firebase
-      .getMonths()
-      .pipe(take(1))
-      .subscribe((months) => {
-        if (months) {
-          this.months.set(months);
-        }
-      });
-  }
-
-  getSelectedPlan() {
-    return this.firebase.getPlan().pipe(take(1)).subscribe(plan => {
-      if (plan) {
-        this.selectedPlan.set(plan);
-      }
+      this.loading.set(false);
     });
   }
 

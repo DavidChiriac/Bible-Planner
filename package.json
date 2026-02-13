@@ -1,6 +1,6 @@
 {
   "name": "bible-planner",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -26,6 +26,7 @@
     "@primeuix/themes": "^2.0.3",
     "express": "^5.1.0",
     "firebase": "^12.9.0",
+    "ngx-device-detector": "^11.0.0",
     "ngx-webstorage": "^21.0.1",
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
