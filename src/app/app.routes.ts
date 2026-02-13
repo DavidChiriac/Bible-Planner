@@ -1,12 +1,16 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './shared/guards/auth.guard';
 import { guestGuard } from './shared/guards/guest.guard';
+import { HomePage } from './pages/home-page/home-page';
+import { Login } from './pages/login/login';
+import { Settings } from './pages/settings/settings';
+import { Books } from './pages/books/books';
+import { BookChapters } from './pages/books/book-chapters/book-chapters';
 
 export const routes: Routes = [
-    { path: '', redirectTo: 'home', pathMatch: 'full' },
-    { path: 'home', loadComponent: () => import('./pages/home-page/home-page').then(m => m.HomePage), canActivate: [authGuard] },
-    { path: 'login', loadComponent: () => import('./pages/login/login').then(m => m.Login), canActivate: [guestGuard] },
-    { path: 'settings', loadComponent: () => import('./pages/settings/settings').then(m => m.Settings), canActivate: [authGuard] },
-    { path: 'books', loadComponent: () => import('./pages/books/books').then(m => m.Books), canActivate: [authGuard] },
-    { path: 'books/:id', loadComponent: () => import('./pages/books/book-chapters/book-chapters').then(m => m.BookChapters), canActivate: [authGuard] },
+    { path: '', component: HomePage, canActivate: [authGuard], pathMatch: 'full' },
+    { path: 'login', component: Login, canActivate: [guestGuard] },
+    { path: 'settings', component: Settings, canActivate: [authGuard] },
+    { path: 'books', component: Books, canActivate: [authGuard] },
+    { path: 'books/:id', component: BookChapters, canActivate: [authGuard] },
 ];
