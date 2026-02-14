@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Plan citire Biblie</string>
+    <string name="title_activity_main">Plan citire Biblie</string>
+    <string name="package_name">davidchiriac.github.io</string>
+    <string name="custom_url_scheme">davidchiriac.github.io</string>
+</resources>
