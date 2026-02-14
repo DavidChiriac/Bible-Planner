@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:820329179054:android:5c98a5dae11cd0bae54a3f",
+        "mobilesdk_app_id": "1:820329179054:android:c8e6a58189db3a6fe54a3f",
         "android_client_info": {
-          "package_name": "davidchiriac.github.io"
+          "package_name": "davidchiriac.github.io.bibleplanner"
         }
       },
       "oauth_client": [

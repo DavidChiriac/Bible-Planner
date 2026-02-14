@@ -13,6 +13,7 @@ import {
 
 import { FirebaseService } from './firebase.service';
 import { Utils } from './utils.service';
+import { environment } from '../../../environments/environment';
 
 type AuthResult = { success: boolean; error?: string; user?: any };
 
@@ -38,8 +39,15 @@ export class AuthService {
       return;
     }
 
+    console.error('Before nav url:', this.router.url);
+    console.error(environment.production ? 'Production mode' : 'Development mode');
+
     this.utils.fetchData();
-    await this.router.navigate(['']);
+    await this.router.navigateByUrl('/').then(() => {
+      console.error('Navigation to home complete');
+    });
+    console.error('After nav url:', this.router.url);
+    console.error('Window location:', globalThis.location.href);
   }
 
   async logout(): Promise<void> {
@@ -60,7 +68,32 @@ export class AuthService {
 
   private async authenticateWithGoogle(): Promise<AuthResult> {
     try {
+      const auth = this.firebase.getAuth();
+
+      if (Capacitor.isNativePlatform()) {
+        const res = await FirebaseAuthentication.signInWithGoogle();
+
+        const idToken = res.credential?.idToken ?? undefined;
+        const accessToken = res.credential?.accessToken ?? undefined;
+
+        if (!idToken && !accessToken) {
+          return { success: false, error: 'Google sign-in returned no tokens, cannot sign into Firebase.' };
+        }
+
+        console.error('Google authentication successful, signing into Firebase with credential:', { idToken, accessToken });
+
+        const cred = GoogleAuthProvider.credential(idToken, accessToken);
+        console.error('Google credential created:', cred);
+        const userCredential = await signInWithCredential(auth, cred);
+        console.error('Firebase sign-in successful:', userCredential);
+
+        return { success: true, user: userCredential.user };
+      }
+      console.error('Using web Google authentication');
+
       const res = await FirebaseAuthentication.signInWithGoogle();
+
+      console.error(res);
 
       // Depending on platform/plugin version, tokens may be here:
       const idToken = res.credential?.idToken;
@@ -69,12 +102,13 @@ export class AuthService {
       // GoogleAuthProvider.credential(idToken, accessToken)
       const cred = GoogleAuthProvider.credential(idToken ?? undefined, accessToken ?? undefined);
 
+      console.log('Google credential created:', cred);
       if (!idToken && !accessToken) {
         throw new Error('No Google token returned (idToken/accessToken missing)');
       }
 
-      const userCredential = await signInWithCredential(this.firebase.getAuth(), cred);
-      return { success: true, user: userCredential.user };
+      await signInWithCredential(this.firebase.getAuth(), cred);
+      return { success: true };
 
     } catch (error: any) {
       console.error('Google authentication error:', error);

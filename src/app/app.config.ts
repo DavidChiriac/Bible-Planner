@@ -14,11 +14,15 @@ import {provideNgxWebstorage, withNgxWebstorageConfig, withSessionStorage} from 
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { Capacitor } from '@capacitor/core';
 
+const hydrationProviders = Capacitor.isNativePlatform()
+  ? []
+  : [provideClientHydration(withEventReplay())];
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
     provideRouter(routes, ...(environment.production ? [withHashLocation()] : [])),
-    provideClientHydration(withEventReplay()),
+    ...hydrationProviders,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideDatabase(() => getDatabase()),
     provideHttpClient(),

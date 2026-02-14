@@ -4,10 +4,10 @@ plugins {
 }
 
 android {
-    namespace = "davidchiriac.github.io"
+    namespace = "davidchiriac.github.io.bibleplanner"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "davidchiriac.github.io"
+        applicationId "davidchiriac.github.io.bibleplanner"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
