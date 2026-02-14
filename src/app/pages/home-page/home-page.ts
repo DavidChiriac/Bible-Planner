@@ -62,7 +62,7 @@ export class HomePage {
     const start = new Date(this.utils.startDate());
 
     const diffInMs = today.getTime() - start.getTime();
-    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24)) + 1;
 
     return this.numbersOfDaysRead() - (diffInDays * 12 / this.utils.months()!);
   });

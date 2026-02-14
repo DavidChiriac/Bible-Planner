@@ -16,7 +16,7 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
-    provideRouter(routes, withHashLocation()),
+    provideRouter(routes, ...(environment.production ? [withHashLocation()] : [])),
     provideClientHydration(withEventReplay()),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideDatabase(() => getDatabase()),

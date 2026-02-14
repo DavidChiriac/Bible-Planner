@@ -3,6 +3,7 @@ import { FirebaseService } from './firebase.service';
 import { forkJoin, take } from 'rxjs';
 import { TABS } from '../../pages/home-page/home-page';
 import { isPlatformBrowser } from '@angular/common';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Injectable({
   providedIn: 'root',
@@ -10,31 +11,36 @@ import { isPlatformBrowser } from '@angular/common';
 export class Utils {
   readSet = signal(new Set<string>());
   loading = signal(true);
-  startDate = signal('');
+  startDate = signal(new Date().toISOString().split('T')[0]);
   months = signal<number | null>(null);
   selectedPlan = signal<TABS>(TABS.CRONOLOGIC);
 
   private readonly firebase = inject(FirebaseService);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly deviceService = inject(DeviceDetectorService);
 
   constructor() {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
 
-    forkJoin({
-      chapters: this.firebase.getChapters().pipe(take(1)),
-      startDate: this.firebase.getStartDate().pipe(take(1)),
-      months: this.firebase.getMonths().pipe(take(1)),
-      plan: this.firebase.getPlan().pipe(take(1)),
-    }).subscribe(({ chapters, startDate, months, plan }) => {
-      this.readSet.set(new Set(chapters ?? []));
-      if (startDate?.length) this.startDate.set(startDate);
-      if (months) this.months.set(months);
-      if (plan) this.selectedPlan.set(plan);
+    this.fetchData();
+  }
 
-      this.loading.set(false);
-    });
+  fetchData() {
+    forkJoin({
+        chapters: this.firebase.getChapters().pipe(take(1)),
+        startDate: this.firebase.getStartDate().pipe(take(1)),
+        months: this.firebase.getMonths().pipe(take(1)),
+        plan: this.firebase.getPlan().pipe(take(1)),
+      }).subscribe(({ chapters, startDate, months, plan }) => {
+        this.readSet.set(new Set(chapters ?? []));
+        if (startDate?.length) this.startDate.set(startDate);
+        if (months) this.months.set(months);
+        if (plan) this.selectedPlan.set(plan);
+
+        this.loading.set(false);
+      });
   }
 
   toggleChapter(chapter: string) {
@@ -96,5 +102,21 @@ export class Utils {
       }
     }
     return readDays;
+  }
+
+  isMobile() {
+    return this.deviceService.isMobile();
+  }
+
+  isTablet() {
+    return this.deviceService.isTablet();
+  }
+
+  startDateAsDate(): Date | null {
+    const s = this.startDate();
+    if (!s) return null;
+
+    const [y, m, d] = s.split('-').map(Number);
+    return new Date(y, m - 1, d);
   }
 }

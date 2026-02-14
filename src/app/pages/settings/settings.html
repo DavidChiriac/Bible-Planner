@@ -2,8 +2,7 @@
     <div class="w-100 flex flex-column align-items-center gap-3 justify-content-center mt-5">
         <div class="flex align-items-center gap-3">
             <label for="start-date">Data de început:</label>
-            <input id="start-date" type="date" pInputText [ngModel]="startDate" (ngModelChange)="setStartDate($event)"
-                autocomplete="off" />
+            <p-datepicker [(ngModel)]="startDate" dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" pInputMask="99/99/9999" (ngModelChange)="setStartDate($event)"></p-datepicker>
         </div>
         <div class="flex align-items-center gap-3">
             <label for="number-of-months">Numărul de luni:</label>
@@ -19,7 +18,7 @@
 <p-dialog header="Reset Progress" [modal]="true" [(visible)]="resetConfirmationVisible" [style]="{ width: '25rem' }">
     <span class="p-text-secondary block mb-8">Ești sigur că vrei să resetezi progresul?</span>
     <div class="flex justify-end gap-2">
-        <button pButton label="Cancel" (click)="resetConfirmationVisible = false" onkeydown=""></button>
-        <button pButton label="Confirm" severity="danger" (click)="confirmResetProgress()" onkeydown=""></button>
+        <button pButton label="Anulează" (click)="resetConfirmationVisible = false" onkeydown=""></button>
+        <button pButton label="Confirmă" severity="danger" (click)="confirmResetProgress()" onkeydown=""></button>
     </div>
 </p-dialog>
