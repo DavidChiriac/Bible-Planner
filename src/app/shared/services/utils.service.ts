@@ -13,7 +13,7 @@ export class Utils {
   loading = signal(true);
   startDate = signal(new Date().toISOString().split('T')[0]);
   months = signal<number | null>(null);
-  selectedPlan = signal<TABS>(TABS.CRONOLOGIC);
+  selectedPlan = signal<TABS | undefined>(undefined);
 
   private readonly firebase = inject(FirebaseService);
   private readonly platformId = inject(PLATFORM_ID);
