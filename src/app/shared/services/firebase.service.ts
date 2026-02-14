@@ -1,8 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import {
   Auth,
-  GoogleAuthProvider,
-  signInWithPopup,
   signOut,
   user,
   getAuth,
@@ -19,11 +17,6 @@ export class FirebaseService {
   private readonly db = inject(Database);
 
   readonly user$ = user(this.auth);
-
-  async loginWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(this.auth, provider);
-  }
 
   async logout() {
     await signOut(this.auth);
