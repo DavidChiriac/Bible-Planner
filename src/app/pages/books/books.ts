@@ -8,6 +8,7 @@ import { SelectModule } from 'primeng/select';
 import { Button } from 'primeng/button';
 import { NgClass } from '@angular/common';
 import { SessionStorageService } from 'ngx-webstorage';
+import { Utils } from '../../shared/services/utils.service';
 
 @Component({
   selector: 'app-books',
@@ -18,6 +19,7 @@ import { SessionStorageService } from 'ngx-webstorage';
 export class Books {
   private readonly router = inject(Router);
   private readonly sessionStorage = inject(SessionStorageService);
+  utils = inject(Utils);
   
   searchTerm = signal(this.sessionStorage.retrieve('booksSearchTerm') || '');
 
@@ -58,6 +60,6 @@ export class Books {
   });
 
   navigateToBook(book: string) {
-    this.router.navigate([`/books/${book.toLocaleLowerCase().replace(/\s/g, '-')}`]);
+    this.router.navigate([`/books/${book.toLocaleLowerCase().replaceAll(/\s/g, '-')}`]);
   }
 }

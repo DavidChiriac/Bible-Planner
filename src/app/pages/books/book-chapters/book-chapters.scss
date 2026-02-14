@@ -1,10 +1,17 @@
 .chapters-section{
-    width: 700px;
+    width: 900px;
     margin: auto;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     padding-top: 1rem;
+}
+
+.chapters-section-mobile {
+    @extend .chapters-section;
+    
+    width: 100%;
+    padding-inline: 1rem;
 }
 
 .chapter {
