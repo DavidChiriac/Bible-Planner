@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'davidchiriac.github.io',
+  appId: 'davidchiriac.github.io.bibleplanner',
   appName: 'Bible Planner',
   webDir: 'dist/bible-planner/browser',
   plugins: {
