@@ -140,7 +140,7 @@ export class FirebaseService {
       return 'progress reset';
     }
 
-    async setSelectedPlan(plan: string): Promise<string> {
+    async setSelectedPlan(plan: string = ''): Promise<string> {
       const u = this.auth.currentUser;
       if (!u) throw new Error('Not logged in');
 
