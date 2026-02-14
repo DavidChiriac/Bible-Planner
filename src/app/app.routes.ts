@@ -13,4 +13,5 @@ export const routes: Routes = [
     { path: 'settings', component: Settings, canActivate: [authGuard] },
     { path: 'books', component: Books, canActivate: [authGuard] },
     { path: 'books/:id', component: BookChapters, canActivate: [authGuard] },
+    { path: '**', redirectTo: '' }
 ];

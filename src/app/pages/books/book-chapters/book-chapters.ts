@@ -18,7 +18,7 @@ export class BookChapters {
 
   book = computed(() => {
     return BOOKS.find((b) => {
-      return b.title.toLocaleLowerCase().replace(/\s/g, '-') === this.id();
+      return b.title.toLocaleLowerCase().replaceAll(' ', '-') === this.id();
     })
   }  );
 

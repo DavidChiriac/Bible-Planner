@@ -6,3 +6,30 @@
         color: black;
     }
 }
+
+.p-menubar-mobile {
+    .p-menubar-item {
+        font-size: 16px;
+    }
+
+    .p-menubar-item-icon {
+        font-size: 24px;
+    }
+}
+
+.p-menubar:not(.p-menubar-mobile) {
+    .p-menubar-root-list {
+        width: 100%;
+
+        .p-menubar-item:last-child {
+            margin-left: auto;
+
+            background-color: white;
+            border-radius: 5px;
+
+            .p-menubar-item-label{
+                color: black;
+            }
+        }
+    }
+}

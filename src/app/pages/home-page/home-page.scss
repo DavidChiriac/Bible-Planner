@@ -1,17 +1,36 @@
 .card {
-    width: 700px;
+    width: 900px;
     margin: auto;
     overflow: hidden;
     padding: 1rem;
 }
 
+.card-mobile {
+    @extend .card;
+
+    width: 100%;
+}
+
 .plan-selector{
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1rem;
-    margin-top: 1rem;
-    border-radius: 5px;
-    overflow: hidden;
+  width: 900px;
+  margin: auto;
+  padding-inline: 1rem;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  margin-top: 2rem;
+  border-radius: 5px;
+}
+
+.plan-selector-mobile{
+  @extend .plan-selector;
+
+  width: 100%;
+  padding-inline: 1rem;
+}
+
+.plan-selector-button {
+  flex: 1;
 }
 
 .gray {
@@ -24,4 +43,13 @@
 
 .day:hover {
     background: gray;
+}
+
+.row {
+    padding-block: 0.5rem;
+    padding-inline: 0.25rem;
+    border: 1px solid gray;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
 }

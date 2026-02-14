@@ -1,4 +1,4 @@
-<footer class="flex justify-content-between">
+<footer class="flex justify-content-between" [ngClass]="{'mobile': utils.isMobile()}">
     <p class="ml-4 version">{{version}}</p>
     <p class="text-right mr-4">© 2026 Bible Planner. All rights reserved.</p>
 </footer>

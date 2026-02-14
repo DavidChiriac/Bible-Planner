@@ -1,15 +1,21 @@
-<div class="container">
-    <div class="w-100 flex flex-column align-items-center gap-3 justify-content-center mt-5">
-        <div class="flex align-items-center gap-3">
+<div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
+    <div class="w-100 mt-5 flex flex-column align-items-center gap-3 justify-content-center" [ngClass]="{'mobile': utils.isMobile()}">
+        <div class="flex align-items-center" [ngClass]="{'gap-3': !utils.isMobile(), 'mt-5 flex-column': utils.isMobile()}">
             <label for="start-date">Data de început:</label>
+            @if (utils.isMobile()) {
+                <br/>
+            }
             <p-datepicker [(ngModel)]="startDate" dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" pInputMask="99/99/9999" (ngModelChange)="setStartDate($event)"></p-datepicker>
         </div>
-        <div class="flex align-items-center gap-3">
+        <div class="flex align-items-center" [ngClass]="{'gap-3': !utils.isMobile(), 'mt-3 flex-column': utils.isMobile()}">
             <label for="number-of-months">Numărul de luni:</label>
-            <input id="number-of-months" type="number" min="1" max="12" pInputText [ngModel]="months" (ngModelChange)="setMonths($event)"
+            @if (utils.isMobile()) {
+                <br/>
+            }
+            <input id="number-of-months" type="number" min="1" pInputText [ngModel]="months" (ngModelChange)="setMonths($event)"
                 autocomplete="off" />
         </div>
-        <div class="">
+        <div class="mt-6">
             <button pButton (click)="resetProgress()" severity="danger" onkeydown="">Reset Progress</button>
         </div>
     </div>
