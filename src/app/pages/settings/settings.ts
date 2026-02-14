@@ -6,9 +6,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
+import { DatePickerModule } from 'primeng/datepicker';
 @Component({
   selector: 'app-settings',
-  imports: [ButtonModule, InputTextModule, FloatLabelModule, FormsModule, DialogModule],
+  imports: [ButtonModule, InputTextModule, FloatLabelModule, FormsModule, DialogModule, DatePickerModule],
   templateUrl: './settings.html',
   styleUrl: './settings.scss',
 })
@@ -18,15 +19,21 @@ export class Settings {
 
   resetConfirmationVisible = false;
 
-  startDate = this.utils.startDate();
+  startDate: Date | null = this.utils.startDateAsDate();
   months = this.utils.months();
 
-  setStartDate(date: string) {
-    if (!date) {
-      return;
-    }
-    this.firebase.setStartDate(date);
-    this.utils.startDate.set(date);
+  setStartDate(date: Date | null) {
+    if (!date) return;
+
+    const iso =
+      `${date.getFullYear()}-` +
+      `${String(date.getMonth() + 1).padStart(2, '0')}-` +
+      `${String(date.getDate()).padStart(2, '0')}`;
+      
+    this.firebase.setStartDate(iso);
+
+    this.startDate = date;
+    this.utils.startDate.set(iso);
   }
 
   setMonths(months: number) {
@@ -34,6 +41,7 @@ export class Settings {
       return;
     }
     this.firebase.setMonths(months);
+    this.months = months;
     this.utils.months.set(months);
   }
 
