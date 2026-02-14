@@ -32,6 +32,7 @@
     "@capacitor/android": "^8.1.0",
     "@capacitor/cli": "^8.1.0",
     "@capacitor/core": "^8.1.0",
+    "@capgo/capacitor-social-login": "^8.3.1",
     "@primeuix/themes": "^2.0.3",
     "express": "^5.1.0",
     "firebase": "^12.9.0",
