@@ -13,7 +13,7 @@
     "deploy": "npm run build:pages && npm run postbuild:pages && gh-pages -d dist/bible-planner/browser",
     "serve:ssr:bible-planner": "node dist/bible-planner/server/server.mjs",
     "capacitor:sync": "npx cap sync android",
-    "capacitor:run": "npx cap run android"
+    "capacitor": "npm run build && npm run capacitor:sync && npx cap run android"
   },
   "private": true,
   "dependencies": {

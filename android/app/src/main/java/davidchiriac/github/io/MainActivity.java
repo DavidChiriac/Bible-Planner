@@ -1,4 +1,4 @@
-package davidchiriac.github.io;
+package davidchiriac.github.io.bibleplanner;
 
 import com.getcapacitor.BridgeActivity;
 
