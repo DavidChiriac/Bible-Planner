@@ -26,10 +26,10 @@
                             <span class="w-6 text-right gray">{{tab.label}}</span>
                         </div>
                     </p-accordion-header>
-                    <p-accordion-content >
+                    <p-accordion-content>
                         @if (openWeeks().includes(tab.week)) {
                             @for (day of tab.days; track day.label) {
-                                <div class="flex gap-2 align-items-center mb-2 day cursor-pointer" [ngClass]="{'read': utils.isEntireDayRead(day.chapters)}" (click)="utils.setEntireDayRead(day.chapters)" onkeydown="">
+                                <div class="flex gap-2 align-items-center mb-2 day cursor-pointer" [ngClass]="{'read': utils.isEntireDayRead(day.chapters), 'day': !utils.isMobile() && !utils.isTablet()}" (click)="utils.setEntireDayRead(day.chapters)" onkeydown="">
                                     <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)"></p-checkbox>
                                     <p class="m-0">{{ day.label }}</p>
                                 </div>
