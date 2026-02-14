@@ -27,6 +27,11 @@ export class Navbar {
       icon: 'pi pi-cog',
       routerLink: '/settings',
     },
+    {
+      label: 'Deconectare',
+      icon: 'pi pi-sign-out',
+      command: () => this.auth.logout(),
+    }
   ];
 
   auth = inject(AuthService);

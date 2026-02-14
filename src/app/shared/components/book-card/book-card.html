@@ -1,4 +1,4 @@
-<div class="book-card" [ngClass]="{'completed': isCompleted()}">
+<div class="book-card" [ngClass]="{'completed': isCompleted(), 'mobile': utils.isMobile()}">
     <div class="icon">
         <img [src]="'assets/icons/open-book.png'" alt="Book Cover" class="book-cover" />
     </div>

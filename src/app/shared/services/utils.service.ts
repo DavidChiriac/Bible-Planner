@@ -119,4 +119,10 @@ export class Utils {
     const [y, m, d] = s.split('-').map(Number);
     return new Date(y, m - 1, d);
   }
+
+  hasReadWholeBible() {
+    const readChapters = this.readSet();
+    const totalChapters = 1189;
+    return readChapters.size === totalChapters;
+  }
 }

@@ -7,14 +7,15 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { DatePickerModule } from 'primeng/datepicker';
+import { NgClass } from '@angular/common';
 @Component({
   selector: 'app-settings',
-  imports: [ButtonModule, InputTextModule, FloatLabelModule, FormsModule, DialogModule, DatePickerModule],
+  imports: [ButtonModule, InputTextModule, FloatLabelModule, FormsModule, DialogModule, DatePickerModule, NgClass],
   templateUrl: './settings.html',
   styleUrl: './settings.scss',
 })
 export class Settings {
-  private readonly utils = inject(Utils);
+  utils = inject(Utils);
   private readonly firebase = inject(FirebaseService);
 
   resetConfirmationVisible = false;

@@ -1,12 +1,14 @@
-<div class="container">
-    <div class="plan-selector">
+<div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
+    <div [ngClass]="utils.isMobile() ? 'plan-selector-mobile' : 'plan-selector'">
         @for (tab of tabs; track tab) {
-            <p-button (click)="selectedTab.set(tab)" onkeydown="" class="plan-selector-button" [ngClass]="{'selected': selectedTab() === tab}">{{ tab }}</p-button>
+            <p-button (click)="selectedTab.set(tab)" onkeydown="" class="plan-selector-button" [ngClass]="{'selected': selectedTab() === tab, 'mobile': utils.isMobile()}">{{ tab }}</p-button>
         }
     </div>
     <div class="details w-100">
         <div class="flex justify-content-center w-100">
-            @if (currentStatus() > 0) {
+            @if (utils.hasReadWholeBible()) {
+                <p class="status positive">Felicitări! Ai citit întreaga Biblie! 🎉</p>
+            } @else if (currentStatus() > 0) {
                 <p class="status positive">Ești cu {{ currentStatus() }} zile citite înainte!</p>
             } @else if (currentStatus() < 0) {
                 <p class="status negative">Ești cu {{ (currentStatus() * -1) }} zile citite în urmă!</p>
@@ -16,22 +18,26 @@
         </div>
     </div>
 
-    <div class="card">
-        <p-accordion [multiple]="true">
+    <div [ngClass]="utils.isMobile() ? 'card-mobile' : 'card'">
+        <p-accordion [multiple]="true" [ngClass]="{'mobile': utils.isMobile()}">
             @for (tab of weeks(); track tab.week) {
                 <p-accordion-panel [value]="tab.week">
                     <p-accordion-header (click)="addWeekToOpen(tab.week)" onkeydown="">
                         <div class="w-full flex justify-content-between pr-5 cursor-pointer">
-                            <span>{{ 'Săptămâna ' + tab.week + ' - ' + utils.countDaysReadInAWeek(tab) + '/' + tab.days.length + ' zile complete'}}</span>
-                            <span class="w-6 text-right gray">{{tab.label}}</span>
+                            @if (utils.isMobile()) {
+                                <h4>{{ 'Săpt. ' + tab.week + ' - ' }} <span class="font-italic">{{utils.countDaysReadInAWeek(tab) + '/' + tab.days.length + ' zile'}}</span></h4>
+                            } @else {
+                                <span>{{ 'Săptămâna ' + tab.week + ' - ' }} <span class="font-italic">{{utils.countDaysReadInAWeek(tab) + '/' + tab.days.length + ' zile complete'}}</span></span>
+                            }
+                            <span class="w-6 text-right gray flex align-items-center justify-content-end">{{tab.label}}</span>
                         </div>
                     </p-accordion-header>
                     <p-accordion-content>
                         @if (openWeeks().includes(tab.week)) {
                             @for (day of tab.days; track day.label) {
-                                <div class="flex gap-2 align-items-center mb-2 day cursor-pointer" [ngClass]="{'read': utils.isEntireDayRead(day.chapters), 'day': !utils.isMobile() && !utils.isTablet()}" (click)="utils.setEntireDayRead(day.chapters)" onkeydown="">
+                                <div class="flex gap-2 align-items-center mb-2 day cursor-pointer row" [ngClass]="{'read': utils.isEntireDayRead(day.chapters), 'day': !utils.isMobile() && !utils.isTablet()}" (click)="utils.setEntireDayRead(day.chapters)" onkeydown="">
                                     <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)"></p-checkbox>
-                                    <p class="m-0">{{ day.label }}</p>
+                                    <h3 class="m-0">{{ day.label }}</h3>
                                 </div>
                             }
                         }

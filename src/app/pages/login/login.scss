@@ -1,3 +1,10 @@
 .container{
     height: calc(100dvh - 18px - 64px);
 }
+
+.container-mobile{
+    height: calc(100dvh - 7px - 64px);
+    padding-inline: 2rem;
+    text-align: center;
+    padding-block: 10rem;
+}
