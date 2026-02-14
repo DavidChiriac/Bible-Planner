@@ -15,27 +15,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "820329179054-09ib8pk89k7ufa9l8ld3r3f3g26vbqku.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "davidchiriac.github.io.bibleplanner",
-            "certificate_hash": "f5fe87362562ebe1eefed00667b261c1fd08a147"
-          }
-        },
-        {
-          "client_id": "820329179054-mhpcrr8ilf9lne42ue5uvbksq7d8qb2k.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "davidchiriac.github.io.bibleplanner",
-            "certificate_hash": "3ce5be6ff899f658ea8255f6f94ab001217ec94a"
-          }
-        },
-        {
           "client_id": "820329179054-pfpnvp4gqdldmq485t57uuv8f13vtefi.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "davidchiriac.github.io.bibleplanner",
             "certificate_hash": "989eadb1392445695b9fdf38f87decb29d07c430"
+          }
+        },
+        {
+          "client_id": "820329179054-so6vqcti77o2mpp50f912ht38jfd84o7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "davidchiriac.github.io.bibleplanner",
+            "certificate_hash": "c566ca4bd2048095289ad9362bfba5ee688501f3"
           }
         },
         {
