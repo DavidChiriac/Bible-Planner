@@ -1,18 +1,19 @@
-import { ApplicationConfig, inject, provideZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter, withHashLocation } from '@angular/router';
-
-import { routes } from './app.routes';
-
-import { provideFirebaseApp, initializeApp, FirebaseApp } from '@angular/fire/app';
-import { provideDatabase, getDatabase } from '@angular/fire/database';
-import { environment } from '../environments/environment';
 import { provideHttpClient } from '@angular/common/http';
-import { provideAuth, getAuth, initializeAuth, indexedDBLocalPersistence } from '@angular/fire/auth';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+
+import { provideFirebaseApp, initializeApp, getApp } from '@angular/fire/app';
+import { provideDatabase, getDatabase } from '@angular/fire/database';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
-import {provideNgxWebstorage, withNgxWebstorageConfig, withSessionStorage} from 'ngx-webstorage';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { provideNgxWebstorage, withNgxWebstorageConfig, withSessionStorage } from 'ngx-webstorage';
+
 import { Capacitor } from '@capacitor/core';
+import { routes } from './app.routes';
+import { environment } from '../environments/environment';
 
 const hydrationProviders = Capacitor.isNativePlatform()
   ? []
@@ -23,33 +24,27 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes, ...(environment.production ? [withHashLocation()] : [])),
     ...hydrationProviders,
+
     provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideDatabase(() => getDatabase()),
+    provideDatabase(() => getDatabase(getApp())),
+    provideAuth(() => getAuth(getApp())),
+
     provideHttpClient(),
-    provideAuth(() => {
-      const app = inject(FirebaseApp);
 
-      if (Capacitor.isNativePlatform()) {
-        return initializeAuth(app, {
-          persistence: indexedDBLocalPersistence,
-        });
-      }
-
-      return getAuth(app);
-    }),
     providePrimeNG({
-            theme: {
-                preset: Aura,
-                options: {
-                    prefix: 'p',
-                    cssLayer: false,
-                    darkModeSelector: '.app-dark-mode',
-                }
-            },
-        }),
+      theme: {
+        preset: Aura,
+        options: {
+          prefix: 'p',
+          cssLayer: false,
+          darkModeSelector: true,
+        },
+      },
+    }),
+
     provideNgxWebstorage(
-		withNgxWebstorageConfig({ separator: ':', caseSensitive: true }),
-		withSessionStorage()
-	), provideClientHydration(withEventReplay())
-  ]
+      withNgxWebstorageConfig({ separator: ':', caseSensitive: true }),
+      withSessionStorage()
+    ),
+  ],
 };

@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { authState } from '@angular/fire/auth';
@@ -13,7 +13,6 @@ import {
 
 import { FirebaseService } from './firebase.service';
 import { Utils } from './utils.service';
-import { environment } from '../../../environments/environment';
 
 type AuthResult = { success: boolean; error?: string; user?: any };
 
@@ -23,6 +22,7 @@ export class AuthService {
   private readonly router = inject(Router);
   private readonly utils = inject(Utils);
 
+  errors = signal<any[]>([]);
   private readonly isLoggedIn$ = new BehaviorSubject(false);
 
   constructor() {
@@ -31,71 +31,98 @@ export class AuthService {
     });
   }
 
-  async login(): Promise<void> {
-    const result = await this.authenticateWithGoogle();
+  isLoggedIn() {
+    return this.isLoggedIn$.getValue();
+  }
 
-    if (!result.success) {
-      return;
-    }
+  async login(): Promise<void> {
+    this.errors.update(e => [...e, { step: 'Login clicked', native: Capacitor.isNativePlatform() }]);
+
+    const result = Capacitor.isNativePlatform()
+      ? await this.authenticateWithGoogleNative()
+      : await this.authenticateWithGoogleWeb();
+
+    this.errors.update(e => [...e, { step: 'login() result', result }]);
+
+    if (!result.success) return;
 
     this.utils.fetchData();
     await this.router.navigateByUrl('/');
   }
 
-  async logout(): Promise<void> {
-    try {
-      if (Capacitor.isNativePlatform()) {
-        await FirebaseAuthentication.signOut();
-      }
-      await this.firebase.logout();
-      await this.router.navigate(['/login']);
-    } catch (e) {
-      console.error('Logout failed:', e);
-    }
-  }
-
-  isLoggedIn(): boolean {
-    return this.isLoggedIn$.getValue();
-  }
-
-  private async authenticateWithGoogle(): Promise<AuthResult> {
+  private async authenticateWithGoogleNative(): Promise<AuthResult> {
     try {
       const auth = this.firebase.getAuth();
 
-      if (Capacitor.isNativePlatform()) {
-        const res = await FirebaseAuthentication.signInWithGoogle();
+      this.errors.update(e => [...e, { step: 'Native: signInWithGoogle start' }]);
+      const res = await FirebaseAuthentication.signInWithGoogle({ useCredentialManager: false });
+      this.errors.update(e => [...e, { step: 'Native: signInWithGoogle resolved', res }]);
 
-        const idToken = res.credential?.idToken ?? undefined;
-        const accessToken = res.credential?.accessToken ?? undefined;
-
-        if (!idToken && !accessToken) {
-          return { success: false, error: 'Google sign-in returned no tokens, cannot sign into Firebase.' };
-        }
-
-        const cred = GoogleAuthProvider.credential(idToken, accessToken);
-        const userCredential = await signInWithCredential(auth, cred);
-
-        return { success: true, user: userCredential.user };
-      }
-
-      const res = await FirebaseAuthentication.signInWithGoogle();
-
-      // Depending on platform/plugin version, tokens may be here:
-      const idToken = res.credential?.idToken;
-      const accessToken = res.credential?.accessToken;
-
-      // GoogleAuthProvider.credential(idToken, accessToken)
-      const cred = GoogleAuthProvider.credential(idToken ?? undefined, accessToken ?? undefined);
+      const idToken = res.credential?.idToken ?? undefined;
+      const accessToken = res.credential?.accessToken ?? undefined;
 
       if (!idToken && !accessToken) {
-        throw new Error('No Google token returned (idToken/accessToken missing)');
+        return { success: false, error: 'Native Google sign-in returned no tokens' };
       }
 
-      await signInWithCredential(this.firebase.getAuth(), cred);
-      return { success: true };
+      const cred = GoogleAuthProvider.credential(idToken, accessToken);
+      this.errors.update(e => [...e, { step: 'Native: credential created' }]);
 
+      const userCredential = await signInWithCredential(auth, cred);
+      this.errors.update(e => [...e, { step: 'Native: Firebase sign-in ok', uid: userCredential.user.uid }]);
+
+      return { success: true, user: userCredential.user };
     } catch (error: any) {
-      return { success: false, error: error?.message || 'Google authentication failed' };
+      this.errors.update(e => [...e, { step: 'Native login error', message: error?.message, error }]);
+      return { success: false, error: error?.message || 'Native Google login failed' };
     }
   }
+
+  private async authenticateWithGoogleWeb(): Promise<AuthResult> {
+    try {
+      const auth = this.firebase.getAuth();
+      const provider = new GoogleAuthProvider();
+
+      // Optional: always show account chooser
+      // provider.setCustomParameters({ prompt: 'select_account' });
+
+      this.errors.update(e => [...e, { step: 'Web: signInWithPopup start' }]);
+      const userCredential = await signInWithPopup(auth, provider);
+      this.errors.update(e => [...e, { step: 'Web: popup ok', uid: userCredential.user.uid }]);
+
+      return { success: true, user: userCredential.user };
+    } catch (error: any) {
+      this.errors.update(e => [...e, { step: 'Web login error', message: error?.message, error }]);
+      return { success: false, error: error?.message || 'Web Google login failed' };
+    }
+  }
+
+  async logout(): Promise<void> {
+  this.errors.update(e => [...e, { step: 'Logout clicked', native: Capacitor.isNativePlatform() }]);
+
+  try {
+    // 1) Sign out native provider session (only on device)
+    if (Capacitor.isNativePlatform()) {
+      this.errors.update(e => [...e, { step: 'Native: FirebaseAuthentication.signOut start' }]);
+      await FirebaseAuthentication.signOut();
+      this.errors.update(e => [...e, { step: 'Native: FirebaseAuthentication.signOut ok' }]);
+    }
+
+    // 2) Sign out Firebase session (web + native)
+    this.errors.update(e => [...e, { step: 'Firebase: signOut start' }]);
+
+    // If your FirebaseService.logout() already calls auth.signOut(), keep using it:
+    await this.firebase.logout();
+
+    this.errors.update(e => [...e, { step: 'Firebase: signOut ok' }]);
+
+    // 3) Navigate back to login
+    await this.router.navigate(['/login']);
+    this.errors.update(e => [...e, { step: 'Navigated to /login' }]);
+
+  } catch (error: any) {
+    this.errors.update(e => [...e, { step: 'Logout error', message: error?.message, error }]);
+  }
+}
+
 }
