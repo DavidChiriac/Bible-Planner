@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "820329179054-m18lhtlj66p2uiv2ssce5kh839jvcrak.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "davidchiriac.github.io.bibleplanner",
+            "certificate_hash": "aaff8065079d8970a2db16f697a955627aa0502c"
+          }
+        },
+        {
           "client_id": "820329179054-pfpnvp4gqdldmq485t57uuv8f13vtefi.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
