@@ -5,6 +5,8 @@ import { Navbar } from './shared/components/navbar/navbar';
 import { Footer } from './shared/components/footer/footer';
 import { AuthService } from './shared/services/auth.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { Fullscreen } from '@boengli/capacitor-fullscreen';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-root',
@@ -18,4 +20,10 @@ export class AppComponent {
 
   utils = inject(Utils);
   auth = inject(AuthService);
+
+  async ngOnInit() {
+    if (Capacitor.getPlatform() !== 'web') {
+      await Fullscreen.activateImmersiveMode();
+    }
+  }
 }
