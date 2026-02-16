@@ -7,13 +7,13 @@ body {
 }
 
 .container {
-    height: calc(100dvh - 85px - 18px);
+    min-height: calc(100dvh - 82px - 18px);
     width: 100%;
     overflow: auto;
 }
 
 .container-mobile {
-    height: calc(100dvh - 85px);
+    min-height: calc(100dvh - 85px);
     width: 100%;
     overflow: auto;
 }

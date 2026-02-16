@@ -21,7 +21,6 @@ export class AuthService {
   private readonly firebase = inject(FirebaseService);
   private readonly router = inject(Router);
   private readonly utils = inject(Utils);
-
   private readonly isLoggedIn$ = new BehaviorSubject(false);
 
   constructor() {
@@ -41,7 +40,6 @@ export class AuthService {
 
     if (!result.success) return;
 
-    this.utils.fetchData();
     await this.router.navigateByUrl('/');
   }
 
@@ -85,24 +83,25 @@ export class AuthService {
   }
 
   async logout(): Promise<void> {
+    try {
+      // 1) Sign out native provider session (only on device)
+      if (Capacitor.isNativePlatform()) {
+        await FirebaseAuthentication.signOut();
+      }
 
-  try {
-    // 1) Sign out native provider session (only on device)
-    if (Capacitor.isNativePlatform()) {
-      await FirebaseAuthentication.signOut();
+      // 2) Sign out Firebase session (web + native)
+      // If your FirebaseService.logout() already calls auth.signOut(), keep using it:
+      await this.firebase.logout();
+
+      this.utils.reset()
+
+
+      // 3) Navigate back to login
+      await this.router.navigate(['/login']);
+
+    } catch (error: any) {
+      console.error('Logout failed:', error);
     }
-
-    // 2) Sign out Firebase session (web + native)
-    // If your FirebaseService.logout() already calls auth.signOut(), keep using it:
-    await this.firebase.logout();
-
-
-    // 3) Navigate back to login
-    await this.router.navigate(['/login']);
-
-  } catch (error: any) {
-    console.error('Logout failed:', error);
   }
-}
 
 }
