@@ -3,12 +3,12 @@
 }
 
 .plan-selector-button {
-    .p-button{
-        background-color: white !important;
-        border-radius: 0 !important;
-        border: none !important;
-        width: 100%;
-    }
+  .p-button {
+    background-color: white !important;
+    border-radius: 0 !important;
+    border: none !important;
+    width: 100%;
+  }
 
   &:first-child {
     .p-button {
@@ -26,12 +26,44 @@
 }
 
 .plan-selector-button.selected {
-    .p-button {
-        background-color: gray !important;
-        color: white !important;
-    }
+  .p-button {
+    background-color: gray !important;
+    color: white !important;
+  }
 }
 
 .logout .p-button {
-    background-color: white !important;
+  background-color: white !important;
+}
+
+.chapter-index .p-button {
+  background-color: white !important;
+  border-radius: 10px !important;
+  width: 100%;
+
+  &:hover {
+    background-color: green !important;
+
+    .p-button-label {
+      color: black !important;
+    }
+  }
+
+  &.p-button-success {
+    border-radius: 10px !important;
+    background-color: green !important;
+
+    &:hover {
+      background-color: #f0f0f0 !important;
+
+      .p-button-label {
+        color: black !important;
+      }
+    }
+  }
+
+  .p-button-label {
+    font-size: 32px;
+    color: black;
+  }
 }
