@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Plan citit Biblia</string>
-    <string name="title_activity_main">Plan citit Biblia</string>
+    <string name="app_name">Planificator pentru citirea Bibliei</string>
+    <string name="title_activity_main">Planificator pentru citirea Bibliei</string>
     <string name="package_name">davidchiriac.github.io.bibleplanner</string>
     <string name="custom_url_scheme">davidchiriac.github.io.bibleplanner</string>
 </resources>

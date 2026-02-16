@@ -4,7 +4,6 @@ import { Router, RouterOutlet } from '@angular/router';
 import { Navbar } from './shared/components/navbar/navbar';
 import { Footer } from './shared/components/footer/footer';
 import { AuthService } from './shared/services/auth.service';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { Capacitor } from '@capacitor/core';
 import { StatusBar } from '@capacitor/status-bar';
 import { App } from '@capacitor/app';
@@ -12,7 +11,7 @@ import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Navbar, Footer, ProgressSpinnerModule],
+  imports: [RouterOutlet, Navbar, Footer],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
