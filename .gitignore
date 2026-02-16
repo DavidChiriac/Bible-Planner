@@ -43,3 +43,4 @@ Thumbs.db
 
 # Android release keystore (DO NOT COMMIT)
 android/app/bibleplanner-release.keystore
+bibleplanner-release.keystore
