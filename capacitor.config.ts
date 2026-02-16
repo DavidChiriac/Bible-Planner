@@ -9,6 +9,11 @@ const config: CapacitorConfig = {
       skipNativeAuth: false,
       providers: ['google.com'],
     },
+    EdgeToEdge: {
+      backgroundColor: "#ffffff",
+      navigationBarColor: "#000000",
+      statusBarColor: "#000000",
+    },
   },
 };
 

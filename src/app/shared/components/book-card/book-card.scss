@@ -47,7 +47,11 @@
     background-color: green;
 }
 
-.check {
+.in-progress {
+    background-color: orange;
+}
+
+.overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -61,6 +65,9 @@
 
     i {
         font-size: 2rem;
+    }
+
+    .circled {
         border: 3px solid black;
         padding: 0.5rem;
         border-radius: 50%;

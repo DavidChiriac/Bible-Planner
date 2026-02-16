@@ -6,6 +6,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { authState } from '@angular/fire/auth';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,7 @@ export class Utils {
   private readonly firebase = inject(FirebaseService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly deviceService = inject(DeviceDetectorService);
+  private readonly breakpointObserver = inject(BreakpointObserver);
 
   private loadedOnce = false;
 
@@ -33,7 +35,6 @@ export class Utils {
       .subscribe((res) => {
         if (this.loadedOnce) {
           this.loading.set(false);
-          return;
         }
         if(!res) {
           this.loading.set(false);
@@ -136,7 +137,7 @@ export class Utils {
   }
 
   isMobile() {
-    const small = globalThis.matchMedia('(max-width: 767px)').matches;
+    const small = this.breakpointObserver.isMatched('(max-width: 767px)');
     return this.deviceService.isMobile() && small;
   }
 
