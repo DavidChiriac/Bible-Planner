@@ -1,5 +1,5 @@
 @if (utils.loading()) {
-  <div class="loading-screen">
+  <div class="loading-screen" [class.mobile]="utils.isMobile()">
     <img src="/assets/images/Bible Planner.png" alt="Bible Planner"/>
   </div>
 } @else {
