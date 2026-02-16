@@ -1,11 +1,11 @@
 @if (utils.loading()) {
-  <div class="loading flex justify-center align-items-center">
-      <p-progress-spinner ariaLabel="loading" />
+  <div class="loading-screen">
+    <img src="/assets/images/Bible Planner.png" alt="Bible Planner"/>
   </div>
 } @else {
   @if (auth.isLoggedIn()) {
     <app-navbar></app-navbar>
   }
   <router-outlet></router-outlet>
+  <app-footer></app-footer>
 }
-<app-footer></app-footer>
