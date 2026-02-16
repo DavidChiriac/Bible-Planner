@@ -1,7 +1,7 @@
 <div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
     <div [ngClass]="utils.isMobile() ? 'plan-selector-mobile' : 'plan-selector'">
         @for (tab of tabs; track tab) {
-            <p-button (click)="selectedTab.set(tab)" onkeydown="" class="plan-selector-button" [ngClass]="{'selected': selectedTab() === tab, 'mobile': utils.isMobile()}">{{ tab }}</p-button>
+            <p-button (onClick)="changeTab(tab)" onkeydown="" class="plan-selector-button" [ngClass]="{'selected': selectedTab() === tab, 'mobile': utils.isMobile()}">{{ tab }}</p-button>
         }
     </div>
     <div class="details w-100">
@@ -11,7 +11,7 @@
             } @else if (currentStatus() > 0) {
                 <p class="status positive">Ești cu {{ currentStatus() }} zile citite înainte!</p>
             } @else if (currentStatus() < 0) {
-                <p class="status negative">Ești cu {{ (currentStatus() * -1) }} zile citite în urmă!</p>
+                <p class="status negative">Ești cu {{ (currentStatus() * -1) }} zile de citit în urmă!</p>
             } @else {
                 <p class="status neutral">Ești la zi cu planul de citire!</p>
             }

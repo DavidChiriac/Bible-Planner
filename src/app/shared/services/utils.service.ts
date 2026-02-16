@@ -1,9 +1,11 @@
 import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { FirebaseService } from './firebase.service';
-import { forkJoin, take } from 'rxjs';
+import { filter, forkJoin, take } from 'rxjs';
 import { TABS } from '../../pages/home-page/home-page';
 import { isPlatformBrowser } from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { authState } from '@angular/fire/auth';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
@@ -19,15 +21,32 @@ export class Utils {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly deviceService = inject(DeviceDetectorService);
 
+  private loadedOnce = false;
+
   constructor() {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
 
-    this.fetchData();
+    authState(this.firebase.getAuth())
+      .pipe(takeUntilDestroyed())
+      .subscribe((res) => {
+        if (this.loadedOnce) {
+          this.loading.set(false);
+          return;
+        }
+        if(!res) {
+          this.loading.set(false);
+          return;
+        }
+
+        this.loadedOnce = true;
+        this.fetchData();
+      });
   }
 
   fetchData() {
+    this.loading.set(true);
     forkJoin({
         chapters: this.firebase.getChapters().pipe(take(1)),
         startDate: this.firebase.getStartDate().pipe(take(1)),
@@ -35,9 +54,19 @@ export class Utils {
         plan: this.firebase.getPlan().pipe(take(1)),
       }).subscribe(({ chapters, startDate, months, plan }) => {
         this.readSet.set(new Set(chapters ?? []));
-        if (startDate?.length) this.startDate.set(startDate);
-        if (months) this.months.set(months);
-        if (plan) this.selectedPlan.set(plan);
+        if (startDate?.length) {
+          this.startDate.set(startDate);
+        } else {
+          this.startDate.set(new Date().toISOString().split('T')[0]);
+        }
+        if (months) {
+          this.months.set(months);
+        } else {
+          this.months.set(12);
+        }
+        if (plan) {
+          this.selectedPlan.set(plan);
+        }
 
         this.loading.set(false);
       });
@@ -105,7 +134,8 @@ export class Utils {
   }
 
   isMobile() {
-    return this.deviceService.isMobile();
+    const small = globalThis.matchMedia('(max-width: 767px)').matches;
+    return this.deviceService.isMobile() && small;
   }
 
   isTablet() {
@@ -124,5 +154,13 @@ export class Utils {
     const readChapters = this.readSet();
     const totalChapters = 1189;
     return readChapters.size === totalChapters;
+  }
+
+  reset() {
+    this.readSet.set(new Set());
+    this.months.set(null);
+    this.selectedPlan.set(undefined);
+    this.loading.set(false);
+    this.loadedOnce = false;
   }
 }

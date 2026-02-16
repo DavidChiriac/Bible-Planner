@@ -8,12 +8,28 @@
 }
 
 .p-menubar-mobile {
+    height: 80px;
+    padding-inline: 1rem;
+
+    .p-menubar-button .p-icon {
+        height: 32px;
+        width: 32px;
+    }
+
     .p-menubar-item {
         font-size: 16px;
     }
 
     .p-menubar-item-icon {
         font-size: 24px;
+    }
+
+    .p-menubar-root-list {
+        .p-menubar-item {
+            a {
+                height: 60px;
+            }
+        }
     }
 }
 

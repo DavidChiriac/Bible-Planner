@@ -37,8 +37,6 @@ export class HomePage {
   selectedTab = signal(this.utils.selectedPlan());
 
   weeks = computed(() => {
-    this.firebase.setSelectedPlan(this.selectedTab());
-  
     return this.selectedTab() === TABS.CRONOLOGIC ? CRONOLOGIC : INORDINE;
   });
 
@@ -68,6 +66,13 @@ export class HomePage {
   });
 
   openWeeks = signal<number[]>([]);
+
+  changeTab(tab: TABS) {
+    this.openWeeks.set([]);
+    this.selectedTab.set(tab);
+
+    this.firebase.setSelectedPlan(tab);
+  }
 
   addWeekToOpen(week: number) {
     if (!this.openWeeks().includes(week)) {
