@@ -1,6 +1,6 @@
 import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { FirebaseService } from './firebase.service';
-import { filter, forkJoin, take } from 'rxjs';
+import { forkJoin, take } from 'rxjs';
 import { TABS } from '../../pages/home-page/home-page';
 import { isPlatformBrowser } from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -66,6 +66,8 @@ export class Utils {
         }
         if (plan) {
           this.selectedPlan.set(plan);
+        } else {
+          this.selectedPlan.set(TABS.CRONOLOGIC);
         }
 
         this.loading.set(false);
