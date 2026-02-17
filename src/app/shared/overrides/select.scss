@@ -1,0 +1,32 @@
+.p-select {
+ background: var(--beige-light);
+}
+
+.p-select-label{
+    color: var(--brown-dark);
+}
+
+.p-select:not(.p-disabled).p-focus {
+    border: 1px solid var(--mint) !important;
+}
+
+.sort-books {
+    .p-select-list {
+        background: var(--beige-light);
+        border: 1px solid var(--brown-light);
+
+        .p-select-option {
+            color: var(--brown-dark);
+        }
+    }
+
+    .p-select-item {
+        background: var(--beige-light);
+        color: var(--brown-dark);
+    }
+
+    .p-select-item.p-highlight {
+        background: var(--mint);
+        color: var(--beige-light);
+    }
+}

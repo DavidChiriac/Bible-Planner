@@ -6,7 +6,7 @@
         }
     </div>
     <div class="details w-100">
-        <div class="flex justify-content-center w-100">
+        <div class="flex justify-content-center w-100 status">
             @if (utils.hasReadWholeBible()) {
             <p class="status positive">Felicitări! Ai citit întreaga Biblie! 🎉</p>
             } @else if (currentStatus() > 0) {
@@ -20,7 +20,7 @@
     </div>
 
     <div [ngClass]="utils.isMobile ? 'card-mobile' : 'card'">
-        <p-accordion [multiple]="true" [ngClass]="{'mobile': utils.isMobile}">
+        <p-accordion [multiple]="true" [ngClass]="{'mobile': utils.isMobile}" animationDuration="0">
             @for (tab of weeks(); track tab.week) {
                 <div class="week-anchor" [attr.id]="'week-' + tab.week">
                     <p-accordion-panel [value]="tab.week">
@@ -58,14 +58,14 @@
 
                         <p-accordion-content>
                             @if (openWeeks().includes(tab.week)) {
-                            @for (day of tab.days; track day.label) {
-                            <div class="flex gap-2 align-items-center mb-2 day cursor-pointer row"
-                                [ngClass]="{'read': utils.isEntireDayRead(day.chapters), 'day': !utils.isMobile && !utils.isTablet()}"
-                                (click)="utils.setEntireDayRead(day.chapters)" onkeydown="">
-                                <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)"></p-checkbox>
-                                <h3 class="m-0">{{ day.label }}</h3>
-                            </div>
-                            }
+                                @for (day of tab.days; track day.label) {
+                                    <div class="flex gap-2 align-items-center mb-2 day cursor-pointer row"
+                                        [ngClass]="{'read': utils.isEntireDayRead(day.chapters), 'day': !utils.isMobile && !utils.isTablet()}"
+                                        (click)="utils.setEntireDayRead(day.chapters)" onkeydown="">
+                                        <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)"></p-checkbox>
+                                        <h3 class="m-0">{{ day.label }}</h3>
+                                    </div>
+                                }
                             }
                         </p-accordion-content>
                     </p-accordion-panel>
@@ -77,12 +77,12 @@
     <div class="sticky-bottom-right flex flex-column gap-2 align-items-end">
         <p-button
             icon="pi pi-arrow-up"
-            severity="secondary"
-            [label]="'Sus'"
+            class="go-to-top"
             (onClick)="scrollToTop()">
         </p-button>
         <p-button
             icon="pi pi-angle-down"
+            class="continue-reading"
             [label]="'Continuă citirea'"
             (onClick)="goToNextTargetWeek()">
         </p-button>

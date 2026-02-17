@@ -1,57 +1,80 @@
-.p-menubar-item-link-active {
-    background-color: white;
-    border-radius: 5px;
+.p-menubar {
+  background: var(--brown-dark);
+  color: var(--beige-bg);
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 24px;
+  border-radius: 0px;
+
+  .p-menubar-button,
+  .p-menubar-button:hover {
+    background: transparent;
+  }
+
+  .p-menubar-item .p-menubar-item-link:not(.p-menubar-item-link-active) {
+    .p-menubar-item-label {
+      color: var(--beige-bg);
+      opacity: 0.8;
+    }
+  }
+
+  .p-menubar-item-link-active {
+    border: none !important;
+    background: var(--mint-light);
+    border-radius: 6px !important;
 
     .p-menubar-item-label {
-        color: black;
+      opacity: 1;
+      color: var(--brown-dark);
+      border-bottom: 2px solid var(--mint);
     }
+  }
+
+  .p-menubar-root-list {
+    width: 100%;
+    .p-menubar-item:last-child {
+      margin-left: auto;
+    }
+  }
 }
 
 .p-menubar-mobile {
-    height: 60px;
-    padding-inline: 1rem;
+  height: 60px;
 
-    .p-menubar-button .p-icon {
-        height: 32px;
-        width: 32px;
+  .p-menubar-button .p-icon {
+    height: 32px;
+    width: 32px;
+  }
+
+  .p-menubar-item {
+    font-size: 16px;
+  }
+
+  .p-menubar-item-icon {
+    font-size: 24px;
+  }
+
+  .p-menubar-root-list {
+    background: var(--brown-dark);
+    border: 1px solid var(--beige-light);
+    box-shadow: 2px 2px 2px 2px var(--brown-light);
+
+    .p-menubar-item.p-focus .p-menubar-item-content {
+      background: transparent!important;
+    }
+
+    .p-menubar-item-link-active {
+        .p-menubar-item-label {
+          color: var(--brown-dark);
+          font-weight: 900;
+        }
     }
 
     .p-menubar-item {
-        font-size: 16px;
-    }
-
-    .p-menubar-item-icon {
-        font-size: 24px;
-    }
-
-    .p-menubar-root-list {
-    z-index: 1001;
-
-        .p-menubar-item {
-            a {
-                height: 60px;
-            }
+        a {
+          height: 60px;
         }
     }
-}
-
-.p-menubar:not(.p-menubar-mobile) {
-    .p-menubar-root-list {
-        width: 100%;
-
-        .p-menubar-item:last-child {
-            margin-left: auto;
-
-            background-color: white;
-            border-radius: 5px;
-
-            .p-menubar-item-label{
-                color: black;
-            }
-        }
-    }
-}
-
-.p-menubar-item.p-focus > .p-menubar-item-content {
-    background: none;
+  }
 }
