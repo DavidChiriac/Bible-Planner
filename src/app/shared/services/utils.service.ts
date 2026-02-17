@@ -14,7 +14,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 export class Utils {
   readSet = signal(new Set<string>());
   loading = signal(true);
-  startDate = signal(this.startDateAsDate(new Date().toISOString().split('T')[0]));
+  startDate = signal<Date | null>(null);
   months = signal<number | null>(null);
   selectedPlan = signal<TABS | undefined>(undefined);
 
@@ -61,17 +61,17 @@ export class Utils {
         this.readSet.set(new Set(chapters ?? []));
         if (startDate?.length) {
           this.startDate.set(this.startDateAsDate(startDate));
-        } else {
+        } else if (!this.startDate()) {
           this.firebase.setStartDate(new Date().toISOString().split('T')[0]);
         }
         if (months) {
           this.months.set(months);
-        } else {
+        } else if (!this.months()) {
           this.firebase.setMonths(12);
         }
         if (plan) {
           this.selectedPlan.set(plan);
-        } else {
+        } else if (!this.selectedPlan()) {
           this.firebase.setSelectedPlan(TABS.CRONOLOGIC);
         }
 
