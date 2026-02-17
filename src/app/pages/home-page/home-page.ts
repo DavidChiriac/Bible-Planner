@@ -36,10 +36,8 @@ export class HomePage {
   firebase = inject(FirebaseService);
 
   tabs = [TABS.CRONOLOGIC, TABS.INORDINE];
-  selectedTab = signal(this.utils.selectedPlan());
-
   weeks = computed(() => {
-    return this.selectedTab() === TABS.CRONOLOGIC ? CRONOLOGIC : INORDINE;
+    return this.utils.selectedPlan() === TABS.CRONOLOGIC ? CRONOLOGIC : INORDINE;
   });
 
   numbersOfDaysRead = computed(() => {
@@ -118,7 +116,7 @@ export class HomePage {
 
   changeTab(tab: TABS) {
     this.openWeeks.set([]);
-    this.selectedTab.set(tab);
+    this.utils.selectedPlan.set(tab);
     this.lastNavigatedWeek.set(0);
 
     this.firebase.setSelectedPlan(tab);

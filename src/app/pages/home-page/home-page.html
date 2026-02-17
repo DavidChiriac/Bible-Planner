@@ -1,8 +1,8 @@
 <div [ngClass]="utils.isMobile ? 'container-mobile' : 'container'">
     <div [ngClass]="utils.isMobile ? 'plan-selector-mobile' : 'plan-selector'">
         @for (tab of tabs; track tab) {
-        <p-button (onClick)="changeTab(tab)" onkeydown="" class="plan-selector-button"
-            [ngClass]="{'selected': selectedTab() === tab, 'mobile': utils.isMobile}">{{ tab }}</p-button>
+        <p-button (onClick)="changeTab(tab)" class="plan-selector-button"
+            [ngClass]="{'selected': utils.selectedPlan() === tab}">{{ tab }}</p-button>
         }
     </div>
     <div class="details w-100">
