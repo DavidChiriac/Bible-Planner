@@ -105,31 +105,35 @@ export class HomePage {
 
     weeks.sort((a, b) => a.week - b.week);
 
-    const totalOf = (w: any) => w.days.length;
     const readOf = (w: any) => this.utils.countDaysReadInAWeek(w);
+    const totalOf = (w: any) => w.days.length;
+
+    const isCompleted = (w: any) => readOf(w) === totalOf(w);
+    const isUnstarted = (w: any) => readOf(w) === 0;
+    const isPartial = (w: any) => {
+      const r = readOf(w);
+      const t = totalOf(w);
+      return r > 0 && r < t;
+    };
 
     const candidates: any[] = [];
 
     for (let i = 0; i < weeks.length; i++) {
       const w = weeks[i];
-      const read = readOf(w);
-      const total = totalOf(w);
 
-      const isCompleted = read === total;
-      const isPartial = read > 0 && read < total;
-
-      // 1️⃣ Add completed weeks
-      if (isCompleted) {
-        candidates.push(w);
-        continue;
+      // ✅ Candidate A: completed week whose next week is unstarted
+      if (i < weeks.length - 1) {
+        const next = weeks[i + 1];
+        if (isCompleted(w) && isUnstarted(next)) {
+          candidates.push(w);
+          continue;
+        }
       }
 
-      // 2️⃣ Add ONLY first week of a partial streak
-      if (isPartial) {
+      // 🔄 Candidate B: first week of a partial block
+      if (isPartial(w)) {
         const prev = weeks[i - 1];
-        const prevIsPartial =
-          prev && readOf(prev) > 0 && readOf(prev) < totalOf(prev);
-
+        const prevIsPartial = prev ? isPartial(prev) : false;
         if (!prevIsPartial) {
           candidates.push(w);
         }
@@ -138,16 +142,16 @@ export class HomePage {
 
     if (candidates.length === 0) return;
 
-    // 🔁 Endless cycling
-    const next =
+    // 🔁 Endless cycling relative to last navigated target
+    const nextTarget =
       candidates.find((w) => w.week > this.lastNavigatedWeek) ?? candidates[0];
 
-    this.lastNavigatedWeek = next.week;
+    this.lastNavigatedWeek = nextTarget.week;
 
-    this.addWeekToOpen(next.week);
+    this.addWeekToOpen(nextTarget.week);
 
     this.afterRender(() => {
-      const el = document.getElementById(`week-${next.week}`);
+      const el = document.getElementById(`week-${nextTarget.week}`);
       if (!el) return;
 
       const y = el.getBoundingClientRect().top + window.scrollY - 60;
