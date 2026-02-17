@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import CRONOLOGIC from '../../../assets/jsons/plan_biblie_cronologic_cornilescu_pe_zile.json';
 import INORDINE from '../../../assets/jsons/plan_biblie_in_ordine_pe_saptamani.json';
 import { AuthService } from '../../shared/services/auth.service';
@@ -46,11 +46,7 @@ export class HomePage {
     let readDays = 0;
 
     for (const day of this.weeks().flatMap((p) => p.days)) {
-      if (
-        day.chapters.every((chapter: string) =>
-          this.utils.readSet().has(chapter)
-        )
-      ) {
+      if (day.chapters.every((chapter: string) => this.utils.readSet().has(chapter))) {
         readDays++;
       }
     }
@@ -69,41 +65,20 @@ export class HomePage {
 
   openWeeks = signal<number[]>([]);
 
-  private lastNavigatedWeek = 0;
+  // Keep pointer as a signal so it can reset cleanly when inputs change
+  private readonly lastNavigatedWeek = signal(0);
 
-  changeTab(tab: TABS) {
-    this.openWeeks.set([]);
-    this.selectedTab.set(tab);
+  /**
+   * Precompute "targets" ONLY when weeks() changes or the readSet() changes.
+   * This avoids scanning all weeks every time you click Next.
+   */
+  targetWeeks = computed(() => {
+    // Make the computed depend on readSet changes (Set is mutable, so depend on size).
+    // If you replace the Set with a new Set on every update, you can just call this.utils.readSet().
+    const _ = this.utils.readSet().size;
 
-    this.firebase.setSelectedPlan(tab);
-  }
-
-  addWeekToOpen(week: number) {
-    if (!this.openWeeks().includes(week)) {
-      this.openWeeks.update((weeks) => [...weeks, week]);
-    }
-  }
-
-  goToDay(chapters: string[]) {
-    const chapterToGo = chapters.find(
-      (chapter) => !this.utils.readSet().has(chapter)
-    );
-    if (chapterToGo) {
-      const book = chapterToGo.split('-')[0];
-      const chapter = chapterToGo.split('-')[1];
-      globalThis.location.href = `/books/${book}#${chapter}`;
-    }
-  }
-
-  private afterRender(fn: () => void) {
-    requestAnimationFrame(() => requestAnimationFrame(fn));
-  }
-
-  goToNextTargetWeek(): void {
-    const weeks = [...this.weeks()];
-    if (!weeks.length) return;
-
-    weeks.sort((a, b) => a.week - b.week);
+    const weeks = [...this.weeks()].sort((a, b) => a.week - b.week);
+    if (!weeks.length) return [];
 
     const readOf = (w: any) => this.utils.countDaysReadInAWeek(w);
     const totalOf = (w: any) => w.days.length;
@@ -134,19 +109,50 @@ export class HomePage {
       if (isPartial(w)) {
         const prev = weeks[i - 1];
         const prevIsPartial = prev ? isPartial(prev) : false;
-        if (!prevIsPartial) {
-          candidates.push(w);
-        }
+        if (!prevIsPartial) candidates.push(w);
       }
     }
 
-    if (candidates.length === 0) return;
+    return candidates;
+  });
 
-    // 🔁 Endless cycling relative to last navigated target
+  changeTab(tab: TABS) {
+    this.openWeeks.set([]);
+    this.selectedTab.set(tab);
+    this.lastNavigatedWeek.set(0);
+
+    this.firebase.setSelectedPlan(tab);
+  }
+
+  addWeekToOpen(week: number) {
+    if (!this.openWeeks().includes(week)) {
+      this.openWeeks.update((weeks) => [...weeks, week]);
+    }
+  }
+
+  goToDay(chapters: string[]) {
+    const chapterToGo = chapters.find((chapter) => !this.utils.readSet().has(chapter));
+    if (chapterToGo) {
+      const book = chapterToGo.split('-')[0];
+      const chapter = chapterToGo.split('-')[1];
+      globalThis.location.href = `/books/${book}#${chapter}`;
+    }
+  }
+
+  private afterRender(fn: () => void) {
+    requestAnimationFrame(() => requestAnimationFrame(fn));
+  }
+
+  goToNextTargetWeek(): void {
+    const candidates = this.targetWeeks();
+    if (!candidates.length) return;
+
+    const last = this.lastNavigatedWeek();
+
     const nextTarget =
-      candidates.find((w) => w.week > this.lastNavigatedWeek) ?? candidates[0];
+      candidates.find((w) => w.week > last) ?? candidates[0];
 
-    this.lastNavigatedWeek = nextTarget.week;
+    this.lastNavigatedWeek.set(nextTarget.week);
 
     this.afterRender(() => {
       const el = document.getElementById(`week-${nextTarget.week}`);
@@ -162,7 +168,7 @@ export class HomePage {
   }
 
   scrollToTop(): void {
-    this.lastNavigatedWeek = 0;
+    this.lastNavigatedWeek.set(0);
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
