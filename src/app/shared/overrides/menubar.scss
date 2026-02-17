@@ -25,6 +25,8 @@
     }
 
     .p-menubar-root-list {
+    z-index: 1001;
+
         .p-menubar-item {
             a {
                 height: 60px;
@@ -48,4 +50,8 @@
             }
         }
     }
+}
+
+.p-menubar-item.p-focus > .p-menubar-item-content {
+    background: none;
 }

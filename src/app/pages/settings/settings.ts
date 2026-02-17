@@ -20,9 +20,6 @@ export class Settings {
 
   resetConfirmationVisible = false;
 
-  startDate: Date | null = this.utils.startDateAsDate();
-  months = this.utils.months();
-
   setStartDate(date: Date | null) {
     if (!date) return;
 
@@ -33,8 +30,7 @@ export class Settings {
       
     this.firebase.setStartDate(iso);
 
-    this.startDate = date;
-    this.utils.startDate.set(iso);
+    this.utils.startDate.set(this.utils.startDateAsDate(iso));
   }
 
   setMonths(months: number) {
@@ -42,7 +38,6 @@ export class Settings {
       return;
     }
     this.firebase.setMonths(months);
-    this.months = months;
     this.utils.months.set(months);
   }
 

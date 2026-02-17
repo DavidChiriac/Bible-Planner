@@ -1,49 +1,90 @@
-<div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
-    <div [ngClass]="utils.isMobile() ? 'plan-selector-mobile' : 'plan-selector'">
+<div [ngClass]="utils.isMobile ? 'container-mobile' : 'container'">
+    <div [ngClass]="utils.isMobile ? 'plan-selector-mobile' : 'plan-selector'">
         @for (tab of tabs; track tab) {
-            <p-button (onClick)="changeTab(tab)" onkeydown="" class="plan-selector-button" [ngClass]="{'selected': selectedTab() === tab, 'mobile': utils.isMobile()}">{{ tab }}</p-button>
+        <p-button (onClick)="changeTab(tab)" onkeydown="" class="plan-selector-button"
+            [ngClass]="{'selected': selectedTab() === tab, 'mobile': utils.isMobile}">{{ tab }}</p-button>
         }
     </div>
     <div class="details w-100">
         <div class="flex justify-content-center w-100">
             @if (utils.hasReadWholeBible()) {
-                <p class="status positive">Felicitări! Ai citit întreaga Biblie! 🎉</p>
+            <p class="status positive">Felicitări! Ai citit întreaga Biblie! 🎉</p>
             } @else if (currentStatus() > 0) {
-                <p class="status positive">Ești cu {{ currentStatus() }} zile citite înainte!</p>
+            <p class="status positive">Ești cu {{ currentStatus() }} zile citite înainte!</p>
             } @else if (currentStatus() < 0) {
                 <p class="status negative">Ești cu {{ (currentStatus() * -1) }} zile de citit în urmă!</p>
-            } @else {
+                } @else {
                 <p class="status neutral">Ești la zi cu planul de citire!</p>
-            }
+                }
         </div>
     </div>
 
-    <div [ngClass]="utils.isMobile() ? 'card-mobile' : 'card'">
-        <p-accordion [multiple]="true" [ngClass]="{'mobile': utils.isMobile()}">
+    <div [ngClass]="utils.isMobile ? 'card-mobile' : 'card'">
+        <p-accordion [multiple]="true" [ngClass]="{'mobile': utils.isMobile}">
             @for (tab of weeks(); track tab.week) {
-                <p-accordion-panel [value]="tab.week">
-                    <p-accordion-header (click)="addWeekToOpen(tab.week)" onkeydown="">
-                        <div class="w-full flex justify-content-between pr-5 cursor-pointer">
-                            @if (utils.isMobile()) {
-                                <h4>{{ 'Săpt. ' + tab.week + ' - ' }} <span class="font-italic">{{utils.countDaysReadInAWeek(tab) + '/' + tab.days.length + ' zile'}}</span></h4>
-                            } @else {
-                                <span>{{ 'Săptămâna ' + tab.week + ' - ' }} <span class="font-italic">{{utils.countDaysReadInAWeek(tab) + '/' + tab.days.length + ' zile complete'}}</span></span>
-                            }
-                            <span class="w-6 text-right gray flex align-items-center justify-content-end">{{tab.label}}</span>
-                        </div>
-                    </p-accordion-header>
-                    <p-accordion-content>
-                        @if (openWeeks().includes(tab.week)) {
-                            @for (day of tab.days; track day.label) {
-                                <div class="flex gap-2 align-items-center mb-2 day cursor-pointer row" [ngClass]="{'read': utils.isEntireDayRead(day.chapters), 'day': !utils.isMobile() && !utils.isTablet()}" (click)="utils.setEntireDayRead(day.chapters)" onkeydown="">
-                                    <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)"></p-checkbox>
-                                    <h3 class="m-0">{{ day.label }}</h3>
+                <div class="week-anchor" [attr.id]="'week-' + tab.week">
+                    <p-accordion-panel [value]="tab.week">
+                        <p-accordion-header (click)="addWeekToOpen(tab.week)" onkeydown="">
+                            <div class="w-full flex justify-content-between pr-5 cursor-pointer gap-2" [ngClass]="utils.isMobile ? 'align-items-start' : 'align-items-center'">
+
+                                <div class="flex gap-2" [ngClass]="utils.isMobile ? 'flex-column align-items-start': 'align-items-center'">
+                                    @if (utils.isMobile) {
+                                        <h4 class="m-0">
+                                            {{ 'Săpt. ' + tab.week }}
+                                        </h4>
+                                    } @else {
+                                        <span>
+                                            {{ 'Săptămâna ' + tab.week }}
+                                        </span>
+                                    }
+
+                                    @let read = utils.countDaysReadInAWeek(tab);
+                                    @let total = tab.days.length;
+
+                                    @if (read === total) {
+                                        <p-tag value="Complet" severity="success"></p-tag>
+                                    } @else if (read > 0) {
+                                        <p-tag [value]="'În curs (' + read + '/' + total + ')'" severity="warn"></p-tag>
+                                    } @else {
+                                        <p-tag value="Neînceput" severity="secondary"></p-tag>
+                                    }
                                 </div>
+
+                                <span class="w-6 text-right gray flex align-items-center justify-content-end">
+                                    {{ tab.label }}
+                                </span>
+                            </div>
+                        </p-accordion-header>
+
+                        <p-accordion-content>
+                            @if (openWeeks().includes(tab.week)) {
+                            @for (day of tab.days; track day.label) {
+                            <div class="flex gap-2 align-items-center mb-2 day cursor-pointer row"
+                                [ngClass]="{'read': utils.isEntireDayRead(day.chapters), 'day': !utils.isMobile && !utils.isTablet()}"
+                                (click)="utils.setEntireDayRead(day.chapters)" onkeydown="">
+                                <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)"></p-checkbox>
+                                <h3 class="m-0">{{ day.label }}</h3>
+                            </div>
                             }
-                        }
-                    </p-accordion-content>
-                </p-accordion-panel>
+                            }
+                        </p-accordion-content>
+                    </p-accordion-panel>
+                </div>
             }
         </p-accordion>
+    </div>
+
+    <div class="sticky-bottom-right flex flex-column gap-2 align-items-end">
+        <p-button
+            icon="pi pi-arrow-up"
+            severity="secondary"
+            [label]="'Sus'"
+            (onClick)="scrollToTop()">
+        </p-button>
+        <p-button
+            icon="pi pi-angle-down"
+            [label]="'Continuă citirea'"
+            (onClick)="goToNextPartialWeek()">
+        </p-button>
     </div>
 </div>

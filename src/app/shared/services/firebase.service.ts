@@ -6,6 +6,7 @@ import { Observable, switchMap, of, map } from 'rxjs';
 import { objectVal } from 'rxfire/database';
 import { TABS } from '../../pages/home-page/home-page';
 import Chapters from '../../../assets/jsons/biblia_cornilescu_carti_capitole.json';
+import { migrateChaptersSameRefIfNeeded } from './migration';
 
 type BookDef = { title: string; chapters: string[] };
 
@@ -135,7 +136,7 @@ export class FirebaseService {
           // partial: numeric keys = read chapters
           const nums = Object.keys(node)
             .filter((k) => this.isNumericKey(k) && node[k] === true)
-            .map((k) => Number(k))
+            .map(Number)
             .filter((n) => Number.isFinite(n))
             .sort((a, b) => a - b);
 
@@ -306,5 +307,12 @@ export class FirebaseService {
         return objectVal<TABS>(selectedPlanRef);
       })
     );
+  }
+
+  async ensureChaptersMigrated(): Promise<void> {
+    const u = this.auth.currentUser;
+    if (!u) return;
+
+    await migrateChaptersSameRefIfNeeded(this.db, u.uid);
   }
 }

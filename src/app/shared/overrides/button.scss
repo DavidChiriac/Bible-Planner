@@ -41,7 +41,7 @@
   border-radius: 10px !important;
   width: 100%;
 
-  &:hover {
+  :host:not(.mobile) &:hover {
     background-color: green !important;
 
     .p-button-label {
@@ -53,7 +53,7 @@
     border-radius: 10px !important;
     background-color: green !important;
 
-    &:hover {
+    :host:not(.mobile) &:hover {
       background-color: #f0f0f0 !important;
 
       .p-button-label {
