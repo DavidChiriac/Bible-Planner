@@ -16,7 +16,7 @@
     }
 
     @if (progress() > 0 && progress() < 100) {
-        <div class="overlay">
+        <div [ngClass]="utils.isMobile ? 'mobile-overlay' : 'overlay'">
             <i class="pi pi-clock"></i>
         </div>
     }

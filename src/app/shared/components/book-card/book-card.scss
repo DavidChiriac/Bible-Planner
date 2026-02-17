@@ -1,8 +1,11 @@
 .book-card {
+    background: var(--beige-card);
+    border: 1px solid var(--brown-light);
+
     position: relative;
     cursor: pointer;
-    border: 1px solid white;
-    border-radius: 30px;
+    border-radius: 14px;
+    box-shadow: var(--shadow-soft);
 
     .icon {
         width: 100%;
@@ -30,7 +33,7 @@
 }
 
 .book-card:hover {
-    background-color: white;
+    background-color: var(--beige-light);
 
     .icon {
         img {
@@ -39,16 +42,18 @@
     }
 
     .book-info h3 {
-        color: black;
+        color: var(--brown-dark);
     }
 }
 
 .completed {
-    background-color: green;
+    background: var(--mint);
+    border-color: var(--mint-dark);
+    color: var(--beige-light);
 }
 
 .in-progress {
-    background-color: orange;
+    background-color: var(--brown-light);
 }
 
 .overlay {
@@ -61,14 +66,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: black;
+    color: var(--brown-dark);
 
     i {
         font-size: 2rem;
     }
 
     .circled {
-        border: 3px solid black;
+        border: 3px solid var(--brown-dark);
         padding: 0.5rem;
         border-radius: 50%;
     }
@@ -77,4 +82,11 @@
 .mobile h3 {
     font-size: 16px;
     word-break: break-all;
+    font-weight: 600;
+}
+
+.mobile-overlay {
+    @extend .overlay;
+
+    height: 70%;
 }

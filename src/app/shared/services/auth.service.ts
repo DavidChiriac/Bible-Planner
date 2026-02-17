@@ -39,7 +39,7 @@ export class AuthService {
       : await this.authenticateWithGoogleWeb();
 
     if (!result.success) return;
-
+    this.isLoggedIn$.next(true);
     await this.router.navigateByUrl('/');
   }
 
@@ -97,6 +97,7 @@ export class AuthService {
 
 
       // 3) Navigate back to login
+      this.isLoggedIn$.next(false);
       await this.router.navigate(['/login']);
 
     } catch (error: any) {

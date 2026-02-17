@@ -1,45 +1,45 @@
-.chapters-section{
-    width: 900px;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding-top: 1rem;
+.chapters-section {
+  width: 900px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 1rem;
 }
 
 .chapters-section-mobile {
-    @extend .chapters-section;
-    
-    width: 100%;
-    padding-inline: 1rem;
+  @extend .chapters-section;
+
+  width: 100%;
+  padding-inline: 1rem;
 }
 
 .chapter {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    border-radius: 5px;
-    border: 1px solid white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: 1px solid var(--beige-light);
 
-    &:hover {
-        background-color: #f0f0f0;
+  &:hover {
+    background-color: var(--beige-light);
 
-        .chapter-name {
-            color: black;
-        }
+    .chapter-name {
+      color: var(--brown-dark);
     }
+  }
 }
 
 .chapter-name {
-    font-size: 32px;
+  font-size: 32px;
 }
 
 .book-title {
-    font-size: 48px;
+  font-size: 48px;
 }
 
 .chapters-container .chapter-index {
-    flex: 1 1 10%;
+  flex: 1 1 10%;
 }

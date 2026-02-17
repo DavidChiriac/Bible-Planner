@@ -16,15 +16,15 @@
                 autocomplete="off" />
         </div>
         <div class="mt-6">
-            <button pButton (click)="resetProgress()" severity="danger" onkeydown="">Reset Progress</button>
+            <p-button (onClick)="resetProgress()" class="reset-progress">Reset Progress</p-button>
         </div>
     </div>
 </div>
 
-<p-dialog header="Reset Progress" [modal]="true" [(visible)]="resetConfirmationVisible" [style]="{ width: '25rem' }">
+<p-dialog header="Resetează Progresul" [modal]="true" [(visible)]="resetConfirmationVisible" [style]="{ width: '25rem' }">
     <span class="p-text-secondary block mb-8">Ești sigur că vrei să resetezi progresul?</span>
     <div class="flex justify-end gap-2">
-        <button pButton label="Anulează" (click)="resetConfirmationVisible = false" onkeydown=""></button>
-        <button pButton label="Confirmă" severity="danger" (click)="confirmResetProgress()" onkeydown=""></button>
+        <p-button label="Anulează" class="cancel-reset-progress" (onClick)="resetConfirmationVisible = false"></p-button>
+        <p-button label="Confirmă" class="confirm-reset-progress" (onClick)="confirmResetProgress()"></p-button>
     </div>
 </p-dialog>

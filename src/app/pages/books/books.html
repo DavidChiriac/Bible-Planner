@@ -1,8 +1,8 @@
 <div [ngClass]="utils.isMobile ? 'container-mobile' : 'container'">
     <div [ngClass]="utils.isMobile ? 'filters-mobile' : 'filters'" class="flex gap-3 align-items-center">
         <input type="text" [(ngModel)]="searchTerm" pInputText class="w-100 search-book" placeholder="Caută cartea"/>
-        <p-select [options]="sortOptions" [(ngModel)]="selectedSortOption" optionLabel="label" optionValue="value"></p-select>
-        <p-button label="X" severity="secondary" (onClick)="searchTerm.set(''); selectedSortOption.set('normal');" [disabled]="!searchTerm() && selectedSortOption() === 'normal'" [severity]="!searchTerm() && selectedSortOption() === 'normal' ? 'secondary' : 'danger'"></p-button>
+        <p-select [options]="sortOptions" [panelStyleClass]="'sort-books'" [(ngModel)]="selectedSortOption" optionLabel="label" optionValue="value"></p-select>
+        <p-button label="X" (onClick)="searchTerm.set(''); selectedSortOption.set('normal');" [disabled]="!searchTerm() && selectedSortOption() === 'normal'" [ngClass]="!searchTerm() && selectedSortOption() === 'normal' ? 'clear-filters-disabled' : 'clear-filters'"></p-button>
     </div>
     
     <div [ngClass]="utils.isMobile ? 'plan-selector-mobile' : 'plan-selector'">

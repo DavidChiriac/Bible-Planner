@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
-import { ButtonModule } from 'primeng/button';
+import { Button } from 'primeng/button';
 import { Utils } from '../../shared/services/utils.service';
-import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-login',
-  imports: [ButtonModule, NgClass],
+  imports: [Button],
   templateUrl: './login.html',
   styleUrl: './login.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

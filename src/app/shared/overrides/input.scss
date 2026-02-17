@@ -1,3 +1,13 @@
 .search-book.p-inputtext {
     width: 100%;
 }
+
+.p-inputtext {
+    background: var(--beige-light);
+
+    color: var(--brown-dark);
+}
+
+.p-inputtext:enabled:focus {
+    border: 1px solid var(--mint) !important;
+}

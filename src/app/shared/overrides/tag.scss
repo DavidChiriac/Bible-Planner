@@ -1,0 +1,29 @@
+.p-tag {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.p-tag-success {
+    background: var(--mint);
+
+  .p-tag-label {
+    color: var(--beige-light);
+  }
+}
+
+.p-tag-warn {
+    background: var(--beige-light);
+
+    .p-tag-label {
+        color: var(--mint);
+    }
+}
+
+.p-tag-secondary {
+    background: var(--brown-light);
+
+    .p-tag-label {
+        color: var(--beige-light); 
+    }
+}

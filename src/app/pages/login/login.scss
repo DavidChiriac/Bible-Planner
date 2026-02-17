@@ -1,10 +1,14 @@
 .container{
-    height: calc(100dvh - 18px - 64px);
+    height: calc(100dvh);
+    padding-inline: 2rem;
+    padding-block: 10rem;
+    text-align: center;
+    background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('/assets/images/Login Background.jpg') no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
-.container-mobile{
-    height: calc(100dvh - 7px - 64px);
-    padding-inline: 2rem;
-    text-align: center;
-    padding-block: 10rem;
+.title {
+    color: var(--beige-light);
+    font-size: 48px;
 }

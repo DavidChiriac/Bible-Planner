@@ -4,6 +4,9 @@
 
 body {
     margin: 0;
+    background: var(--beige-bg);
+    color: var(--brown-dark);
+    font-family: "Lora", serif;
 }
 
 .container {
@@ -14,6 +17,23 @@ body {
 
 .container-mobile {
     min-height: calc(100dvh - 99px);
-    width: 100%;
+    width: 95%;
+    margin: auto;
     overflow: auto;
+}
+
+:root {
+  --brown-dark: #4A3B2A;
+  --brown: #6B5A45;
+  --brown-light: #B8A995;
+
+  --beige-bg: #F2E9D8;
+  --beige-card: #E5D7BF;
+  --beige-light: #FAF6EE;
+
+  --mint: #8FBFA8;
+  --mint-dark: #6E9E88;
+  --mint-light: #CFE3D8;
+
+  --shadow-soft: 0 4px 12px rgba(74, 59, 42, 0.15);
 }
