@@ -1,6 +1,6 @@
-import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { DestroyRef, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { FirebaseService } from './firebase.service';
-import { forkJoin, take } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { TABS } from '../../pages/home-page/home-page';
 import { isPlatformBrowser } from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -14,7 +14,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 export class Utils {
   readSet = signal(new Set<string>());
   loading = signal(true);
-  startDate = signal(new Date().toISOString().split('T')[0]);
+  startDate = signal(this.startDateAsDate(new Date().toISOString().split('T')[0]));
   months = signal<number | null>(null);
   selectedPlan = signal<TABS | undefined>(undefined);
 
@@ -22,6 +22,9 @@ export class Utils {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly deviceService = inject(DeviceDetectorService);
   private readonly breakpointObserver = inject(BreakpointObserver);
+  private readonly destroyRef = inject(DestroyRef);
+  
+  isMobile = this.checkIsMobile()
 
   private loadedOnce = false;
 
@@ -32,7 +35,7 @@ export class Utils {
 
     authState(this.firebase.getAuth())
       .pipe(takeUntilDestroyed())
-      .subscribe((res) => {
+      .subscribe(async (res) => {
         if (this.loadedOnce) {
           this.loading.set(false);
         }
@@ -42,33 +45,34 @@ export class Utils {
         }
 
         this.loadedOnce = true;
-        this.fetchData();
+        await this.fetchData();
       });
   }
 
-  fetchData() {
+  async fetchData() {
     this.loading.set(true);
-    forkJoin({
-        chapters: this.firebase.getChapters().pipe(take(1)),
-        startDate: this.firebase.getStartDate().pipe(take(1)),
-        months: this.firebase.getMonths().pipe(take(1)),
-        plan: this.firebase.getPlan().pipe(take(1)),
-      }).subscribe(({ chapters, startDate, months, plan }) => {
+    await this.firebase.ensureChaptersMigrated();
+    combineLatest({
+        chapters: this.firebase.getChapters(),
+        startDate: this.firebase.getStartDate(),
+        months: this.firebase.getMonths(),
+        plan: this.firebase.getPlan(),
+      }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(({ chapters, startDate, months, plan }) => {
         this.readSet.set(new Set(chapters ?? []));
         if (startDate?.length) {
-          this.startDate.set(startDate);
+          this.startDate.set(this.startDateAsDate(startDate));
         } else {
-          this.startDate.set(new Date().toISOString().split('T')[0]);
+          this.firebase.setStartDate(new Date().toISOString().split('T')[0]);
         }
         if (months) {
           this.months.set(months);
         } else {
-          this.months.set(12);
+          this.firebase.setMonths(12);
         }
         if (plan) {
           this.selectedPlan.set(plan);
         } else {
-          this.selectedPlan.set(TABS.CRONOLOGIC);
+          this.firebase.setSelectedPlan(TABS.CRONOLOGIC);
         }
 
         this.loading.set(false);
@@ -136,7 +140,7 @@ export class Utils {
     return readDays;
   }
 
-  isMobile() {
+  checkIsMobile() {
     const small = this.breakpointObserver.isMatched('(max-width: 767px)');
     return this.deviceService.isMobile() && small;
   }
@@ -145,8 +149,8 @@ export class Utils {
     return this.deviceService.isTablet();
   }
 
-  startDateAsDate(): Date | null {
-    const s = this.startDate();
+  startDateAsDate(date: string): Date | null {
+    const s = date;
     if (!s) return null;
 
     const [y, m, d] = s.split('-').map(Number);

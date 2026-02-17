@@ -9,6 +9,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { NgClass } from '@angular/common';
+import { TagModule } from 'primeng/tag';
 
 export enum TABS {
   CRONOLOGIC = 'Cronologic',
@@ -24,6 +25,7 @@ export enum TABS {
     CheckboxModule,
     ButtonModule,
     NgClass,
+    TagModule
   ],
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss',
@@ -46,7 +48,7 @@ export class HomePage {
     for (const day of this.weeks().flatMap((p) => p.days)) {
       if (
         day.chapters.every((chapter: string) =>
-          this.utils.readSet().has(chapter),
+          this.utils.readSet().has(chapter)
         )
       ) {
         readDays++;
@@ -57,15 +59,17 @@ export class HomePage {
 
   currentStatus = computed(() => {
     const today = new Date();
-    const start = new Date(this.utils.startDate());
+    const start = this.utils.startDate() ?? new Date();
 
     const diffInMs = today.getTime() - start.getTime();
     const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24)) + 1;
 
-    return this.numbersOfDaysRead() - (diffInDays * 12 / this.utils.months()!);
+    return this.numbersOfDaysRead() - (diffInDays * 12) / this.utils.months()!;
   });
 
   openWeeks = signal<number[]>([]);
+
+  private lastNavigatedWeek = 0;
 
   changeTab(tab: TABS) {
     this.openWeeks.set([]);
@@ -81,11 +85,64 @@ export class HomePage {
   }
 
   goToDay(chapters: string[]) {
-    const chapterToGo = chapters.find((chapter) => !this.utils.readSet().has(chapter));
+    const chapterToGo = chapters.find(
+      (chapter) => !this.utils.readSet().has(chapter)
+    );
     if (chapterToGo) {
       const book = chapterToGo.split('-')[0];
       const chapter = chapterToGo.split('-')[1];
       globalThis.location.href = `/books/${book}#${chapter}`;
     }
+  }
+
+  private afterRender(fn: () => void) {
+    requestAnimationFrame(() => requestAnimationFrame(fn));
+  }
+
+  goToNextPartialWeek(): void {
+    const weeks = this.weeks();
+    if (!weeks?.length) return;
+
+    const isTarget = (w: any) => {
+      const read = this.utils.countDaysReadInAWeek(w);
+      const total = w.days.length;
+      return read > 0 && read < total;
+    };
+
+    const candidates = weeks.filter(isTarget);
+    if (candidates.length === 0) return;
+
+    // Sort by week to ensure predictable cycling
+    candidates.sort((a, b) => a.week - b.week);
+
+    // Find the next candidate AFTER lastNavigatedWeek; wrap to first
+    const idx = candidates.findIndex((w) => w.week > this.lastNavigatedWeek);
+    const next = idx === -1 ? candidates[0] : candidates[idx];
+
+    // Update pointer for endless cycling
+    this.lastNavigatedWeek = next.week;
+
+    // Expand
+    this.addWeekToOpen(next.week);
+
+    // Scroll
+    this.afterRender(() => {
+      const el = document.getElementById(`week-${next.week}`);
+      if (!el) return;
+
+      const y = el.getBoundingClientRect().top + window.scrollY - 60;
+
+      window.scrollTo({
+        top: y,
+        behavior: 'smooth',
+      });
+    });
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   }
 }
