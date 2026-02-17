@@ -302,7 +302,7 @@ export class FirebaseService {
   getPlan(): Observable<TABS> {
     return this.user$.pipe(
       switchMap((u) => {
-        if (!u) return of(TABS.CRONOLOGIC);
+        if (!u) return of(TABS.INORDINE);
         const selectedPlanRef = ref(this.db, `users/${u.uid}/selectedPlan`);
         return objectVal<TABS>(selectedPlanRef);
       })
