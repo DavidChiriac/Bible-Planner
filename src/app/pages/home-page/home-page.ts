@@ -148,8 +148,6 @@ export class HomePage {
 
     this.lastNavigatedWeek = nextTarget.week;
 
-    this.addWeekToOpen(nextTarget.week);
-
     this.afterRender(() => {
       const el = document.getElementById(`week-${nextTarget.week}`);
       if (!el) return;
@@ -164,6 +162,7 @@ export class HomePage {
   }
 
   scrollToTop(): void {
+    this.lastNavigatedWeek = 0;
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
