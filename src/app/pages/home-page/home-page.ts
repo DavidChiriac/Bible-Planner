@@ -25,7 +25,7 @@ export enum TABS {
     CheckboxModule,
     ButtonModule,
     NgClass,
-    TagModule
+    TagModule,
   ],
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss',
@@ -99,33 +99,53 @@ export class HomePage {
     requestAnimationFrame(() => requestAnimationFrame(fn));
   }
 
-  goToNextPartialWeek(): void {
-    const weeks = this.weeks();
-    if (!weeks?.length) return;
+  goToNextTargetWeek(): void {
+    const weeks = [...this.weeks()];
+    if (!weeks.length) return;
 
-    const isTarget = (w: any) => {
-      const read = this.utils.countDaysReadInAWeek(w);
-      const total = w.days.length;
-      return read > 0 && read < total;
-    };
+    weeks.sort((a, b) => a.week - b.week);
 
-    const candidates = weeks.filter(isTarget);
+    const totalOf = (w: any) => w.days.length;
+    const readOf = (w: any) => this.utils.countDaysReadInAWeek(w);
+
+    const candidates: any[] = [];
+
+    for (let i = 0; i < weeks.length; i++) {
+      const w = weeks[i];
+      const read = readOf(w);
+      const total = totalOf(w);
+
+      const isCompleted = read === total;
+      const isPartial = read > 0 && read < total;
+
+      // 1️⃣ Add completed weeks
+      if (isCompleted) {
+        candidates.push(w);
+        continue;
+      }
+
+      // 2️⃣ Add ONLY first week of a partial streak
+      if (isPartial) {
+        const prev = weeks[i - 1];
+        const prevIsPartial =
+          prev && readOf(prev) > 0 && readOf(prev) < totalOf(prev);
+
+        if (!prevIsPartial) {
+          candidates.push(w);
+        }
+      }
+    }
+
     if (candidates.length === 0) return;
 
-    // Sort by week to ensure predictable cycling
-    candidates.sort((a, b) => a.week - b.week);
+    // 🔁 Endless cycling
+    const next =
+      candidates.find((w) => w.week > this.lastNavigatedWeek) ?? candidates[0];
 
-    // Find the next candidate AFTER lastNavigatedWeek; wrap to first
-    const idx = candidates.findIndex((w) => w.week > this.lastNavigatedWeek);
-    const next = idx === -1 ? candidates[0] : candidates[idx];
-
-    // Update pointer for endless cycling
     this.lastNavigatedWeek = next.week;
 
-    // Expand
     this.addWeekToOpen(next.week);
 
-    // Scroll
     this.afterRender(() => {
       const el = document.getElementById(`week-${next.week}`);
       if (!el) return;
