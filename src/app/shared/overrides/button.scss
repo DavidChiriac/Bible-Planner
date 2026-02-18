@@ -112,6 +112,9 @@
 
 .clear-filters .p-button {
   background: var(--brown-dark);
+  border: 1px solid var(--beige-light);
+    outline: 1px solid var(--beige-light);
+    outline-offset: 2px;
 
   .p-button-label {
     color: var(--beige-light);
@@ -120,6 +123,9 @@
 
 .clear-filters-disabled .p-button {
   background: var(--beige-light);
+  border: 1px solid var(--beige-light);
+    outline: 1px solid var(--beige-light);
+    outline-offset: 2px;
 
   .p-button-label {
     color: var(--brown);

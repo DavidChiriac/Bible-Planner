@@ -1,4 +1,4 @@
-<div [ngClass]="utils.isMobile ? 'container-mobile' : 'container'">
+<div class="mb-6" [ngClass]="utils.isMobile ? 'container-mobile' : 'container'">
     <div [ngClass]="utils.isMobile ? 'filters-mobile' : 'filters'" class="flex gap-3 align-items-center">
         <input type="text" [(ngModel)]="searchTerm" pInputText class="w-100 search-book" placeholder="Caută cartea"/>
         <p-select [options]="sortOptions" [panelStyleClass]="'sort-books'" [(ngModel)]="selectedSortOption" optionLabel="label" optionValue="value"></p-select>
@@ -24,7 +24,7 @@
         </div>
 
 
-    <div [ngClass]="utils.isMobile ? 'cards-section-mobile' : 'cards-section'">
+    <div class="mb-3" [ngClass]="utils.isMobile ? 'cards-section-mobile' : 'cards-section'">
         @for (item of items(); track item.title) {
             <div class="book">
                 <app-book-card [book]="item" (click)="navigateToBook(item.title)" onkeydown=""></app-book-card>

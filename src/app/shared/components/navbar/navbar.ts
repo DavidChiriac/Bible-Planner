@@ -2,10 +2,12 @@ import { Component, inject } from '@angular/core';
 import { MenubarModule } from 'primeng/menubar';
 import { AuthService } from '../../services/auth.service';
 import { ButtonModule } from 'primeng/button';
+import { Utils } from '../../services/utils.service';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
-  imports: [MenubarModule, ButtonModule],
+  imports: [MenubarModule, ButtonModule, NgClass],
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
 })
@@ -18,9 +20,15 @@ export class Navbar {
       routerLinkActiveOptions: { exact: true }
     },
     {
+      separator: true
+    },
+    {
       label: 'Cărți',
       icon: 'pi pi-book',
       routerLink: '/books',
+    },
+    {
+      separator: true
     },
     {
       label: 'Setări',
@@ -35,4 +43,5 @@ export class Navbar {
   ];
 
   auth = inject(AuthService);
+  utils = inject(Utils);
 }

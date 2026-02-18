@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import CRONOLOGIC from '../../../assets/jsons/plan_biblie_cronologic_cornilescu_pe_zile.json';
 import INORDINE from '../../../assets/jsons/plan_biblie_in_ordine_pe_saptamani.json';
 import { AuthService } from '../../shared/services/auth.service';

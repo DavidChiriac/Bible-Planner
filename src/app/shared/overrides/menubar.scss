@@ -1,6 +1,6 @@
 .p-menubar {
   background: var(--brown-dark);
-  color: var(--beige-bg);
+  color: var(--beige-light);
   display: flex;
   align-items: center;
   width: 100%;
@@ -14,7 +14,12 @@
 
   .p-menubar-item .p-menubar-item-link:not(.p-menubar-item-link-active) {
     .p-menubar-item-label {
-      color: var(--beige-bg);
+      color: var(--beige-light);
+      opacity: 0.8;
+    }
+
+    .p-menubar-item-icon {
+      color: var(--beige-light);
       opacity: 0.8;
     }
   }
@@ -29,6 +34,13 @@
       color: var(--brown-dark);
       border-bottom: 2px solid var(--mint);
     }
+  }
+
+  .p-menubar-separator {
+    width: 1px;
+    height: 16px;
+    background: var(--beige-light);
+    opacity: 0.8;
   }
 
   .p-menubar-root-list {
@@ -58,7 +70,7 @@
   .p-menubar-root-list {
     background: var(--brown-dark);
     border: 1px solid var(--beige-light);
-    box-shadow: 2px 2px 2px 2px var(--brown-light);
+    box-shadow: -1px 1px 1px var(--brown-light);
 
     .p-menubar-item.p-focus .p-menubar-item-content {
       background: transparent!important;

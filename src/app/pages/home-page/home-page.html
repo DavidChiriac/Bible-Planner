@@ -6,16 +6,18 @@
         }
     </div>
     <div class="details w-100">
-        <div class="flex justify-content-center w-100 status">
+        <div class="flex gap-4 justify-content-center w-100 status mb-4">
+            <i class="pi flex align-items-center pi-angle-double-left"></i>
             @if (utils.hasReadWholeBible()) {
-            <p class="status positive">Felicitări! Ai citit întreaga Biblie! 🎉</p>
+            <p>Felicitări! Ai citit întreaga Biblie! 🎉</p>
             } @else if (currentStatus() > 0) {
-            <p class="status positive">Ești cu {{ currentStatus() }} zile citite înainte!</p>
+            <p>Ești cu {{ currentStatus() }} zile citite înainte!</p>
             } @else if (currentStatus() < 0) {
-                <p class="status negative">Ești cu {{ (currentStatus() * -1) }} zile de citit în urmă!</p>
+                <p>Ești cu {{ (currentStatus() * -1) }} zile de citit în urmă!</p>
                 } @else {
-                <p class="status neutral">Ești la zi cu planul de citire!</p>
+                <p>Ești la zi cu planul de citire!</p>
                 }
+            <i class="pi flex align-items-center pi-angle-double-right"></i>
         </div>
     </div>
 
@@ -58,9 +60,9 @@
 
                         <p-accordion-content>
                             @if (openWeeks().includes(tab.week)) {
-                                @for (day of tab.days; track day.label) {
-                                    <div class="flex gap-2 align-items-center mb-2 day cursor-pointer row"
-                                        [ngClass]="{'read': utils.isEntireDayRead(day.chapters), 'day': !utils.isMobile && !utils.isTablet()}"
+                                @for (day of tab.days; track day.label; let i = $index) {
+                                    <div class="flex gap-2 align-items-center day cursor-pointer row"
+                                        [ngClass]="{'read': utils.isEntireDayRead(day.chapters), 'day': !utils.isMobile && !utils.isTablet(), 'mb-1': i < tab.days.length - 1}"
                                         (click)="utils.setEntireDayRead(day.chapters)" onkeydown="">
                                         <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)"></p-checkbox>
                                         <h3 class="m-0">{{ day.label }}</h3>

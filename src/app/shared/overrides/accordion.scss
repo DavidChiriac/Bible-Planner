@@ -17,12 +17,13 @@
     background: transparent !important;
     border: 1px solid var(--brown-light) !important;
     border-radius: 16px !important;
-    box-shadow: 2px 2px 2px 2px var(--brown-light);
+    box-shadow: -1px 1px 1px var(--brown-light)
   }
 
   .p-accordioncontent-content {
     background: transparent !important;
     padding-inline: 0.12rem !important;
+    padding-bottom: 0;
   }
 }
 
@@ -42,7 +43,8 @@
   .p-accordioncontent-content {
     border: 1px solid var(--brown-light) !important;
     border-top: none !important;
-    border-bottom-left-radius: 16px !important;
-    border-bottom-right-radius: 16px !important;
+    border-bottom-left-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+    padding-bottom: 2px;
   }
 }

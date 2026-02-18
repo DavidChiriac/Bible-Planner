@@ -1,6 +1,6 @@
 <div class="book-card" [ngClass]="{'completed': isCompleted(), 'mobile': utils.isMobile, 'in-progress': progress() > 0 && progress() < 100}">
     <div class="icon">
-        <img [src]="'assets/icons/open-book.png'" alt="Book Cover" class="book-cover" />
+        <img [src]="isCompleted() || (progress() > 0 && progress() < 100) ? 'assets/icons/read-book.png' : 'assets/icons/open-book.png'" alt="Book Cover" class="book-cover" />
     </div>
     <div class="book-info flex flex-column">
         <div class="w-9">

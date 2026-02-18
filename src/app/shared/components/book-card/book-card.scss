@@ -1,6 +1,8 @@
 .book-card {
     background: var(--beige-card);
     border: 1px solid var(--brown-light);
+    outline: 1px solid var(--brown-light);
+    outline-offset: 2px;
 
     position: relative;
     cursor: pointer;
@@ -20,7 +22,6 @@
         img {
             width: 80%;
             aspect-ratio: 2/1.5;
-            filter: invert(1);
         }
     }
 
@@ -34,12 +35,6 @@
 
 .book-card:hover {
     background-color: var(--beige-light);
-
-    .icon {
-        img {
-            filter: invert(0);
-        }
-    }
 
     .book-info h3 {
         color: var(--brown-dark);

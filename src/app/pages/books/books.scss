@@ -37,14 +37,17 @@
 }
 
 .plan-selector{
-  width: 900px;
+  width: 700px;
   margin: auto;
-  padding-inline: 1rem;
   display: flex;
   justify-content: center;
   margin-bottom: 1rem;
   margin-top: 1rem;
-  border-radius: 5px;
+  border-radius: 15px;
+  border: 1px solid var(--brown-light);
+  box-shadow: -1px 1px 1px var(--brown-light);
+  outline: 1px solid var(--brown-light);
+  outline-offset: 2px;
 }
 
 .plan-selector-mobile{
