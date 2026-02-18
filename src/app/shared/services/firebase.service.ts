@@ -1,7 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { Auth, signOut, user, getAuth } from '@angular/fire/auth';
 import { Database } from '@angular/fire/database';
-import { child, ref, remove, runTransaction, update } from 'firebase/database';
+import {
+  child,
+  get,
+  ref,
+  remove,
+  runTransaction,
+  update,
+} from 'firebase/database';
 import { Observable, switchMap, of, map } from 'rxjs';
 import { objectVal } from 'rxfire/database';
 import { TABS } from '../../pages/home-page/home-page';
@@ -20,6 +27,8 @@ type BookNode = {
   __all?: boolean;
   [chapter: string]: any;
 };
+
+export type NoteItem = { key: string; text: string };
 
 @Injectable({ providedIn: 'root' })
 export class FirebaseService {
@@ -122,18 +131,16 @@ export class FirebaseService {
         for (const [book, node] of Object.entries(tree)) {
           if (!node) continue;
 
-          const count = CHAPTER_COUNT[book]; // from your JSON
+          const count = CHAPTER_COUNT[book];
           const all = node.__all === true;
 
           if (all) {
-            // expand all chapters for this book
             if (Number.isInteger(count) && count > 0) {
               for (let i = 1; i <= count; i++) out.push(`${book} ${i}`);
             }
             continue;
           }
 
-          // partial: numeric keys = read chapters
           const nums = Object.keys(node)
             .filter((k) => this.isNumericKey(k) && node[k] === true)
             .map(Number)
@@ -143,7 +150,6 @@ export class FirebaseService {
           for (const n of nums) out.push(`${book} ${n}`);
         }
 
-        // dedupe (safety) + keep stable order
         return Array.from(new Set(out));
       })
     );
@@ -153,14 +159,13 @@ export class FirebaseService {
     const u = this.auth.currentUser;
     if (!u) throw new Error('Not logged in');
 
-    // Group inputs by book so we can do 1 small transaction per touched book
     const byBook = new Map<string, Set<number>>();
     for (const label of newChapters) {
       const p = this.parseChapterLabel(label);
       if (!p) continue;
 
       const max = CHAPTER_COUNT[p.book];
-      if (max && p.chapter > max) continue; // ignore invalid chapter number
+      if (max && p.chapter > max) continue;
 
       if (!byBook.has(p.book)) byBook.set(p.book, new Set<number>());
       byBook.get(p.book)!.add(p.chapter);
@@ -168,23 +173,18 @@ export class FirebaseService {
 
     const root = this.chaptersRoot(u.uid);
 
-    // 1 transaction per changed book (tiny nodes, no full download)
     for (const [book, chaptersSet] of byBook.entries()) {
       const bookRef = child(root, book);
-
       const bookTotal = CHAPTER_COUNT[book] ?? 0;
 
       await runTransaction(bookRef, (current: BookNode | null) => {
         const node: BookNode =
           current && typeof current === 'object' ? current : {};
 
-        // Already fully read → nothing to do
         if (node.__all === true) return node;
 
-        // Apply adds
         for (const ch of chaptersSet) node[String(ch)] = true;
 
-        // Check completion
         if (bookTotal > 0) {
           let readCount = 0;
           for (const k of Object.keys(node)) {
@@ -192,7 +192,6 @@ export class FirebaseService {
           }
 
           if (readCount >= bookTotal) {
-            // Collapse to single flag; returning {__all:true} overwrites & deletes numeric keys
             return { __all: true };
           }
         }
@@ -235,22 +234,17 @@ export class FirebaseService {
         const isAll = node.__all === true;
 
         if (isAll) {
-          // If book was collapsed, and we delete a chapter, we must "expand" back to partial
-          // (rare case, but keeps behavior correct without changing your callers)
-          if (bookTotal <= 0) return node; // can't expand without count
+          if (bookTotal <= 0) return node;
 
           const newNode: BookNode = {};
           for (let i = 1; i <= bookTotal; i++) {
             if (!delSet.has(i)) newNode[String(i)] = true;
           }
-          // If deleting all chapters → delete the whole book node
           return Object.keys(newNode).length === 0 ? null : newNode;
         }
 
-        // Partial: delete numeric keys
         for (const ch of delSet) delete node[String(ch)];
 
-        // Clean up if nothing remains
         const stillHasAny = Object.keys(node).some(
           (k) => this.isNumericKey(k) && node[k] === true
         );
@@ -263,10 +257,6 @@ export class FirebaseService {
     return touched ? 'deleted' : 'nothing to delete';
   }
 
-  /**
-   * Optional explicit API if you want a "mark entire book read" button
-   * without adding every chapter.
-   */
   async markBookComplete(book: string): Promise<void> {
     const u = this.auth.currentUser;
     if (!u) throw new Error('Not logged in');
@@ -314,5 +304,109 @@ export class FirebaseService {
     if (!u) return;
 
     await migrateChaptersSameRefIfNeeded(this.db, u.uid);
+  }
+
+  // ---------------- NOTES ----------------
+
+  async saveNote(chapters: string[], note: string): Promise<string> {
+    const u = this.auth.currentUser;
+    if (!u) throw new Error('Not logged in');
+
+    const noteRef = ref(this.db, `users/${u.uid}/notes`);
+
+    const snapshot = await get(noteRef);
+    const existingData = snapshot.exists() ? snapshot.val() : {};
+
+    const updates: Record<string, string> = {};
+
+    for (const ch of chapters) {
+      const chapterNotes = existingData?.[ch] ?? {};
+
+      const indices = Object.keys(chapterNotes)
+        .map(Number)
+        .filter((n) => Number.isFinite(n));
+
+      const nextIndex = indices.length ? Math.max(...indices) + 1 : 0;
+
+      updates[`${ch}/${nextIndex}`] = note;
+    }
+
+    await update(noteRef, updates);
+
+    return 'note saved';
+  }
+
+  /**
+   * Fetch notes with stable keys (so UI can delete the exact clicked one).
+   * Returns: { chapter: [{key:'0', text:'...'}, ...] }
+   */
+  async getNoteItemsForChapters(
+    chapters: string[]
+  ): Promise<Record<string, NoteItem[]>> {
+    const u = this.auth.currentUser;
+    if (!u) throw new Error('Not logged in');
+
+    const notesRef = ref(this.db, `users/${u.uid}/notes`);
+    const snapshot = await get(notesRef);
+    const data = snapshot.exists() ? snapshot.val() : {};
+
+    const result: Record<string, NoteItem[]> = {};
+
+    for (const ch of chapters) {
+      const chapterNotes: Record<string, string> = data?.[ch] ?? {};
+
+      const items = Object.keys(chapterNotes)
+        .map((k) => Number(k))
+        .filter((n) => Number.isFinite(n))
+        .sort((a, b) => a - b)
+        .map((n) => {
+          const key = String(n);
+          return { key, text: chapterNotes[key] };
+        });
+
+      result[ch] = items;
+    }
+
+    return result;
+  }
+
+  /**
+   * Delete a note by its key (deletes exactly one instance even if duplicates exist).
+   */
+  async deleteNoteByKey(chapter: string, key: string): Promise<string> {
+    const u = this.auth.currentUser;
+    if (!u) throw new Error('Not logged in');
+
+    const chapterRef = ref(this.db, `users/${u.uid}/notes/${chapter}`);
+
+    // remove(childRef) deletes only that specific key
+    await remove(child(chapterRef, key));
+
+    return 'note deleted';
+  }
+
+  // (Optional) Keep your old API if other code calls it.
+  // This deletes the first matching by text; not used by Day anymore.
+  async deleteNote(chapter: string, note: string): Promise<string> {
+    const u = this.auth.currentUser;
+    if (!u) throw new Error('Not logged in');
+
+    const chapterRef = ref(this.db, `users/${u.uid}/notes/${chapter}`);
+
+    const snapshot = await get(chapterRef);
+    if (!snapshot.exists()) return 'no notes to delete';
+
+    const chapterNotes: Record<string, string> = snapshot.val();
+
+    const matchKey = Object.keys(chapterNotes)
+      .map((k) => ({ key: k, idx: Number(k) }))
+      .filter((x) => Number.isFinite(x.idx))
+      .sort((a, b) => a.idx - b.idx)
+      .find((x) => chapterNotes[x.key] === note)?.key;
+
+    if (!matchKey) return 'note not found';
+
+    await remove(child(chapterRef, matchKey));
+    return 'note deleted';
   }
 }

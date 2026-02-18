@@ -1,7 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import CRONOLOGIC from '../../../assets/jsons/plan_biblie_cronologic_cornilescu_pe_zile.json';
 import INORDINE from '../../../assets/jsons/plan_biblie_in_ordine_pe_saptamani.json';
-import { AuthService } from '../../shared/services/auth.service';
 import { Utils } from '../../shared/services/utils.service';
 import { FirebaseService } from '../../shared/services/firebase.service';
 import { AccordionModule } from 'primeng/accordion';
@@ -10,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { NgClass } from '@angular/common';
 import { TagModule } from 'primeng/tag';
+import { Router } from '@angular/router';
 
 export enum TABS {
   CRONOLOGIC = 'Cronologic',
@@ -32,8 +32,8 @@ export enum TABS {
 })
 export class HomePage {
   utils = inject(Utils);
-  auth = inject(AuthService);
-  firebase = inject(FirebaseService);
+  private readonly firebase = inject(FirebaseService);
+  private readonly router = inject(Router);
 
   tabs = [TABS.CRONOLOGIC, TABS.INORDINE];
   weeks = computed(() => {
@@ -128,13 +128,8 @@ export class HomePage {
     }
   }
 
-  goToDay(chapters: string[]) {
-    const chapterToGo = chapters.find((chapter) => !this.utils.readSet().has(chapter));
-    if (chapterToGo) {
-      const book = chapterToGo.split('-')[0];
-      const chapter = chapterToGo.split('-')[1];
-      globalThis.location.href = `/books/${book}#${chapter}`;
-    }
+  goToDay(dayIndex: number , tab: {week: number}) {
+    this.router.navigate(['/day'], { queryParams: { day: dayIndex, week: tab.week, plan: this.utils.selectedPlan() } });
   }
 
   private afterRender(fn: () => void) {

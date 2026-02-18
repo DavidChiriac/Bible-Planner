@@ -6,9 +6,11 @@ import { Login } from './pages/login/login';
 import { Settings } from './pages/settings/settings';
 import { Books } from './pages/books/books';
 import { BookChapters } from './pages/books/book-chapters/book-chapters';
+import { Day } from './pages/home-page/day/day';
 
 export const routes: Routes = [
     { path: '', component: HomePage, canActivate: [authGuard], pathMatch: 'full' },
+    { path: 'day', component: Day, canActivate: [authGuard] },
     { path: 'login', component: Login, canActivate: [guestGuard] },
     { path: 'settings', component: Settings, canActivate: [authGuard] },
     { path: 'books', component: Books, canActivate: [authGuard] },

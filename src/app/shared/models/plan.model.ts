@@ -1,8 +1,1 @@
-export interface IPlan {
-    week: number;
-    label: string;
-    days: {
-        label: string;
-        chapters: string[];
-    }[];
-}
+export interface IPlan { week: number; label: string; days: { chapters: string[]; label: string; }[]; }

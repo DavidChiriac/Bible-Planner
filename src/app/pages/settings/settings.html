@@ -22,9 +22,10 @@
 </div>
 
 <p-dialog header="Resetează Progresul" [modal]="true" [(visible)]="resetConfirmationVisible" [style]="{ width: '25rem' }">
-    <span class="p-text-secondary block mb-8">Ești sigur că vrei să resetezi progresul?</span>
-    <div class="flex justify-end gap-2">
-        <p-button label="Anulează" class="cancel-reset-progress" (onClick)="resetConfirmationVisible = false"></p-button>
+    <span class="p-text-secondary block mb-2">Ești sigur că vrei să resetezi progresul?</span>
+    <span class="p-text-secondary block mb-8 font-italic">(Asta NU va afecta notițele tale)</span>
+    <div class="flex justify-content-center gap-2">
         <p-button label="Confirmă" class="confirm-reset-progress" (onClick)="confirmResetProgress()"></p-button>
+        <p-button label="Anulează" class="cancel-reset-progress" (onClick)="resetConfirmationVisible = false"></p-button>
     </div>
 </p-dialog>

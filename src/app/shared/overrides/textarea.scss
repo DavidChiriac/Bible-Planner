@@ -1,0 +1,13 @@
+.p-textarea {
+  background: var(--beige-light);
+  color: var(--brown-dark);
+  border: 1px solid var(--brown-dark);
+  outline: 1px solid var(--brown-dark);
+  outline-offset: 2px;
+}
+
+.p-textarea:enabled:focus {
+  border: 1px solid var(--brown-dark);
+  outline: 1px solid var(--brown-dark);
+  outline-offset: 2px;
+}
