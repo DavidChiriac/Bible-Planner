@@ -1,5 +1,8 @@
 .search-book.p-inputtext {
     width: 100%;
+    border: 1px solid var(--beige-light);
+    outline: 1px solid var(--beige-light);
+    outline-offset: 2px;
 }
 
 .p-inputtext {

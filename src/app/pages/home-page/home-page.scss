@@ -7,13 +7,13 @@
   border-radius: 16px;
   padding: 0.25rem;
   margin-bottom: 1rem;
-  box-shadow: 2px 2px 2px 2px var(--brown-light);
+  box-shadow: -1px 1px 1px var(--brown-light)
 }
 
 .card-mobile {
   @extend .card;
 
-  width: 100%;
+  width: 95%;
 }
 
 .plan-selector {
@@ -25,7 +25,9 @@
   margin-top: 2rem;
   border-radius: 15px;
   border: 1px solid var(--brown-light);
-  box-shadow: 2px 2px 2px 2px var(--brown-light);
+  box-shadow: -1px 1px 1px var(--brown-light);
+  outline: 1px solid var(--brown-light);
+  outline-offset: 2px;
 }
 
 .plan-selector-mobile {
@@ -49,7 +51,6 @@
   padding: 10px 12px;
   border-radius: 5px;
   background: var(--beige-card);
-  margin-bottom: 8px;
   border: 1px solid var(--brown-light);
 }
 
@@ -66,7 +67,6 @@
   p {
     text-align: center;
     color: var(--brown);
-    margin: 12px 0 2rem;
     font-size: 1.25rem;
     font-weight: 600;
   }
