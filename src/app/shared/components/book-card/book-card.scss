@@ -41,6 +41,12 @@
     }
 }
 
+.book-card:is(.completed, .in-progress):hover {
+    .icon img {
+        filter: invert(1);
+    }
+}
+
 .completed {
     background: var(--mint);
     border-color: var(--mint-dark);

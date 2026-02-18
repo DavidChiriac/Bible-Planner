@@ -1,0 +1,98 @@
+@if (loading()) {
+<div class="container flex flex-column align-items-center gap-3 mt-5">
+    <p-progressSpinner></p-progressSpinner>
+    <p>Se încarcă notițele...</p>
+</div>
+} @else {
+<div [ngClass]="utils.isMobile ? 'container-mobile' : 'container'">
+    <div class="pl-3 mt-3">
+        <p-button label="Back" class="go-back" (onClick)="goBack()">
+            <i class="pi pi-arrow-left"></i>
+        </p-button>
+    </div>
+
+    <div class="flex justify-content-between gap-3 w-9 mx-auto" [ngClass]="{'flex-column w-11': utils.isMobile}">
+        <div [ngClass]="{'w-5 small-container': !utils.isMobile}">
+            <h2 [ngClass]="utils.isMobile ? 'mb-3' : 'mb-4'">Capitole</h2>
+            @for (chapter of chapters; track $index) {
+            <div
+                class="flex gap-2 align-items-center cursor-pointer row mb-3"
+                [ngClass]="{ read: utils.isEntireDayRead([chapter]) }"
+                (click)="$event.stopPropagation(); utils.setEntireDayRead([chapter])"
+                onkeydown="">
+                <p-checkbox
+                    [binary]="true"
+                    [ngModel]="utils.isEntireDayRead([chapter])"></p-checkbox>
+                <h3 class="m-0">{{ chapter }}</h3>
+            </div>
+            }
+
+            <hr/>
+
+            <div class="mt-5">
+                <h2 class="mb-4">Adaugă notă</h2>
+
+                <div class="flex flex-column align-items-start gap-3 mb-6">
+                    <p-multiSelect
+                        [options]="chapters"
+                        placeholder="Alege capitolele"
+                        panelStyleClass="multiselect-panel"
+                        [(ngModel)]="noteChapters"></p-multiSelect>
+                    <textarea rows="10" class="w-full" pTextarea [(ngModel)]="note"></textarea>
+                </div>
+
+                <p-button
+                    label="Salvează notița"
+                    class="save-note"
+                    [styleClass]="'w-full'"
+                    [disabled]="!note || !noteChapters || !noteChapters.length"
+                    (onClick)="saveNote()"></p-button>
+            </div>
+        </div>
+
+        <div [ngClass]="{'w-6': !utils.isMobile}">
+            <h2 class="text-center" [ngClass]="utils.isMobile ? 'mb-3' : 'mb-4'">Notițe</h2>
+
+            @if (dayHasNotHaveNotes()) {
+                <p class="text-center">Nu există notițe pentru această zi.</p>
+            }
+            
+            <div [ngClass]="{'small-container': !utils.isMobile}">
+                @for (entry of notesEntries; track entry[0]) {
+                    @if (entry[1].length) {
+                        <h4>{{ entry[0] }}</h4>
+
+                            @for (item of entry[1]; track item.key) {
+                                <div class="flex w-full justify-content-between align-items-start note">
+                                    <span>{{ item.text }}</span>
+                                    <i
+                                        class="pi pi-trash"
+                                        (click)="confirmDeleteNote(entry[0], item.key); $event.stopPropagation()"
+                                        onkeydown=""></i>
+                                </div>
+                            }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+<p-dialog
+    header="Șterge Notița"
+    [modal]="true"
+    [(visible)]="noteDeleteDialogVisible"
+    [style]="{ width: '25rem' }">
+    <span class="p-text-secondary block mb-8">Ești sigur că vrei să ștergi această notă?</span>
+    <div class="flex justify-content-center gap-2">
+        <p-button
+            label="Confirmă"
+            class="confirm-reset-progress"
+            (onClick)="deleteNote()"></p-button>
+        <p-button
+            label="Anulează"
+            class="cancel-reset-progress"
+            (onClick)="noteDeleteConfirmation.set(null); noteDeleteDialogVisible.set(false)"></p-button>
+    </div>
+</p-dialog>

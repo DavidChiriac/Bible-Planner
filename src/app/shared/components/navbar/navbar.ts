@@ -44,4 +44,10 @@ export class Navbar {
 
   auth = inject(AuthService);
   utils = inject(Utils);
+
+  constructor() {
+    if (this.utils.isMobile) {
+      this.items = this.items.filter(item => !item.separator);
+    }
+  }
 }

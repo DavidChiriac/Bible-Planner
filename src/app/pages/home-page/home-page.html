@@ -6,7 +6,7 @@
         }
     </div>
     <div class="details w-100">
-        <div class="flex gap-4 justify-content-center w-100 status mb-4">
+        <div class="flex justify-content-center w-100 status mb-4" [ngClass]="utils.isMobile ? 'gap-2' : 'gap-4'">
             <i class="pi flex align-items-center pi-angle-double-left"></i>
             @if (utils.hasReadWholeBible()) {
             <p>Felicitări! Ai citit întreaga Biblie! 🎉</p>
@@ -61,10 +61,10 @@
                         <p-accordion-content>
                             @if (openWeeks().includes(tab.week)) {
                                 @for (day of tab.days; track day.label; let i = $index) {
-                                    <div class="flex gap-2 align-items-center day cursor-pointer row"
-                                        [ngClass]="{'read': utils.isEntireDayRead(day.chapters), 'day': !utils.isMobile && !utils.isTablet(), 'mb-1': i < tab.days.length - 1}"
-                                        (click)="utils.setEntireDayRead(day.chapters)" onkeydown="">
-                                        <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)"></p-checkbox>
+                                    <div class="flex gap-2 align-items-center cursor-pointer row"
+                                        [ngClass]="{'read': utils.isEntireDayRead(day.chapters), 'mb-1': i < tab.days.length - 1}"
+                                        (click)="goToDay(i, tab)" onkeydown="">
+                                        <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)" (click)="$event.stopPropagation(); utils.setEntireDayRead(day.chapters)" onkeydown=""></p-checkbox>
                                         <h3 class="m-0">{{ day.label }}</h3>
                                     </div>
                                 }
