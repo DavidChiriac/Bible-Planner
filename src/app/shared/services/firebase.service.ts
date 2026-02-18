@@ -10,7 +10,7 @@ import {
   update,
 } from 'firebase/database';
 import { Observable, switchMap, of, map } from 'rxjs';
-import { objectVal } from 'rxfire/database';
+import { object, objectVal } from 'rxfire/database';
 import { TABS } from '../../pages/home-page/home-page';
 import Chapters from '../../../assets/jsons/biblia_cornilescu_carti_capitole.json';
 import { migrateChaptersSameRefIfNeeded } from './migration';
@@ -45,12 +45,19 @@ export class FirebaseService {
     return getAuth();
   }
 
-  getStartDate(): Observable<string> {
+  getStartDate() {
     return this.user$.pipe(
-      switchMap((u) => {
-        if (!u) return of('');
-        const startDateRef = ref(this.db, `users/${u.uid}/startDate`);
-        return objectVal<string>(startDateRef);
+      switchMap(u => {
+        if (!u) return of(undefined as string | undefined);
+
+        const r = ref(this.db, `users/${u.uid}/startDate`);
+
+        return object(r).pipe(
+          map(change => {
+            const snap = change.snapshot;
+            return snap.exists() ? (snap.val() as string) : undefined;
+          })
+        );
       })
     );
   }
@@ -68,12 +75,19 @@ export class FirebaseService {
     return 'added';
   }
 
-  getMonths(): Observable<number> {
+  getMonths() {
     return this.user$.pipe(
-      switchMap((u) => {
-        if (!u) return of(0);
-        const monthsRef = ref(this.db, `users/${u.uid}/months`);
-        return objectVal<number>(monthsRef);
+      switchMap(u => {
+        if (!u) return of(undefined as number | undefined);
+
+        const r = ref(this.db, `users/${u.uid}/months`);
+
+        return object(r).pipe(
+          map(change => {
+            const snap = change.snapshot;
+            return snap.exists() ? (snap.val() as number) : undefined;
+          })
+        );
       })
     );
   }
@@ -118,7 +132,7 @@ export class FirebaseService {
   getChapters(): Observable<string[]> {
     return this.user$.pipe(
       switchMap((u) => {
-        if (!u) return of([]);
+        if (!u) return of(null);
         return objectVal<Record<string, BookNode> | null>(
           this.chaptersRoot(u.uid)
         );
@@ -289,12 +303,11 @@ export class FirebaseService {
     return 'selected plan updated';
   }
 
-  getPlan(): Observable<TABS> {
+  getPlan(): Observable<TABS | null> {
     return this.user$.pipe(
-      switchMap((u) => {
-        if (!u) return of(TABS.INORDINE);
-        const selectedPlanRef = ref(this.db, `users/${u.uid}/selectedPlan`);
-        return objectVal<TABS>(selectedPlanRef);
+      switchMap(u => {
+        if (!u) return of(null);
+        return objectVal<TABS>(ref(this.db, `users/${u.uid}/selectedPlan`));
       })
     );
   }
