@@ -1,6 +1,6 @@
 import { DestroyRef, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { FirebaseService } from './firebase.service';
-import { combineLatest } from 'rxjs';
+import { combineLatest, distinctUntilChanged, EMPTY, from, switchMap } from 'rxjs';
 import { TABS } from '../../pages/home-page/home-page';
 import { isPlatformBrowser } from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -26,57 +26,60 @@ export class Utils {
   
   isMobile = this.checkIsMobile()
 
-  private loadedOnce = false;
-
   constructor() {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
+    if (!isPlatformBrowser(this.platformId)) return;
 
-    authState(this.firebase.getAuth())
-      .pipe(takeUntilDestroyed())
-      .subscribe(async (res) => {
-        if (this.loadedOnce) {
-          this.loading.set(false);
-        }
-        if(!res) {
-          this.loading.set(false);
-          return;
+    authState(this.firebase.getAuth()).pipe(
+      takeUntilDestroyed(this.destroyRef),
+      // only react when uid actually changes
+      distinctUntilChanged((a, b) => a?.uid === b?.uid),
+      switchMap((u) => {
+        if (!u) {
+          this.reset();                 // clear signals
+          return EMPTY;                 // IMPORTANT: cancels DB listeners
         }
 
-        this.loadedOnce = true;
-        await this.fetchData();
-      });
-  }
+        this.loading.set(true);
 
-  async fetchData() {
-    this.loading.set(true);
-    await this.firebase.ensureChaptersMigrated();
-    combineLatest({
-        chapters: this.firebase.getChapters(),
-        startDate: this.firebase.getStartDate(),
-        months: this.firebase.getMonths(),
-        plan: this.firebase.getPlan(),
-      }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(({ chapters, startDate, months, plan }) => {
-        this.readSet.set(new Set(chapters ?? []));
-        if (startDate?.length) {
-          this.startDate.set(this.startDateAsDate(startDate));
-        } else if (!this.startDate()) {
-          this.firebase.setStartDate(new Date().toISOString().split('T')[0]);
-        }
-        if (months) {
-          this.months.set(months);
-        } else if (!this.months()) {
-          this.firebase.setMonths(12);
-        }
-        if (plan) {
-          this.selectedPlan.set(plan);
-        } else if (!this.selectedPlan()) {
-          this.firebase.setSelectedPlan(TABS.CRONOLOGIC);
-        }
+        // migrate then start DB listeners
+        return from(this.firebase.ensureChaptersMigrated()).pipe(
+          switchMap(() =>
+            combineLatest({
+              chapters: this.firebase.getChapters(),
+              startDate: this.firebase.getStartDate(),
+              months: this.firebase.getMonths(),
+              plan: this.firebase.getPlan(),
+            })
+          ),
+        );
+      })
+    )
+    .subscribe(({ chapters, startDate, months, plan }) => {
+      // update UI state
+      this.readSet.set(new Set(chapters ?? []));
 
-        this.loading.set(false);
-      });
+      if (startDate !== undefined) {
+        // exists in DB -> use it (even if empty string, though you likely never store empty)
+        this.startDate.set(this.startDateAsDate(startDate));
+      } else {
+        // truly missing -> set default
+        this.firebase.setStartDate(new Date().toISOString().split('T')[0]);
+      }
+
+      if (months !== undefined) {
+        this.months.set(months);
+      } else {
+        this.firebase.setMonths(12);
+      }
+
+      if (plan !== undefined && plan !== null) {
+        this.selectedPlan.set(plan);
+      } else {
+        this.firebase.setSelectedPlan(TABS.INORDINE);
+      }
+
+      this.loading.set(false);
+    });
   }
 
   toggleChapter(chapter: string) {
@@ -168,6 +171,5 @@ export class Utils {
     this.months.set(null);
     this.selectedPlan.set(undefined);
     this.loading.set(false);
-    this.loadedOnce = false;
   }
 }
