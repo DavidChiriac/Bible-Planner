@@ -4,16 +4,16 @@
     <p>Se încarcă notițele...</p>
 </div>
 } @else {
-<div [ngClass]="utils.isMobile ? 'container-mobile' : 'container'">
+<div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
     <div class="pl-3 mt-3">
         <p-button label="Back" class="go-back" (onClick)="goBack()">
             <i class="pi pi-arrow-left"></i>
         </p-button>
     </div>
 
-    <div class="flex justify-content-between gap-3 w-9 mx-auto" [ngClass]="{'flex-column w-11': utils.isMobile}">
-        <div [ngClass]="{'w-5 small-container': !utils.isMobile}">
-            <h2 [ngClass]="utils.isMobile ? 'mb-3' : 'mb-4'">Capitole</h2>
+    <div class="flex justify-content-between gap-3 w-9 mx-auto" [ngClass]="{'flex-column w-11': utils.isMobile()}">
+        <div [ngClass]="{'w-5 small-container': !utils.isMobile()}">
+            <h2 [ngClass]="utils.isMobile() ? 'mb-3' : 'mb-4'">Capitole</h2>
             @for (chapter of chapters; track $index) {
             <div
                 class="flex gap-2 align-items-center cursor-pointer row mb-3"
@@ -51,14 +51,14 @@
             </div>
         </div>
 
-        <div [ngClass]="{'w-6': !utils.isMobile}">
-            <h2 class="text-center" [ngClass]="utils.isMobile ? 'mb-3' : 'mb-4'">Notițe</h2>
+        <div [ngClass]="{'w-6': !utils.isMobile()}">
+            <h2 class="text-center" [ngClass]="utils.isMobile() ? 'mb-3' : 'mb-4'">Notițe</h2>
 
             @if (dayHasNotHaveNotes()) {
                 <p class="text-center">Nu există notițe pentru această zi.</p>
             }
             
-            <div [ngClass]="{'small-container': !utils.isMobile}">
+            <div [ngClass]="{'small-container': !utils.isMobile()}">
                 @for (entry of notesEntries; track entry[0]) {
                     @if (entry[1].length) {
                         <h4>{{ entry[0] }}</h4>

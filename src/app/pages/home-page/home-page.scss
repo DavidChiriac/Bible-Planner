@@ -1,5 +1,5 @@
 .card {
-  width: 900px;
+  width: 70%;
   margin: auto;
   overflow: hidden;
   background: var(--beige-card);
@@ -17,7 +17,7 @@
 }
 
 .plan-selector {
-  width: 800px;
+  width: 60%;
   margin: auto;
   display: flex;
   justify-content: center;
@@ -52,15 +52,26 @@
   border-radius: 5px;
   background: var(--beige-card);
   border: 1px solid var(--brown-light);
+
+  .pi {
+    color: var(--brown);
+  }
 }
 
 .sticky-bottom-right {
   position: fixed;
   right: 1.5rem;
-  bottom: 1.5rem;
   z-index: 1000;
 
   border-radius: 2rem;
+
+  &.go-to-top {
+    bottom: 5rem;
+  }
+
+  &.continue-reading {
+     bottom: 1.5rem;
+  }
 }
 
 .status {

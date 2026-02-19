@@ -46,7 +46,7 @@ export class Navbar {
   utils = inject(Utils);
 
   constructor() {
-    if (this.utils.isMobile) {
+    if (this.utils.isMobile()) {
       this.items = this.items.filter(item => !item.separator);
     }
   }
