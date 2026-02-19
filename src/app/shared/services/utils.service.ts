@@ -1,4 +1,4 @@
-import { DestroyRef, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { combineLatest, distinctUntilChanged, EMPTY, from, switchMap } from 'rxjs';
 import { TABS } from '../../pages/home-page/home-page';
@@ -24,7 +24,7 @@ export class Utils {
   private readonly breakpointObserver = inject(BreakpointObserver);
   private readonly destroyRef = inject(DestroyRef);
   
-  isMobile = this.checkIsMobile()
+  isMobile = signal<boolean | null>(null);
 
   constructor() {
     if (!isPlatformBrowser(this.platformId)) return;
@@ -80,6 +80,13 @@ export class Utils {
 
       this.loading.set(false);
     });
+
+    this.breakpointObserver.observe('(max-width: 767px)')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((state) => {
+        console.log(state);
+        this.isMobile.set(state.matches);
+      });
   }
 
   toggleChapter(chapter: string) {
@@ -141,11 +148,6 @@ export class Utils {
       }
     }
     return readDays;
-  }
-
-  checkIsMobile() {
-    const small = this.breakpointObserver.isMatched('(max-width: 767px)');
-    return this.deviceService.isMobile() && small;
   }
 
   isTablet() {

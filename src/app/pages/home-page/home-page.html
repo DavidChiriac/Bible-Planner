@@ -1,12 +1,12 @@
-<div [ngClass]="utils.isMobile ? 'container-mobile' : 'container'">
-    <div [ngClass]="utils.isMobile ? 'plan-selector-mobile' : 'plan-selector'">
+<div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
+    <div [ngClass]="utils.isMobile() ? 'plan-selector-mobile' : 'plan-selector'">
         @for (tab of tabs; track tab) {
         <p-button (onClick)="changeTab(tab)" class="plan-selector-button"
             [ngClass]="{'selected': utils.selectedPlan() === tab}">{{ tab }}</p-button>
         }
     </div>
     <div class="details w-100">
-        <div class="flex justify-content-center w-100 status mb-4" [ngClass]="utils.isMobile ? 'gap-2' : 'gap-4'">
+        <div class="flex justify-content-center w-100 status mb-4" [ngClass]="utils.isMobile() ? 'gap-2' : 'gap-4'">
             <i class="pi flex align-items-center pi-angle-double-left"></i>
             @if (utils.hasReadWholeBible()) {
             <p>Felicitări! Ai citit întreaga Biblie! 🎉</p>
@@ -21,16 +21,16 @@
         </div>
     </div>
 
-    <div [ngClass]="utils.isMobile ? 'card-mobile' : 'card'">
-        <p-accordion [multiple]="true" [ngClass]="{'mobile': utils.isMobile}" animationDuration="0">
+    <div [ngClass]="utils.isMobile() ? 'card-mobile' : 'card'">
+        <p-accordion [multiple]="true" [ngClass]="{'mobile': utils.isMobile()}" animationDuration="0">
             @for (tab of weeks(); track tab.week) {
                 <div class="week-anchor" [attr.id]="'week-' + tab.week">
                     <p-accordion-panel [value]="tab.week">
                         <p-accordion-header (click)="addWeekToOpen(tab.week)" onkeydown="">
-                            <div class="w-full flex justify-content-between pr-5 cursor-pointer gap-2" [ngClass]="utils.isMobile ? 'align-items-start' : 'align-items-center'">
+                            <div class="w-full flex justify-content-between pr-5 cursor-pointer gap-2" [ngClass]="utils.isMobile() ? 'align-items-start' : 'align-items-center'">
 
-                                <div class="flex gap-2" [ngClass]="utils.isMobile ? 'flex-column align-items-start': 'align-items-center'">
-                                    @if (utils.isMobile) {
+                                <div class="flex gap-2" [ngClass]="utils.isMobile() ? 'flex-column align-items-start': 'align-items-center'">
+                                    @if (utils.isMobile()) {
                                         <h4 class="m-0">
                                             {{ 'Săpt. ' + tab.week }}
                                         </h4>
@@ -61,11 +61,14 @@
                         <p-accordion-content>
                             @if (openWeeks().includes(tab.week)) {
                                 @for (day of tab.days; track day.label; let i = $index) {
-                                    <div class="flex gap-2 align-items-center cursor-pointer row"
-                                        [ngClass]="{'read': utils.isEntireDayRead(day.chapters), 'mb-1': i < tab.days.length - 1}"
+                                    <div class="flex justify-content-between cursor-pointer row"
+                                        [ngClass]="{'mb-1': i < tab.days.length - 1}"
                                         (click)="goToDay(i, tab)" onkeydown="">
-                                        <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)" (click)="$event.stopPropagation(); utils.setEntireDayRead(day.chapters)" onkeydown=""></p-checkbox>
-                                        <h3 class="m-0">{{ day.label }}</h3>
+                                        <span class="flex gap-2 align-items-center" [ngClass]="{'read': utils.isEntireDayRead(day.chapters)}">
+                                            <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)" (click)="$event.stopPropagation(); utils.setEntireDayRead(day.chapters)" onkeydown=""></p-checkbox>
+                                            <h3 class="m-0">{{ day.label }}</h3>
+                                        </span>
+                                        <i class="pi pi-pencil"></i>
                                     </div>
                                 }
                             }
@@ -75,18 +78,15 @@
             }
         </p-accordion>
     </div>
-
-    <div class="sticky-bottom-right flex flex-column gap-2 align-items-end">
-        <p-button
-            icon="pi pi-arrow-up"
-            class="go-to-top"
-            (onClick)="scrollToTop()">
-        </p-button>
-        <p-button
-            icon="pi pi-angle-down"
-            class="continue-reading"
-            [label]="'Continuă citirea'"
-            (onClick)="goToNextTargetWeek()">
-        </p-button>
-    </div>
+    <p-button
+        icon="pi pi-arrow-up"
+        class="go-to-top sticky-bottom-right"
+        (onClick)="scrollToTop()">
+    </p-button>
+    <p-button
+        icon="pi pi-angle-down"
+        class="continue-reading sticky-bottom-right"
+        [label]="'Continuă citirea'"
+        (onClick)="goToNextTargetWeek()">
+    </p-button>
 </div>

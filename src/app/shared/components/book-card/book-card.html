@@ -1,4 +1,4 @@
-<div class="book-card" [ngClass]="{'completed': isCompleted(), 'mobile': utils.isMobile, 'in-progress': progress() > 0 && progress() < 100}">
+<div class="book-card" [ngClass]="{'completed': isCompleted(), 'mobile': utils.isMobile(), 'in-progress': progress() > 0 && progress() < 100}">
     <div class="icon">
         <img [src]="isCompleted() || (progress() > 0 && progress() < 100) ? 'assets/icons/read-book.png' : 'assets/icons/open-book.png'" alt="Book Cover" class="book-cover" />
     </div>
@@ -16,7 +16,7 @@
     }
 
     @if (progress() > 0 && progress() < 100) {
-        <div [ngClass]="utils.isMobile ? 'mobile-overlay' : 'overlay'">
+        <div [ngClass]="utils.isMobile() ? 'mobile-overlay' : 'overlay'">
             <i class="pi pi-clock"></i>
         </div>
     }

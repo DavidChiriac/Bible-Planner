@@ -1,5 +1,5 @@
 .cards-section {
-  width: 900px;
+  width: 70%;
   margin: auto;
   margin-top: 3rem;
   display: flex;
@@ -24,7 +24,7 @@
 }
 
 .filters {
-    width: 900px;
+    width: 70%;
     margin: auto;
     margin-top: 1rem;
 }
@@ -37,7 +37,7 @@
 }
 
 .plan-selector{
-  width: 700px;
+  width: 60%;
   margin: auto;
   display: flex;
   justify-content: center;
@@ -53,8 +53,7 @@
 .plan-selector-mobile{
   @extend .plan-selector;
 
-  width: 100%;
-  padding-inline: 1rem;
+  width: 80%;
 }
 
 .plan-selector-button {
