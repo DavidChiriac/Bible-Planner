@@ -9,9 +9,20 @@
         }
     </div>
     <h1 class="w-full px-5 text-center book-title">{{ book()?.title }}</h1>
-    <div class="chapters-container flex flex-1 flex-wrap gap-3 row-gap-3 m-auto justify-content-center" [ngClass]="utils.isMobile() ? 'w-full px-2' : 'w-6'">
+    <div class="chapters-container flex flex-1 flex-wrap gap-3 row-gap-3 m-auto justify-content-center mb-3" [ngClass]="utils.isMobile() ? 'w-full px-2' : 'w-6'">
         @for (chapter of book()?.chapters ?? []; track $index) {
-            <p-button class="chapter-index" [label]="($index + 1).toString()" (onClick)="utils.toggleChapter(chapter)" [severity]="utils.isChapterRead(chapter) ? 'success' : 'secondary'" [ngClass]="{'read': utils.isChapterRead(chapter), 'mobile': utils.isMobile()}" />
+            <div
+                class="flex w-full justify-content-between align-items-center cursor-pointer chapter"
+                [ngClass]="utils.isMobile() ? 'gap-2' : 'gap-6'"
+                (click)="utils.toggleChapter(chapter)" onkeydown="">
+                <div class="flex gap-2">
+                    <p-checkbox
+                        [binary]="true"
+                        [ngModel]="utils.isEntireDayRead([chapter])"></p-checkbox>
+                    <h3 class="m-0">{{ chapter }}</h3>
+                </div>
+                <i class="pi pi-pencil" (click)="$event.stopPropagation(); viewChapterNotes(chapter)" onkeydown=""></i>
+            </div>
         }
     </div>
 </div>

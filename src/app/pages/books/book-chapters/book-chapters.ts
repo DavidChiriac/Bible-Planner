@@ -5,7 +5,7 @@ import { Utils } from '../../../shared/services/utils.service';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { Button } from "primeng/button";
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-book-chapters',
@@ -14,6 +14,9 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './book-chapters.scss',
 })
 export class BookChapters {
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+
   id = signal('');
 
   book = computed(() => {
@@ -23,7 +26,6 @@ export class BookChapters {
   }  );
 
   utils = inject(Utils);
-  private readonly route = inject(ActivatedRoute);
 
   constructor() {
     this.route.params.subscribe(params => {
@@ -36,5 +38,9 @@ export class BookChapters {
 
   goBack() {
     globalThis.history.back();
+  }
+
+  viewChapterNotes(chapter: string) {
+    this.router.navigate(['/day'], { queryParams: { chapter } });
   }
 }

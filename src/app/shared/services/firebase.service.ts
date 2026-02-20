@@ -14,6 +14,7 @@ import { object, objectVal } from 'rxfire/database';
 import { TABS } from '../../pages/home-page/home-page';
 import Chapters from '../../../assets/jsons/biblia_cornilescu_carti_capitole.json';
 import { migrateChaptersSameRefIfNeeded } from './migration';
+import { NoteItem } from '../models/note.models';
 
 type BookDef = { title: string; chapters: string[] };
 
@@ -27,8 +28,6 @@ type BookNode = {
   __all?: boolean;
   [chapter: string]: any;
 };
-
-export type NoteItem = { key: string; text: string };
 
 @Injectable({ providedIn: 'root' })
 export class FirebaseService {
@@ -330,10 +329,12 @@ export class FirebaseService {
     const snapshot = await get(noteRef);
     const existingData = snapshot.exists() ? snapshot.val() : {};
 
-    const updates: Record<string, string> = {};
+    const createdDate = new Date().toISOString();
+
+    const updates: Record<string, { text: string; createdDate: string }> = {};
 
     for (const ch of chapters) {
-      const chapterNotes = existingData?.[ch] ?? {};
+      const chapterNotes: Record<string, any> = existingData?.[ch] ?? {};
 
       const indices = Object.keys(chapterNotes)
         .map(Number)
@@ -341,7 +342,10 @@ export class FirebaseService {
 
       const nextIndex = indices.length ? Math.max(...indices) + 1 : 0;
 
-      updates[`${ch}/${nextIndex}`] = note;
+      updates[`${ch}/${nextIndex}`] = {
+        text: note,
+        createdDate,
+      };
     }
 
     await update(noteRef, updates);
@@ -349,10 +353,6 @@ export class FirebaseService {
     return 'note saved';
   }
 
-  /**
-   * Fetch notes with stable keys (so UI can delete the exact clicked one).
-   * Returns: { chapter: [{key:'0', text:'...'}, ...] }
-   */
   async getNoteItemsForChapters(
     chapters: string[]
   ): Promise<Record<string, NoteItem[]>> {
@@ -366,15 +366,22 @@ export class FirebaseService {
     const result: Record<string, NoteItem[]> = {};
 
     for (const ch of chapters) {
-      const chapterNotes: Record<string, string> = data?.[ch] ?? {};
-
+      // Now chapterNotes is Record<string, { text: string; createdDate: string }>
+      const chapterNotes: Record<
+        string,
+        { text: string; createdDate: string }
+      > = data?.[ch] ?? {};
+      console.log(`Chapter ${ch} notes raw:`, chapterNotes);
       const items = Object.keys(chapterNotes)
-        .map((k) => Number(k))
-        .filter((n) => Number.isFinite(n))
-        .sort((a, b) => a - b)
-        .map((n) => {
-          const key = String(n);
-          return { key, text: chapterNotes[key] };
+        .sort((a, b) => Number(a) - Number(b))
+        .map((key) => {
+          const note = chapterNotes[key];
+
+          return {
+            key,
+            text: note.text,
+            createdDate: note.createdDate,
+          };
         });
 
       result[ch] = items;
@@ -398,28 +405,29 @@ export class FirebaseService {
     return 'note deleted';
   }
 
-  // (Optional) Keep your old API if other code calls it.
-  // This deletes the first matching by text; not used by Day anymore.
-  async deleteNote(chapter: string, note: string): Promise<string> {
+  async updateNote(
+    chapter: string,
+    key: string,
+    newText: string
+  ): Promise<string> {
     const u = this.auth.currentUser;
     if (!u) throw new Error('Not logged in');
 
-    const chapterRef = ref(this.db, `users/${u.uid}/notes/${chapter}`);
+    const noteItemRef = ref(
+      this.db,
+      `users/${u.uid}/notes/${chapter}/${key}`
+    );
 
-    const snapshot = await get(chapterRef);
-    if (!snapshot.exists()) return 'no notes to delete';
+    // Get existing note to preserve createdDate
+    const snapshot = await get(noteItemRef);
+    if (!snapshot.exists()) {
+      throw new Error('Note not found');
+    }
 
-    const chapterNotes: Record<string, string> = snapshot.val();
+    await update(noteItemRef, {
+      text: newText,
+    });
 
-    const matchKey = Object.keys(chapterNotes)
-      .map((k) => ({ key: k, idx: Number(k) }))
-      .filter((x) => Number.isFinite(x.idx))
-      .sort((a, b) => a.idx - b.idx)
-      .find((x) => chapterNotes[x.key] === note)?.key;
-
-    if (!matchKey) return 'note not found';
-
-    await remove(child(chapterRef, matchKey));
-    return 'note deleted';
+    return 'note updated';
   }
 }

@@ -31,7 +31,7 @@
 
 .plan-selector-button.selected {
   .p-button {
-    background: var(--mint);
+    background: var(--muted-sage);
     color: var(--beige-light);
   }
 }
@@ -42,7 +42,7 @@
   width: 100%;
 
   :host:not(.mobile) &:hover {
-    background-color: var(--mint-dark) !important;
+    background-color: var(--muted-sage) !important;
 
     .p-button-label {
       color: var(--brown-dark) !important;
@@ -51,7 +51,7 @@
 
   &.p-button-success {
     border-radius: 10px !important;
-    background-color: var(--mint-dark) !important;
+    background-color: var(--muted-sage) !important;
 
     .p-button-label {
       color: var(--beige-light) !important;
@@ -74,7 +74,7 @@
 
 .continue-reading, .mark-as-read, .confirm-reset-progress, .login, .save-note {
   .p-button {
-    background: var(--mint);
+    background: var(--muted-sage);
     color: var(--beige-light);
     border: none;
     border-radius: 14px;
@@ -84,7 +84,7 @@
     box-shadow: var(--shadow-soft);
 
     &:hover {
-      background: var(--mint-dark);
+      background: var(--muted-sage);
     }
   }
 }

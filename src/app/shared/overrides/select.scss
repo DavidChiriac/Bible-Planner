@@ -10,7 +10,7 @@
 }
 
 .p-select:not(.p-disabled).p-focus {
-  border: 1px solid var(--mint) !important;
+  border: 1px solid var(--muted-sage) !important;
 }
 
 .dropdown-panel {
@@ -33,7 +33,7 @@
   }
 
   .p-select-item.p-highlight {
-    background: var(--mint);
+    background: var(--muted-sage);
     color: var(--beige-light);
   }
 }
