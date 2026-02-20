@@ -5,7 +5,7 @@
 body {
     margin: 0;
     background: var(--beige-bg);
-    color: var(--brown-dark);
+    color: var(--deep-umber);
     font-family: "Lora", serif;
 }
 
@@ -23,6 +23,14 @@ body {
 }
 
 :root {
+  --shadow-soft: 0 4px 12px rgba(74, 59, 42, 0.15);
+
+  --terracotta: #A46447;
+  --toasted-almond: #C3B59E;
+  --deep-umber: #4C362D;
+  --muted-sage: #88937B;
+  --linen-white: #E8E1D5;
+
   --brown-dark: #4A3B2A;
   --brown: #6B5A45;
   --brown-light: #B8A995;
@@ -30,10 +38,4 @@ body {
   --beige-bg: #F2E9D8;
   --beige-card: #E5D7BF;
   --beige-light: #FAF6EE;
-
-  --mint: #8FBFA8;
-  --mint-dark: #6E9E88;
-  --mint-light: #CFE3D8;
-
-  --shadow-soft: 0 4px 12px rgba(74, 59, 42, 0.15);
 }

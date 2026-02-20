@@ -14,41 +14,41 @@
     <div class="flex justify-content-between gap-3 w-9 mx-auto" [ngClass]="{'flex-column w-11': utils.isMobile()}">
         <div [ngClass]="{'w-5 small-container': !utils.isMobile()}">
             <h2 [ngClass]="utils.isMobile() ? 'mb-3' : 'mb-4'">Capitole</h2>
-            @for (chapter of chapters; track $index) {
-            <div
-                class="flex gap-2 align-items-center cursor-pointer row mb-3"
-                [ngClass]="{ read: utils.isEntireDayRead([chapter]) }"
-                (click)="$event.stopPropagation(); utils.setEntireDayRead([chapter])"
-                onkeydown="">
-                <p-checkbox
-                    [binary]="true"
-                    [ngModel]="utils.isEntireDayRead([chapter])"></p-checkbox>
-                <h3 class="m-0">{{ chapter }}</h3>
+            <div class="flex flex-wrap gap-3 row-gap-1">
+                @for (chapter of chapters; track $index) {
+                <div
+                    class="flex gap-2 align-items-center cursor-pointer row mb-3"
+                    [ngClass]="{ read: utils.isEntireDayRead([chapter]) }"
+                    (click)="$event.stopPropagation(); utils.setEntireDayRead([chapter])"
+                    onkeydown="">
+                    <p-checkbox
+                        [binary]="true"
+                        [ngModel]="utils.isEntireDayRead([chapter])"></p-checkbox>
+                    <h3 class="m-0">{{ chapter }}</h3>
+                </div>
+                }
             </div>
-            }
 
             <hr/>
 
-            <div class="mt-5">
+            <div class="flex align-items-center justify-content-between gap-3 mb-3">
                 <h2 class="mb-4">Adaugă notă</h2>
-
-                <div class="flex flex-column align-items-start gap-3 mb-6">
-                    <p-multiSelect
-                        [options]="chapters"
-                        appendTo="body"
-                        placeholder="Alege capitolele"
-                        panelStyleClass="multiselect-panel"
-                        [(ngModel)]="noteChapters"></p-multiSelect>
-                    <textarea rows="10" class="w-full" pTextarea [(ngModel)]="note"></textarea>
-                </div>
-
-                <p-button
-                    label="Salvează notița"
-                    class="save-note"
-                    [styleClass]="'w-full'"
-                    [disabled]="!note || !noteChapters || !noteChapters.length"
-                    (onClick)="saveNote()"></p-button>
+                <p-multiSelect
+                    [options]="chapters"
+                    appendTo="body"
+                    placeholder="Alege capitolele"
+                    panelStyleClass="multiselect-panel"
+                    [(ngModel)]="noteChapters"></p-multiSelect>
             </div>
+
+            <textarea rows="10" class="w-full mb-5" pTextarea [(ngModel)]="note"></textarea>
+
+            <p-button
+                label="Salvează notița"
+                class="save-note"
+                [styleClass]="'w-full'"
+                [disabled]="!note || !noteChapters || !noteChapters.length"
+                (onClick)="saveNote()"></p-button>
         </div>
 
         <div [ngClass]="{'w-6': !utils.isMobile()}">
@@ -64,12 +64,20 @@
                         <h4>{{ entry[0] }}</h4>
 
                             @for (item of entry[1]; track item.key) {
-                                <div class="flex w-full justify-content-between align-items-start note">
-                                    <span>{{ item.text }}</span>
-                                    <i
-                                        class="pi pi-trash"
-                                        (click)="confirmDeleteNote(entry[0], item.key); $event.stopPropagation()"
-                                        onkeydown=""></i>
+                                <div class="w-full note">
+                                    <div class="flex gap-3 w-full justify-content-between align-items-start">
+                                        <span>{{ item.text }}</span>
+                                        <div class="flex gap-1">
+                                            <i
+                                                class="pi pi-trash"
+                                                (click)="confirmDeleteNote(entry[0], item.key)"
+                                                onkeydown=""></i>
+                                            <i class="pi pi-pencil ml-2 cursor-pointer" (click)="enterEditMode(entry[0], item)" onkeydown=""></i>
+                                        </div>
+                                    </div>
+                                    <div class="font-italic w-full text-right mt-2">
+                                        {{ item.createdDate | date: 'dd-MM-yyyy HH:mm' }}
+                                    </div>
                                 </div>
                             }
                     }
@@ -96,4 +104,25 @@
             class="cancel-reset-progress"
             (onClick)="noteDeleteConfirmation.set(null); noteDeleteDialogVisible.set(false)"></p-button>
     </div>
+</p-dialog>
+<p-dialog header="Editează Notița"
+    [modal]="true"
+    [(visible)]="editMode"
+    [style]="{ width: utils.isMobile() ? '90%' : '50%' }"
+    [ngClass]="utils.isMobile() ? 'edit-dialog-mobile' : ''">
+    <div class="flex flex-column align-items-start gap-3 mb-6 mt-1">
+        <textarea rows="10" class="w-full" pTextarea [(ngModel)]="editedNote"></textarea>
+    </div>
+
+    <div class="flex justify-content-center gap-2">
+        <p-button
+            label="Salvează"
+            class="confirm-reset-progress"
+            (onClick)="confirmEdit()"></p-button>
+        <p-button
+            label="Anulează"
+            class="cancel-reset-progress"
+            (onClick)="editMode.set(false); editedNode = null; editedNote.set('')"></p-button>
+    </div>
+
 </p-dialog>

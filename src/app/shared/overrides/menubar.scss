@@ -15,24 +15,24 @@
   .p-menubar-item .p-menubar-item-link:not(.p-menubar-item-link-active) {
     .p-menubar-item-label {
       color: var(--beige-light);
-      opacity: 0.8;
     }
 
     .p-menubar-item-icon {
       color: var(--beige-light);
-      opacity: 0.8;
     }
   }
 
   .p-menubar-item-link-active {
     border: none !important;
-    background: var(--mint-light);
+    background: var(--muted-sage);
     border-radius: 6px !important;
 
     .p-menubar-item-label {
-      opacity: 1;
-      color: var(--brown-dark);
-      border-bottom: 2px solid var(--mint);
+      color: var(--beige-light);
+    }
+
+    .p-menubar-item-icon {
+      color: var(--beige-light) !important;
     }
   }
 

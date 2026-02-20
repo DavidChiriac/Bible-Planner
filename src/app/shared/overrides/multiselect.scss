@@ -32,12 +32,12 @@
   }
 
   .p-multiselect-option-selected {
-    background: var(--mint);
+    background: var(--muted-sage);
     color: var(--brown-dark);
   }
 
   .p-multiselect-option.p-multiselect-option-selected.p-focus {
-    background: var(--mint);
+    background: var(--muted-sage);
     color: var(--brown-dark);
 
     &:hover {
