@@ -27,38 +27,38 @@
                 <div class="week-anchor" [attr.id]="'week-' + tab.week">
                     <p-accordion-panel [value]="tab.week">
                         <p-accordion-header (click)="addWeekToOpen(tab.week)" onkeydown="">
-                            <div class="w-full flex justify-content-between pr-5 cursor-pointer gap-2" [ngClass]="utils.isMobile() ? 'align-items-start' : 'align-items-center'">
-
-                                <div class="flex gap-2" [ngClass]="utils.isMobile() ? 'flex-column align-items-start': 'align-items-center'">
+                            <div class="w-full flex justify-content-between pr-2 cursor-pointer gap-2 align-items-center">
+                                <div class="flex gap-2 align-items-center">
                                     @if (utils.isWeekFavourite(tab)) {
                                         <i class="pi pi-star-fill" (click)="$event.stopPropagation(); removeFavouriteWeek(tab)" onkeydown=""></i>
                                     } @else {
                                         <i class="pi pi-star" (click)="$event.stopPropagation(); addFavouriteWeek(tab)" onkeydown=""></i>
                                     }
 
-                                    @if (utils.isMobile()) {
-                                        <h4 class="m-0">
-                                            {{ 'Săpt. ' + tab.week }}
-                                        </h4>
-                                    } @else {
-                                        <span>
-                                            {{ 'Săptămâna ' + tab.week }}
-                                        </span>
-                                    }
+                                    <span class="flex gap-2" [ngClass]="utils.isMobile() ? 'flex-column align-items-start' : 'align-items-center'">
+                                        @if (utils.isMobile()) {
+                                            <h4 class="m-0">
+                                                {{ 'Săpt. ' + tab.week }}
+                                            </h4>
+                                        } @else {
+                                            <span>
+                                                {{ 'Săptămâna ' + tab.week }}
+                                            </span>
+                                        }
 
-                                    @let read = utils.countDaysReadInAWeek(tab);
-                                    @let total = tab.days.length;
+                                        @let read = utils.countDaysReadInAWeek(tab);
+                                        @let total = tab.days.length;
 
-                                    @if (read === total) {
-                                        <p-tag value="Complet" severity="success"></p-tag>
-                                    } @else if (read > 0) {
-                                        <p-tag [value]="'În curs (' + read + '/' + total + ')'" severity="warn"></p-tag>
-                                    } @else {
-                                        <p-tag value="Neînceput" severity="secondary"></p-tag>
-                                    }
+                                        @if (read === total) {
+                                            <p-tag value="Complet" severity="success"></p-tag>
+                                        } @else if (read > 0) {
+                                            <p-tag [value]="'În curs (' + read + '/' + total + ')'" severity="warn"></p-tag>
+                                        } @else {
+                                            <p-tag value="Neînceput" severity="secondary"></p-tag>
+                                        }
+                                    </span>
                                 </div>
-
-                                <span class="w-6 text-right gray flex align-items-center justify-content-end">
+                                <span class="week-label w-6 text-right flex align-items-center justify-content-end">
                                     {{ tab.label }}
                                 </span>
                             </div>
