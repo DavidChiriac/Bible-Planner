@@ -10,6 +10,11 @@
   }
 }
 
+.p-checkbox-checked:not(.p-disabled):has(.p-checkbox-input:hover) .p-checkbox-box {
+  background: var(--beige-light);
+  border-color: var(--muted-sage);
+}
+
 .p-checkbox-checked .p-checkbox-box {
   background: var(--muted-sage);
   border-color: var(--muted-sage);
