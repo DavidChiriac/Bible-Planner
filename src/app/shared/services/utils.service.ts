@@ -1,4 +1,4 @@
-import { computed, DestroyRef, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { DestroyRef, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { combineLatest, distinctUntilChanged, EMPTY, from, switchMap } from 'rxjs';
 import { TABS } from '../../pages/home-page/home-page';
@@ -17,6 +17,7 @@ export class Utils {
   startDate = signal<Date | null>(null);
   months = signal<number | null>(null);
   selectedPlan = signal<TABS | undefined>(undefined);
+  favouriteWeeks = signal<{plan: TABS, week: number}[]>([]);
 
   private readonly firebase = inject(FirebaseService);
   private readonly platformId = inject(PLATFORM_ID);
@@ -49,12 +50,13 @@ export class Utils {
               startDate: this.firebase.getStartDate(),
               months: this.firebase.getMonths(),
               plan: this.firebase.getPlan(),
+              favouriteWeeks: this.firebase.getFavouriteWeeks(),
             })
           ),
         );
       })
     )
-    .subscribe(({ chapters, startDate, months, plan }) => {
+    .subscribe(({ chapters, startDate, months, plan, favouriteWeeks }) => {
       // update UI state
       this.readSet.set(new Set(chapters ?? []));
 
@@ -78,6 +80,12 @@ export class Utils {
         this.firebase.setSelectedPlan(TABS.INORDINE);
       }
 
+      if (favouriteWeeks !== undefined && favouriteWeeks !== null) {
+        this.favouriteWeeks.set(favouriteWeeks);
+      } else {
+        this.favouriteWeeks.set([]);
+      }
+
       this.loading.set(false);
     });
 
@@ -87,20 +95,6 @@ export class Utils {
         console.log(state);
         this.isMobile.set(state.matches);
       });
-  }
-
-  toggleChapter(chapter: string) {
-    if (this.readSet().has(chapter)) {
-      this.firebase.deleteChapters([chapter]);
-      const newSet = new Set(this.readSet());
-      newSet.delete(chapter);
-      this.readSet.set(newSet);
-    } else {
-      this.firebase.addChapters([chapter]);
-      const newSet = new Set(this.readSet());
-      newSet.add(chapter);
-      this.readSet.set(newSet);
-    }
   }
 
   isSelected = (chapter: string) => this.readSet().has(chapter);
@@ -135,7 +129,7 @@ export class Utils {
     this.readSet.set(new Set([...this.readSet()].filter((c) => !chapters.includes(c))));
   }
 
-  countDaysReadInAWeek(week: { days: { chapters: string[] }[] }) {
+  countDaysReadInAWeek(week: { week: number, days: { chapters: string[] }[] }) {
     let readDays = 0;
 
     for (const day of week.days) {
@@ -147,6 +141,7 @@ export class Utils {
         readDays++;
       }
     }
+
     return readDays;
   }
 
@@ -173,5 +168,9 @@ export class Utils {
     this.months.set(null);
     this.selectedPlan.set(undefined);
     this.loading.set(false);
+  }
+
+  isWeekFavourite(week: { week: number }) {
+    return this.favouriteWeeks().some(fav => fav.plan === this.selectedPlan() && fav.week === week.week);
   }
 }

@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { Button } from "primeng/button";
 import { ActivatedRoute, Router } from '@angular/router';
+import { FirebaseService } from '../../../shared/services/firebase.service';
 
 @Component({
   selector: 'app-book-chapters',
@@ -16,6 +17,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class BookChapters {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  firebase = inject(FirebaseService);
+  utils = inject(Utils);
 
   id = signal('');
 
@@ -25,7 +28,6 @@ export class BookChapters {
     })
   }  );
 
-  utils = inject(Utils);
 
   constructor() {
     this.route.params.subscribe(params => {

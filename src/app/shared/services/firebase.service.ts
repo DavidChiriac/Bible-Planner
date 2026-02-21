@@ -430,4 +430,58 @@ export class FirebaseService {
 
     return 'note updated';
   }
+
+  async addFavouriteWeek(plan: TABS, week: number): Promise<string> {
+    const u = this.auth.currentUser;
+    if (!u) throw new Error('Not logged in');
+
+    const favsRef = ref(this.db, `users/${u.uid}/favouriteWeeks`);
+
+    const snapshot = await get(favsRef);
+    const existingFavs: { plan: TABS; week: number }[] = snapshot.exists()
+      ? snapshot.val()
+      : [];
+
+    if (!existingFavs.some(fav => fav.plan === plan && fav.week === week)) {
+      const newFavs = [...existingFavs, { plan, week }];
+      await update(ref(this.db), {
+        [`users/${u.uid}/favouriteWeeks`]: newFavs,
+      });
+      return 'week added to favourites';
+    }
+
+    return 'week already in favourites';
+  }
+
+  async deleteFavouriteWeek(plan: TABS, week: number): Promise<string> {
+    const u = this.auth.currentUser;
+    if (!u) throw new Error('Not logged in');
+
+    const favsRef = ref(this.db, `users/${u.uid}/favouriteWeeks`);
+
+    const snapshot = await get(favsRef);
+    const existingFavs: { plan: TABS; week: number }[] = snapshot.exists()
+      ? snapshot.val()
+      : [];
+
+    const newFavs = existingFavs.filter(fav => !(fav.plan === plan && fav.week === week));
+
+    if (newFavs.length !== existingFavs.length) {
+      await update(ref(this.db), {
+        [`users/${u.uid}/favouriteWeeks`]: newFavs,
+      });
+      return 'week removed from favourites';
+    }
+
+    return 'week not found in favourites';
+  }
+
+  async getFavouriteWeeks(): Promise<{ plan: TABS; week: number }[]> {
+    const u = this.auth.currentUser;
+    if (!u) return [];
+
+    const favsRef = ref(this.db, `users/${u.uid}/favouriteWeeks`);
+    const snapshot = await get(favsRef);
+    return snapshot.exists() ? snapshot.val() : [];
+  }
 }

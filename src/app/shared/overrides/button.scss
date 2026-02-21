@@ -12,6 +12,10 @@
     .p-button-label {
       color: var(--brown);
     }
+
+    &:hover {
+      background: inherit;
+    }
   }
 
   &:first-child {

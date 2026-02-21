@@ -30,6 +30,12 @@
                             <div class="w-full flex justify-content-between pr-5 cursor-pointer gap-2" [ngClass]="utils.isMobile() ? 'align-items-start' : 'align-items-center'">
 
                                 <div class="flex gap-2" [ngClass]="utils.isMobile() ? 'flex-column align-items-start': 'align-items-center'">
+                                    @if (utils.isWeekFavourite(tab)) {
+                                        <i class="pi pi-star-fill" (click)="$event.stopPropagation(); removeFavouriteWeek(tab)" onkeydown=""></i>
+                                    } @else {
+                                        <i class="pi pi-star" (click)="$event.stopPropagation(); addFavouriteWeek(tab)" onkeydown=""></i>
+                                    }
+
                                     @if (utils.isMobile()) {
                                         <h4 class="m-0">
                                             {{ 'Săpt. ' + tab.week }}
