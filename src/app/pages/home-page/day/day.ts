@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { Utils } from '../../../shared/services/utils.service';
-import { DatePipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TABS } from '../home-page';
@@ -14,8 +14,8 @@ import { TextareaModule } from 'primeng/textarea';
 import { MultiSelect } from 'primeng/multiselect';
 import { FirebaseService } from '../../../shared/services/firebase.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { Dialog } from 'primeng/dialog';
 import { NoteItem } from '../../../shared/models/note.models';
+import { Note } from '../../../shared/components/note/note';
 
 @Component({
   selector: 'app-day',
@@ -27,9 +27,8 @@ import { NoteItem } from '../../../shared/models/note.models';
     TextareaModule,
     MultiSelect,
     ProgressSpinnerModule,
-    Dialog,
-    DatePipe
-],
+    Note,
+  ],
   templateUrl: './day.html',
   styleUrl: './day.scss',
 })
@@ -52,13 +51,6 @@ export class Day {
 
   loading = signal(true);
 
-  noteDeleteConfirmation = signal<{ chapter: string; key: string } | null>(null);
-  noteDeleteDialogVisible = signal(false);
-
-  editMode = signal(false);
-  editedNode: { chapter: string; key: string } | null = null;
-  editedNote = signal('');
-
   constructor() {
     this.route.queryParams
       .pipe(takeUntilDestroyed())
@@ -69,7 +61,7 @@ export class Day {
         this.chapter = params['chapter'] ?? null;
 
         if (this.chapter) {
-          this.chapters  = [this.chapter];
+          this.chapters = [this.chapter];
           this.noteChapters = [this.chapter];
           await this.fetchNotes().then(() => this.loading.set(false));
           return;
@@ -101,8 +93,9 @@ export class Day {
   }
 
   async fetchNotes() {
-    const noteItems = await this.firebase.getNoteItemsForChapters(this.chapters);
-    console.log(noteItems);
+    const noteItems = await this.firebase.getNoteItemsForChapters(
+      this.chapters
+    );
     this.notesForDay.set(noteItems ?? {});
   }
 
@@ -110,59 +103,42 @@ export class Day {
     return Object.entries(this.notesForDay());
   }
 
-  confirmDeleteNote(chapter: string, key: string) {
-    this.noteDeleteConfirmation.set({ chapter, key });
-    this.noteDeleteDialogVisible.set(true);
-  }
-
-  async deleteNote() {
-    const confirmation = this.noteDeleteConfirmation();
-    if (!confirmation) return;
-
-    const { chapter, key } = confirmation;
-
-    this.loading.set(true);
-
-    await this.firebase.deleteNoteByKey(chapter, key);
-
-    // Update UI locally (no duplicates issues because key is unique)
+  deleteNote(note: NoteItem) {
     this.notesForDay.update((notes) => {
-      const items = notes[chapter];
-      if (!items) return notes;
-
+      const chapterNotes = notes[note.chapterLabel] || [];
+      const newChapterNotes = chapterNotes.filter( 
+        (n) => {
+          return n.key !== note.key;
+        }
+      );
       return {
         ...notes,
-        [chapter]: items.filter((i) => i.key !== key),
+        [note.chapterLabel]: newChapterNotes,
       };
     });
-
-    this.loading.set(false);
-    this.noteDeleteDialogVisible.set(false);
-    this.noteDeleteConfirmation.set(null);
   }
 
-  dayHasNotHaveNotes() {
+  dayHasNoNotes() {
     const notes = this.notesForDay();
     return !notes || Object.values(notes).every((items) => items.length === 0);
   }
 
-  enterEditMode(chapter: string, note: NoteItem) {
-    this.editMode.set(true);
-    this.editedNode = { chapter, key: note.key };
-    this.editedNote.set(note.text);
-  }
+  editNote(note: NoteItem) {
+    this.notesForDay.update((notes) => {
+      const chapterNotes = notes[note.chapterLabel] || [];
 
-  confirmEdit() {
-    if (!this.editedNode) return;
-    const { chapter, key } = this.editedNode;
-    this.loading.set(true);
-    this.firebase.updateNote(chapter, key, this.editedNote()).then(() => {
-      this.fetchNotes().then(() => {
-        this.loading.set(false);
-        this.editMode.set(false);
-        this.editedNote.set('');
-        this.editedNode = null;
+      const newChapterNotes = chapterNotes.map((n) => {
+        if (n.key === note.key) {
+          return note;
+        }
+
+        return n;
       });
+
+      return {
+        ...notes,
+        [note.chapterLabel]: newChapterNotes,
+      };
     });
   }
 }

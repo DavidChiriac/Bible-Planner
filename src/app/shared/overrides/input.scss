@@ -14,3 +14,16 @@
 .p-inputtext:enabled:focus {
     border: 1px solid var(--muted-sage) !important;
 }
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.chapter-index {
+    width: 100px;
+    border: 1px solid var(--brown-dark);
+    outline: 1px solid var(--brown-dark);
+    outline-offset: 2px;
+}

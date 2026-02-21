@@ -92,7 +92,6 @@ export class Utils {
     this.breakpointObserver.observe('(max-width: 767px)')
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => {
-        console.log(state);
         this.isMobile.set(state.matches);
       });
   }

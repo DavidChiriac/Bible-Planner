@@ -76,7 +76,7 @@
   }
 }
 
-.continue-reading, .mark-as-read, .confirm-reset-progress, .login, .save-note {
+.continue-reading, .mark-as-read, .confirm-reset-progress, .login, .save-note, .add-note {
   .p-button {
     background: var(--muted-sage);
     color: var(--beige-light);
@@ -91,6 +91,10 @@
       background: var(--muted-sage);
     }
   }
+}
+
+.add-note {
+  white-space: nowrap;
 }
 
 .go-to-top .p-button {
@@ -123,6 +127,10 @@
   .p-button-label {
     color: var(--beige-light);
   }
+  
+  &:hover {
+    background: var(--brown);
+  }
 }
 
 .clear-filters-disabled .p-button {
@@ -154,7 +162,7 @@
   }
 }
 
-.mark-as-unread, .cancel-reset-progress, .reset-progress {
+.mark-as-unread, .cancel-reset-progress, .reset-progress, .filters-btn, .search-btn {
   .p-button {
     background: var(--brown-dark);
     color: var(--beige-light);

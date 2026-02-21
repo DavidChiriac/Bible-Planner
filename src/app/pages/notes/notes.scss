@@ -1,0 +1,30 @@
+.filters {
+    width: 80%;
+    margin: auto;
+    margin-top: 1rem;
+}
+
+.filters-mobile {
+    @extend .filters;
+
+    width: 100%;
+    padding-inline: 1rem;
+}
+
+.notes-container {
+    width: 80%;
+    margin: auto;
+    margin-top: 5rem;
+}
+
+.error {
+    color: var(--terracotta);
+}
+
+.notes-container-mobile {
+    @extend .notes-container;
+
+    width: 100%;
+    padding-inline: 1rem;
+    margin-top: 2rem;
+}

@@ -5,7 +5,8 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'settings', renderMode: RenderMode.Server },
   { path: 'books', renderMode: RenderMode.Server },
   { path: 'books/:id', renderMode: RenderMode.Server },
-
+  { path: 'notes', renderMode: RenderMode.Server },
+  { path: 'day', renderMode: RenderMode.Server },
   { path: 'login', renderMode: RenderMode.Client },
 
   { path: '**', renderMode: RenderMode.Server },
