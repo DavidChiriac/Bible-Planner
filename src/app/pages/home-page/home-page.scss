@@ -87,3 +87,7 @@
   color: var(--brown);
   font-size: 24px;
 }
+
+.week-label {
+  word-break: keep-all;
+}
