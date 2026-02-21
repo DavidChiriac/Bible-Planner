@@ -14,25 +14,6 @@
   text-decoration: line-through;
 }
 
-.note {
-  padding: 10px 12px;
-  border-radius: 5px;
-  background: var(--beige-card);
-  border: 1px solid var(--brown-light);
-  margin-bottom: 1rem;
-  gap: 2rem;
-  white-space: pre-line;
-
-  span {
-    word-break: keep-all;
-  }
-
-  i:hover {
-    color: var(--beige-light);
-    cursor: pointer;
-  }
-}
-
 .small-container {
     max-height: calc(100dvh - 200px);
     overflow-y: auto;

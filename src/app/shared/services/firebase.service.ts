@@ -3,10 +3,15 @@ import { Auth, signOut, user, getAuth } from '@angular/fire/auth';
 import { Database } from '@angular/fire/database';
 import {
   child,
+  DataSnapshot,
   get,
+  limitToFirst,
+  orderByChild,
+  query,
   ref,
   remove,
   runTransaction,
+  startAfter,
   update,
 } from 'firebase/database';
 import { Observable, switchMap, of, map } from 'rxjs';
@@ -27,6 +32,12 @@ export const CHAPTER_COUNT: Record<string, number> = Object.fromEntries(
 type BookNode = {
   __all?: boolean;
   [chapter: string]: any;
+};
+
+type SearchMode = 'prefix' | 'contains' | 'none';
+
+export type NotesCursor = {
+  offset: number;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -371,16 +382,20 @@ export class FirebaseService {
         string,
         { text: string; createdDate: string }
       > = data?.[ch] ?? {};
-      console.log(`Chapter ${ch} notes raw:`, chapterNotes);
       const items = Object.keys(chapterNotes)
         .sort((a, b) => Number(a) - Number(b))
         .map((key) => {
           const note = chapterNotes[key];
 
+          const parsed = this.parseChapterLabel(ch);
+
           return {
             key,
             text: note.text,
             createdDate: note.createdDate,
+            book: parsed?.book ?? '',
+            chapter: parsed?.chapter ?? 0,
+            chapterLabel: ch,
           };
         });
 
@@ -430,6 +445,8 @@ export class FirebaseService {
 
     return 'note updated';
   }
+
+  // --------------------- FAVOURITE WEEKS ----------------
 
   async addFavouriteWeek(plan: TABS, week: number): Promise<string> {
     const u = this.auth.currentUser;
@@ -483,5 +500,120 @@ export class FirebaseService {
     const favsRef = ref(this.db, `users/${u.uid}/favouriteWeeks`);
     const snapshot = await get(favsRef);
     return snapshot.exists() ? snapshot.val() : [];
+  }
+
+  async getPaginatedNotes(params: {
+    pageSize: number;
+    cursor?: NotesCursor;
+
+    // filters (all optional)
+    search?: string; // case-insensitive contains in note text
+    books?: string[]; // multiple books
+    chapters?: Array<number | string>; // multiple chapters
+
+    // sorting
+    sortBy?: 'createdDate' | 'chapter' | null;
+    sortDir?: 'asc' | 'desc' | null;
+  }): Promise<{ items: NoteItem[]; nextCursor?: NotesCursor }> {
+    const u = this.auth.currentUser;
+    if (!u) throw new Error('Not logged in');
+
+    const {
+      pageSize,
+      cursor,
+      search = '',
+      books = [],
+      chapters = [],
+      sortBy = 'createdDate',
+      sortDir = 'asc',
+    } = params;
+
+    const term = search.trim().toLowerCase();
+    const bookSet = new Set((books ?? []).map((b) => (b ?? '').trim()).filter(Boolean));
+    const chapterSet = new Set(
+      (chapters ?? [])
+        .map(Number)
+        .filter((n) => Number.isFinite(n) && n > 0)
+    );
+
+    // Your actual structure:
+    // users/{uid}/notes/{chapterLabel}/{index} -> { text, createdDate }
+    const notesRootRef = ref(this.db, `users/${u.uid}/notes`);
+    const snap = await get(notesRootRef);
+
+    if (!snap.exists()) return { items: [] };
+
+    const tree: Record<
+      string,
+      Record<string, { text: string; createdDate: string }>
+    > = snap.val() ?? {};
+
+    // 1) Flatten + attach book/chapter from chapterLabel ("Geneza 1")
+    let all: NoteItem[] = [];
+
+    for (const [chapterLabel, chapterNotes] of Object.entries(tree)) {
+      const parsed = this.parseChapterLabel(chapterLabel);
+      if (!parsed) continue;
+
+      // 2) Filter by books (if provided)
+      if (bookSet.size > 0 && !bookSet.has(parsed.book)) continue;
+
+      // 3) Filter by chapters (if provided)
+      if (chapterSet.size > 0 && !chapterSet.has(parsed.chapter)) continue;
+
+      for (const [key, note] of Object.entries(chapterNotes ?? {})) {
+        all.push({
+          key,
+          text: note?.text ?? '',
+          createdDate: note?.createdDate ?? '',
+          book: parsed.book,
+          chapter: parsed.chapter,
+          chapterLabel,
+        });
+      }
+    }
+
+    // 4) Global search (case-insensitive contains) on note text
+    if (term) {
+      all = all.filter((n) => (n.text ?? '').toLowerCase().includes(term));
+    }
+
+    // 5) Sort (stable): primary sort (createdDate or chapter), then chapterLabel, then key
+    all.sort((a, b) => {
+      let result = 0;
+
+      if (sortBy === 'createdDate') {
+        result = (a.createdDate ?? '').localeCompare(b.createdDate ?? '');
+      } else {
+        result = (a.chapter ?? 0) - (b.chapter ?? 0);
+      }
+
+      // stable fallback 1: chapterLabel
+      if (result === 0) {
+        const c = (a.chapterLabel ?? '').localeCompare(b.chapterLabel ?? '');
+        if (c !== 0) result = c;
+      }
+
+      // stable fallback 2: key (numeric if possible)
+      if (result === 0) {
+        const an = Number(a.key);
+        const bn = Number(b.key);
+        if (Number.isFinite(an) && Number.isFinite(bn)) result = an - bn;
+        else result = (a.key ?? '').localeCompare(b.key ?? '');
+      }
+
+      return sortDir === 'desc' ? -result : result;
+    });
+
+    // 6) Apply cursor (client-side)
+    const startIndex = params.cursor?.offset ?? 0;
+
+    const items = all.slice(startIndex, startIndex + pageSize);
+
+    const nextOffset = startIndex + items.length;
+    const nextCursor =
+      nextOffset < all.length ? { offset: nextOffset } : undefined;
+
+    return { items, nextCursor };
   }
 }

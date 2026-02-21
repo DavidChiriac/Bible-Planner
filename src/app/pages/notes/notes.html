@@ -1,0 +1,116 @@
+<div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
+    <div [ngClass]="utils.isMobile() ? 'filters-mobile gap-1' : 'filters gap-3'" class="flex align-items-center">
+        
+        @if (utils.isMobile()) {
+            <div class="w-full">
+                <div class="flex gap-2 w-full">
+                    <input type="text" [(ngModel)]="draftSearchTerm" (keydown.enter)="searchTerm.set(draftSearchTerm())" (ngModelChange)="draftSearchTerm().length === 0 && searchTerm.set('')" pInputText class="w-100 search-book" placeholder="Caută nota"/>
+                    <p-button label="Caută" (onClick)="searchTerm.set(draftSearchTerm())" class="search-btn" [disabled]="!draftSearchTerm()"></p-button>
+                    <p-button class="filters-btn" icon="pi pi-filter" (onClick)="filtersDialogVisible.set(true)"/>
+                </div>
+                <div class="w-full flex justify-content-between mt-3 gap-3">
+                    <p-button class="add-note w-full" [styleClass]="'w-full'" icon="pi pi-plus" label="Adaugă notiță" (onClick)="addNewNote()"></p-button>
+                </div>
+            </div>
+        } @else {
+            <input type="text" [(ngModel)]="draftSearchTerm" (keydown.enter)="searchTerm.set(draftSearchTerm())" (ngModelChange)="draftSearchTerm().length === 0 && searchTerm.set('')" pInputText class="w-100 search-book" placeholder="Caută nota"/>
+            <p-button label="Caută" (onClick)="searchTerm.set(draftSearchTerm())" class="search-btn" [disabled]="!draftSearchTerm()"></p-button>
+            <p-multiselect [options]="books" appendTo="body" [showClear]="true" (onClear)="selectedBooks.set([])" [panelStyleClass]="'multiselect-panel'" placeholder="Cărți" [(ngModel)]="selectedBooks"></p-multiselect>
+            <p-multiselect [options]="chapters()" appendTo="body" [showClear]="true" (onClear)="selectedChapters.set([])" [disabled]="selectedBooks().length === 0" [panelStyleClass]="'multiselect-panel'" placeholder="Capitole" [(ngModel)]="selectedChapters"></p-multiselect>
+            <p-select [options]="sortOptions" appendTo="body" [showClear]="sort() !== sortOptions[0].value" (onClear)="sort.set(sortOptions[0].value)" [placeholder]="sortOptions[0].label" class="notes-sort" [panelStyleClass]="'dropdown-panel'" optionLabel="label" optionValue="value" [(ngModel)]="sort"></p-select>
+            <p-button label="X" (onClick)="searchTerm.set(''); selectedBooks.set([]); selectedChapters.set([]); sort.set(sortOptions[0].value); cursor.set({ offset: 0 });" [disabled]="!searchTerm() && selectedBooks().length === 0 && selectedChapters().length === 0 && !sort()" [ngClass]="!searchTerm() && selectedBooks().length === 0 && selectedChapters().length === 0 && !sort() ? 'clear-filters-disabled' : 'clear-filters'"></p-button>
+
+            <p-button label="Adaugă Notiță" class="add-note text-right" (onClick)="addNewNote()"></p-button>
+        }
+    </div>
+    <div [ngClass]="utils.isMobile() ? 'notes-container-mobile' : 'notes-container'">
+        @if (loading()) {
+            <div class="container flex flex-column align-items-center gap-3 mt-5">
+                <p-progressSpinner></p-progressSpinner>
+                <p>Se încarcă notițele...</p>
+            </div>
+        } @else {
+            @if (notes().length === 0) {
+                <div class="no-notes flex flex-column align-items-center gap-3">
+                    <i class="pi pi-sticky-note" style="font-size: 4rem"></i>
+                    <h2 class="m-0">Nicio notă găsită</h2>
+                </div>
+            } @else {
+                @for (note of notes(); track $index) {
+                    <app-note [note]="note" [displayChapterLabel]="true" (delete)="deleteNote($event)" (edit)="editNote($event)"></app-note>
+                }
+            }
+        }
+        <div class="w-full flex justify-content-center my-6">
+            @if (nextPageLoading()) {
+                <p-progressSpinner></p-progressSpinner>
+            } @else if (hasMore()) {
+                <p-button label="Încarcă mai multe" class="add-note" (onClick)="loadNextPage()"></p-button>
+            }
+        </div>
+    </div>
+</div>
+
+<p-dialog 
+    header="Filtre"
+    [modal]="true"
+    [(visible)]="filtersDialogVisible"
+    [style]="{ width: '90%' }"
+    [ngClass]="utils.isMobile() ? 'filters-dialog-mobile' : ''">
+    <div class="flex flex-column gap-4">
+        <div class="flex flex-column gap-2">
+            <label for="books">Cărți</label>
+            <p-multiselect id="books" appendTo="body" [options]="books" [showClear]="true" (onClear)="draftSelectedBooks.set([])" [panelStyleClass]="'multiselect-panel'" placeholder="Selectează cărțile" [(ngModel)]="draftSelectedBooks"></p-multiselect>
+        </div>
+
+        <div class="flex flex-column gap-2">
+            <label for="chapters">Capitole</label>
+            <p-multiselect id="chapters" appendTo="body" [options]="chapters()" [showClear]="true" (onClear)="draftSelectedChapters.set([])" [disabled]="draftSelectedBooks().length === 0" [panelStyleClass]="'multiselect-panel'" placeholder="Selectează capitolele" [(ngModel)]="draftSelectedChapters"></p-multiselect>
+        </div>
+
+        <div class="flex flex-column gap-2">
+            <label for="sort">Sortează</label>
+            <p-select [options]="sortOptions" appendTo="body" [showClear]="draftSort() !== sortOptions[0].value" (onClear)="draftSort.set(sortOptions[0].value)" [placeholder]="sortOptions[0].label" class="notes-sort" [panelStyleClass]="'dropdown-panel'" optionLabel="label" optionValue="value" [(ngModel)]="draftSort"></p-select>
+        </div>
+
+        <div class="flex justify-content-end gap-2">
+            <p-button label="Aplică" class="confirm-reset-progress" [disabled]="draftSelectedBooks().length === 0 && draftSelectedChapters().length === 0 && draftSort() === sortOptions[0].value" (onClick)="applyFilters()"></p-button>
+            <p-button label="Resetează" class="cancel-reset-progress" (onClick)="draftSelectedBooks.set([]); draftSelectedChapters.set([]); draftSort.set(sortOptions[0].value); filtersDialogVisible.set(false); applyFilters()"></p-button>
+        </div>
+
+    </div>
+
+</p-dialog>
+
+<p-dialog header="Adaugă Notiță"
+    [modal]="true"
+    [(visible)]="addNoteVisible"
+    [style]="{ width: utils.isMobile() ? '90%' : '50%' }"
+    [ngClass]="utils.isMobile() ? 'edit-dialog-mobile' : ''">
+    <div class="flex flex-column align-items-start gap-3 mb-6 mt-1">
+        <div class="flex gap-2 align-items-center">
+            <p-select [options]="books" class="notes-sort" [filter]="true" [panelStyleClass]="'dropdown-panel'" placeholder="Selectează cartea" [(ngModel)]="newNoteBook"></p-select>
+            <input pInputText class="chapter-index" type="number" min="0" [max]="getMaxChapterPerBook()" placeholder="Capitol" [(ngModel)]="newNoteChapter" [disabled]="!newNoteBook" />
+            @if (newNoteChapter() && newNoteBook() && (newNoteChapter() ?? 0) > getMaxChapterPerBook()) {
+                <span class="error">
+                    Capitolul trebuie să fie între 1 și {{ getMaxChapterPerBook() }}
+                </span>
+            }
+        </div>
+        <textarea rows="10" class="w-full" pTextarea [(ngModel)]="newNoteText"></textarea>
+    </div>
+
+    <div class="flex justify-content-center gap-2">
+        <p-button
+            label="Salvează"
+            [disabled]="getMaxChapterPerBook() < (newNoteChapter() ?? 0)"
+            class="confirm-reset-progress"
+            (onClick)="confirmAddNote()"></p-button>
+        <p-button
+            label="Anulează"
+            class="cancel-reset-progress"
+            (onClick)="addNoteVisible.set(false); newNoteText.set(''); newNoteBook.set(null); newNoteChapter.set(null);"></p-button>
+    </div>
+
+</p-dialog>
+

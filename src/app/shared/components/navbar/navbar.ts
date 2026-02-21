@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { MenubarModule } from 'primeng/menubar';
 import { AuthService } from '../../services/auth.service';
 import { ButtonModule } from 'primeng/button';
@@ -31,6 +31,14 @@ export class Navbar {
       separator: true
     },
     {
+      label: 'Note',
+      icon: 'pi pi-pencil',
+      routerLink: '/notes',
+    },
+    {
+      separator: true
+    },
+    {
       label: 'Setări',
       icon: 'pi pi-cog',
       routerLink: '/settings',
@@ -41,6 +49,14 @@ export class Navbar {
       command: () => this.auth.logout(),
     }
   ];
+
+  computedItems = computed(() => {
+    if (this.utils.isMobile()) {
+      return this.items.filter(item => !item.separator);
+    }
+
+    return this.items;
+  });
 
   auth = inject(AuthService);
   utils = inject(Utils);

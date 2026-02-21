@@ -1,4 +1,4 @@
 <div class="card">
-    <p-menubar [model]="items" breakpoint="767px" />
+    <p-menubar [model]="computedItems()" breakpoint="767px" />
 </div>
 <div [ngClass]="utils.isMobile() ? 'mask-mobile' : 'mask'"></div>
