@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Utils } from '../../../shared/services/utils.service';
 import { NgClass } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
@@ -39,6 +39,8 @@ export class Day {
   private readonly notesService = inject(NotesService);
   private readonly route = inject(ActivatedRoute);
 
+  filterByChapter = signal<string | null>(null);
+
   dayIndex = 0;
   weekIndex = 0;
   plan: IPlan[] | undefined;
@@ -50,6 +52,20 @@ export class Day {
   noteChapters: string[] = [];
 
   notesForDay = signal<Record<string, NoteItem[]>>({});
+  filteredNotesForDay = computed(() => {
+    const notes = this.notesForDay();
+    const filter = this.filterByChapter();
+    if (!filter) {
+      return notes;
+    }
+    const filtered: Record<string, NoteItem[]> = {};
+    for (const [chapter, items] of Object.entries(notes)) {
+      if (chapter === filter) {
+        filtered[chapter] = items;
+      }
+    }
+    return filtered;
+  });    
 
   loading = signal(true);
 
@@ -102,7 +118,7 @@ export class Day {
   }
 
   get notesEntries(): [string, NoteItem[]][] {
-    return Object.entries(this.notesForDay());
+    return Object.entries(this.filteredNotesForDay());
   }
 
   deleteNote(note: NoteItem) {
@@ -121,7 +137,7 @@ export class Day {
   }
 
   dayHasNoNotes() {
-    const notes = this.notesForDay();
+    const notes = this.filteredNotesForDay();
     return !notes || Object.values(notes).every((items) => items.length === 0);
   }
 
