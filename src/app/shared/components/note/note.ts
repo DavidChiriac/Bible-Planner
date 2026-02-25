@@ -2,11 +2,11 @@ import { Component, inject, input, output, signal } from '@angular/core';
 import { NoteItem } from '../../models/note.models';
 import { DatePipe, NgClass } from '@angular/common';
 import { Dialog } from 'primeng/dialog';
-import { FirebaseService } from '../../services/firebase.service';
 import { Button } from 'primeng/button';
 import { Utils } from '../../services/utils.service';
 import { FormsModule } from '@angular/forms';
 import { Textarea } from 'primeng/textarea';
+import { NotesService } from '../../../pages/notes/notes.service';
 
 @Component({
   selector: 'app-note',
@@ -15,7 +15,7 @@ import { Textarea } from 'primeng/textarea';
   styleUrl: './note.scss',
 })
 export class Note {
-  firebase = inject(FirebaseService);
+  private readonly notesService = inject(NotesService);
   utils = inject(Utils);
   note = input.required<NoteItem>();
   displayChapterLabel = input(false);
@@ -38,7 +38,7 @@ export class Note {
     const confirmation = this.noteDeleteConfirmation();
     if (!confirmation) return;
 
-    await this.firebase.deleteNoteByKey(confirmation.chapter, confirmation.key).then(() => {
+    await this.notesService.deleteNoteByKey(confirmation.chapter, confirmation.key).then(() => {
       this.noteDeleteDialogVisible.set(false);
       this.noteDeleteConfirmation.set(null);
       this.delete.emit(this.note());
@@ -54,7 +54,7 @@ export class Note {
     const editedText = this.editedText();
     if (!editedText) return;
 
-    await this.firebase.updateNote(this.note().chapterLabel, this.note().key, editedText).then(() => {
+    await this.notesService.updateNote(this.note().chapterLabel, this.note().key, editedText).then(() => {
       this.editMode.set(false);
       this.editedText.set('');
       this.edit.emit({ ...this.note(), text: editedText });

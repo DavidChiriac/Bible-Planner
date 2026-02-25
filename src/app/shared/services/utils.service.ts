@@ -3,7 +3,6 @@ import { FirebaseService } from './firebase.service';
 import { combineLatest, distinctUntilChanged, EMPTY, from, switchMap } from 'rxjs';
 import { TABS } from '../../pages/home-page/home-page';
 import { isPlatformBrowser } from '@angular/common';
-import { DeviceDetectorService } from 'ngx-device-detector';
 import { authState } from '@angular/fire/auth';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -21,7 +20,6 @@ export class Utils {
 
   private readonly firebase = inject(FirebaseService);
   private readonly platformId = inject(PLATFORM_ID);
-  private readonly deviceService = inject(DeviceDetectorService);
   private readonly breakpointObserver = inject(BreakpointObserver);
   private readonly destroyRef = inject(DestroyRef);
   
@@ -50,7 +48,7 @@ export class Utils {
               startDate: this.firebase.getStartDate(),
               months: this.firebase.getMonths(),
               plan: this.firebase.getPlan(),
-              favouriteWeeks: this.firebase.getFavouriteWeeks(),
+              favouriteWeeks: this.firebase.getFavouriteWeeks$(),
             })
           ),
         );
@@ -60,7 +58,7 @@ export class Utils {
       // update UI state
       this.readSet.set(new Set(chapters ?? []));
 
-      if (startDate !== undefined) {
+      if (startDate) {
         // exists in DB -> use it (even if empty string, though you likely never store empty)
         this.startDate.set(this.startDateAsDate(startDate));
       } else {
@@ -68,7 +66,7 @@ export class Utils {
         this.firebase.setStartDate(new Date().toISOString().split('T')[0]);
       }
 
-      if (months !== undefined) {
+      if (months) {
         this.months.set(months);
       } else {
         this.firebase.setMonths(12);
@@ -101,13 +99,16 @@ export class Utils {
   isEntireDayRead = (dayChapters: string[]) =>
     dayChapters.every((chapter) => this.readSet().has(chapter));
 
-  setEntireDayRead(chapters: string[]) {
+  async setEntireDayRead(chapters: string[]) {
+
     const value = !this.isEntireDayRead(chapters);
     if (value) {
-      this.firebase.addChapters(chapters);
+      await this.firebase.addChapters(chapters);
+
       this.readSet.set(new Set([...this.readSet(), ...chapters]));
     } else {
-      this.firebase.deleteChapters(chapters);
+      await this.firebase.deleteChapters(chapters);
+
       this.readSet.set(
         new Set([...this.readSet()].filter((c) => !chapters.includes(c))),
       );
@@ -142,10 +143,6 @@ export class Utils {
     }
 
     return readDays;
-  }
-
-  isTablet() {
-    return this.deviceService.isTablet();
   }
 
   startDateAsDate(date: string): Date | null {

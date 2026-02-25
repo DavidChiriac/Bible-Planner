@@ -12,10 +12,11 @@ import { Checkbox } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { TextareaModule } from 'primeng/textarea';
 import { MultiSelect } from 'primeng/multiselect';
-import { FirebaseService } from '../../../shared/services/firebase.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { NoteItem } from '../../../shared/models/note.models';
 import { Note } from '../../../shared/components/note/note';
+import { Select } from 'primeng/select';
+import { NotesService } from '../../notes/notes.service';
 
 @Component({
   selector: 'app-day',
@@ -28,13 +29,14 @@ import { Note } from '../../../shared/components/note/note';
     MultiSelect,
     ProgressSpinnerModule,
     Note,
+    Select
   ],
   templateUrl: './day.html',
   styleUrl: './day.scss',
 })
 export class Day {
   utils = inject(Utils);
-  private readonly firebase = inject(FirebaseService);
+  private readonly notesService = inject(NotesService);
   private readonly route = inject(ActivatedRoute);
 
   dayIndex = 0;
@@ -84,7 +86,7 @@ export class Day {
 
   async saveNote() {
     this.loading.set(true);
-    await this.firebase.saveNote(this.noteChapters, this.note);
+    await this.notesService.saveNote(this.noteChapters, this.note);
 
     await this.fetchNotes();
 
@@ -93,7 +95,7 @@ export class Day {
   }
 
   async fetchNotes() {
-    const noteItems = await this.firebase.getNoteItemsForChapters(
+    const noteItems = await this.notesService.getNoteItemsForChapters(
       this.chapters
     );
     this.notesForDay.set(noteItems ?? {});
