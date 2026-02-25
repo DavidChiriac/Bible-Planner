@@ -3,15 +3,9 @@ import { Auth, signOut, user, getAuth } from '@angular/fire/auth';
 import { Database } from '@angular/fire/database';
 import {
   child,
-  DataSnapshot,
-  get,
-  limitToFirst,
-  orderByChild,
-  query,
   ref,
   remove,
   runTransaction,
-  startAfter,
   update,
 } from 'firebase/database';
 import { Observable, switchMap, of, map } from 'rxjs';
@@ -19,7 +13,6 @@ import { object, objectVal } from 'rxfire/database';
 import { TABS } from '../../pages/home-page/home-page';
 import Chapters from '../../../assets/jsons/biblia_cornilescu_carti_capitole.json';
 import { migrateChaptersSameRefIfNeeded } from './migration';
-import { NoteItem } from '../models/note.models';
 
 type BookDef = { title: string; chapters: string[] };
 
@@ -33,8 +26,6 @@ type BookNode = {
   __all?: boolean;
   [chapter: string]: any;
 };
-
-type SearchMode = 'prefix' | 'contains' | 'none';
 
 export type NotesCursor = {
   offset: number;
@@ -136,7 +127,7 @@ export class FirebaseService {
   }
 
   private isNumericKey(k: string) {
-    return /^[0-9]+$/.test(k);
+    return /^\d+$/.test(k);
   }
 
   getChapters(): Observable<string[]> {
@@ -152,6 +143,20 @@ export class FirebaseService {
 
         const out: string[] = [];
 
+        const addAllChapters = (book: string, count: number) => {
+          for (let i = 1; i <= count; i++) out.push(`${book} ${i}`);
+        };
+
+        const addSpecificChapters = (book: string, node: BookNode) => {
+          const nums = Object.keys(node)
+            .filter((k) => this.isNumericKey(k) && node[k] === true)
+            .map(Number)
+            .filter((n) => Number.isFinite(n))
+            .sort((a, b) => a - b);
+
+          for (const n of nums) out.push(`${book} ${n}`);
+        };
+
         for (const [book, node] of Object.entries(tree)) {
           if (!node) continue;
 
@@ -160,18 +165,12 @@ export class FirebaseService {
 
           if (all) {
             if (Number.isInteger(count) && count > 0) {
-              for (let i = 1; i <= count; i++) out.push(`${book} ${i}`);
+              addAllChapters(book, count);
             }
             continue;
           }
 
-          const nums = Object.keys(node)
-            .filter((k) => this.isNumericKey(k) && node[k] === true)
-            .map(Number)
-            .filter((n) => Number.isFinite(n))
-            .sort((a, b) => a - b);
-
-          for (const n of nums) out.push(`${book} ${n}`);
+          addSpecificChapters(book, node);
         }
 
         return Array.from(new Set(out));
@@ -329,145 +328,19 @@ export class FirebaseService {
     await migrateChaptersSameRefIfNeeded(this.db, u.uid);
   }
 
-  // ---------------- NOTES ----------------
-
-  async saveNote(chapters: string[], note: string): Promise<string> {
-    const u = this.auth.currentUser;
-    if (!u) throw new Error('Not logged in');
-
-    const noteRef = ref(this.db, `users/${u.uid}/notes`);
-
-    const snapshot = await get(noteRef);
-    const existingData = snapshot.exists() ? snapshot.val() : {};
-
-    const createdDate = new Date().toISOString();
-
-    const updates: Record<string, { text: string; createdDate: string }> = {};
-
-    for (const ch of chapters) {
-      const chapterNotes: Record<string, any> = existingData?.[ch] ?? {};
-
-      const indices = Object.keys(chapterNotes)
-        .map(Number)
-        .filter((n) => Number.isFinite(n));
-
-      const nextIndex = indices.length ? Math.max(...indices) + 1 : 0;
-
-      updates[`${ch}/${nextIndex}`] = {
-        text: note,
-        createdDate,
-      };
-    }
-
-    await update(noteRef, updates);
-
-    return 'note saved';
-  }
-
-  async getNoteItemsForChapters(
-    chapters: string[]
-  ): Promise<Record<string, NoteItem[]>> {
-    const u = this.auth.currentUser;
-    if (!u) throw new Error('Not logged in');
-
-    const notesRef = ref(this.db, `users/${u.uid}/notes`);
-    const snapshot = await get(notesRef);
-    const data = snapshot.exists() ? snapshot.val() : {};
-
-    const result: Record<string, NoteItem[]> = {};
-
-    for (const ch of chapters) {
-      // Now chapterNotes is Record<string, { text: string; createdDate: string }>
-      const chapterNotes: Record<
-        string,
-        { text: string; createdDate: string }
-      > = data?.[ch] ?? {};
-      const items = Object.keys(chapterNotes)
-        .sort((a, b) => Number(a) - Number(b))
-        .map((key) => {
-          const note = chapterNotes[key];
-
-          const parsed = this.parseChapterLabel(ch);
-
-          return {
-            key,
-            text: note.text,
-            createdDate: note.createdDate,
-            book: parsed?.book ?? '',
-            chapter: parsed?.chapter ?? 0,
-            chapterLabel: ch,
-          };
-        });
-
-      result[ch] = items;
-    }
-
-    return result;
-  }
-
-  /**
-   * Delete a note by its key (deletes exactly one instance even if duplicates exist).
-   */
-  async deleteNoteByKey(chapter: string, key: string): Promise<string> {
-    const u = this.auth.currentUser;
-    if (!u) throw new Error('Not logged in');
-
-    const chapterRef = ref(this.db, `users/${u.uid}/notes/${chapter}`);
-
-    // remove(childRef) deletes only that specific key
-    await remove(child(chapterRef, key));
-
-    return 'note deleted';
-  }
-
-  async updateNote(
-    chapter: string,
-    key: string,
-    newText: string
-  ): Promise<string> {
-    const u = this.auth.currentUser;
-    if (!u) throw new Error('Not logged in');
-
-    const noteItemRef = ref(
-      this.db,
-      `users/${u.uid}/notes/${chapter}/${key}`
-    );
-
-    // Get existing note to preserve createdDate
-    const snapshot = await get(noteItemRef);
-    if (!snapshot.exists()) {
-      throw new Error('Note not found');
-    }
-
-    await update(noteItemRef, {
-      text: newText,
-    });
-
-    return 'note updated';
-  }
-
   // --------------------- FAVOURITE WEEKS ----------------
 
-  async addFavouriteWeek(plan: TABS, week: number): Promise<string> {
+  async addFavouriteWeek(plan: TABS, week: number): Promise<void> {
     const u = this.auth.currentUser;
     if (!u) throw new Error('Not logged in');
 
     const favsRef = ref(this.db, `users/${u.uid}/favouriteWeeks`);
 
-    const snapshot = await get(favsRef);
-    const existingFavs: { plan: TABS; week: number }[] = snapshot.exists()
-      ? snapshot.val()
-      : [];
-
-    if (!existingFavs.some(fav => fav.plan === plan && fav.week === week)) {
-      const newFavs = [...existingFavs, { plan, week }];
-      await update(ref(this.db), {
-        [`users/${u.uid}/favouriteWeeks`]: newFavs,
-      });
-      return 'week added to favourites';
-    }
-
-    return 'week already in favourites';
+    await runTransaction(favsRef, (current) => {
+      const arr = Array.isArray(current) ? current : [];
+      if (arr.some(f => f.plan === plan && f.week === week)) return arr;
+      return [...arr, { plan, week }];
+    });
   }
 
   async deleteFavouriteWeek(plan: TABS, week: number): Promise<string> {
@@ -476,144 +349,24 @@ export class FirebaseService {
 
     const favsRef = ref(this.db, `users/${u.uid}/favouriteWeeks`);
 
-    const snapshot = await get(favsRef);
-    const existingFavs: { plan: TABS; week: number }[] = snapshot.exists()
-      ? snapshot.val()
-      : [];
-
-    const newFavs = existingFavs.filter(fav => !(fav.plan === plan && fav.week === week));
-
-    if (newFavs.length !== existingFavs.length) {
-      await update(ref(this.db), {
-        [`users/${u.uid}/favouriteWeeks`]: newFavs,
-      });
-      return 'week removed from favourites';
-    }
-
-    return 'week not found in favourites';
-  }
-
-  async getFavouriteWeeks(): Promise<{ plan: TABS; week: number }[]> {
-    const u = this.auth.currentUser;
-    if (!u) return [];
-
-    const favsRef = ref(this.db, `users/${u.uid}/favouriteWeeks`);
-    const snapshot = await get(favsRef);
-    return snapshot.exists() ? snapshot.val() : [];
-  }
-
-  async getPaginatedNotes(params: {
-    pageSize: number;
-    cursor?: NotesCursor;
-
-    // filters (all optional)
-    search?: string; // case-insensitive contains in note text
-    books?: string[]; // multiple books
-    chapters?: Array<number | string>; // multiple chapters
-
-    // sorting
-    sortBy?: 'createdDate' | 'chapter' | null;
-    sortDir?: 'asc' | 'desc' | null;
-  }): Promise<{ items: NoteItem[]; nextCursor?: NotesCursor }> {
-    const u = this.auth.currentUser;
-    if (!u) throw new Error('Not logged in');
-
-    const {
-      pageSize,
-      cursor,
-      search = '',
-      books = [],
-      chapters = [],
-      sortBy = 'createdDate',
-      sortDir = 'asc',
-    } = params;
-
-    const term = search.trim().toLowerCase();
-    const bookSet = new Set((books ?? []).map((b) => (b ?? '').trim()).filter(Boolean));
-    const chapterSet = new Set(
-      (chapters ?? [])
-        .map(Number)
-        .filter((n) => Number.isFinite(n) && n > 0)
-    );
-
-    // Your actual structure:
-    // users/{uid}/notes/{chapterLabel}/{index} -> { text, createdDate }
-    const notesRootRef = ref(this.db, `users/${u.uid}/notes`);
-    const snap = await get(notesRootRef);
-
-    if (!snap.exists()) return { items: [] };
-
-    const tree: Record<
-      string,
-      Record<string, { text: string; createdDate: string }>
-    > = snap.val() ?? {};
-
-    // 1) Flatten + attach book/chapter from chapterLabel ("Geneza 1")
-    let all: NoteItem[] = [];
-
-    for (const [chapterLabel, chapterNotes] of Object.entries(tree)) {
-      const parsed = this.parseChapterLabel(chapterLabel);
-      if (!parsed) continue;
-
-      // 2) Filter by books (if provided)
-      if (bookSet.size > 0 && !bookSet.has(parsed.book)) continue;
-
-      // 3) Filter by chapters (if provided)
-      if (chapterSet.size > 0 && !chapterSet.has(parsed.chapter)) continue;
-
-      for (const [key, note] of Object.entries(chapterNotes ?? {})) {
-        all.push({
-          key,
-          text: note?.text ?? '',
-          createdDate: note?.createdDate ?? '',
-          book: parsed.book,
-          chapter: parsed.chapter,
-          chapterLabel,
-        });
-      }
-    }
-
-    // 4) Global search (case-insensitive contains) on note text
-    if (term) {
-      all = all.filter((n) => (n.text ?? '').toLowerCase().includes(term));
-    }
-
-    // 5) Sort (stable): primary sort (createdDate or chapter), then chapterLabel, then key
-    all.sort((a, b) => {
-      let result = 0;
-
-      if (sortBy === 'createdDate') {
-        result = (a.createdDate ?? '').localeCompare(b.createdDate ?? '');
-      } else {
-        result = (a.chapter ?? 0) - (b.chapter ?? 0);
-      }
-
-      // stable fallback 1: chapterLabel
-      if (result === 0) {
-        const c = (a.chapterLabel ?? '').localeCompare(b.chapterLabel ?? '');
-        if (c !== 0) result = c;
-      }
-
-      // stable fallback 2: key (numeric if possible)
-      if (result === 0) {
-        const an = Number(a.key);
-        const bn = Number(b.key);
-        if (Number.isFinite(an) && Number.isFinite(bn)) result = an - bn;
-        else result = (a.key ?? '').localeCompare(b.key ?? '');
-      }
-
-      return sortDir === 'desc' ? -result : result;
+    const res = await runTransaction(favsRef, (current) => {
+      const existing: { plan: TABS; week: number }[] = Array.isArray(current) ? current : [];
+      const filtered = existing.filter(f => !(f.plan === plan && f.week === week));
+      return filtered.length ? filtered : []; // or return null if you want to delete the node entirely
     });
 
-    // 6) Apply cursor (client-side)
-    const startIndex = params.cursor?.offset ?? 0;
+    return res.committed ? 'week removed from favourites' : 'no change';
+  }
 
-    const items = all.slice(startIndex, startIndex + pageSize);
-
-    const nextOffset = startIndex + items.length;
-    const nextCursor =
-      nextOffset < all.length ? { offset: nextOffset } : undefined;
-
-    return { items, nextCursor };
+  getFavouriteWeeks$() {
+    return this.user$.pipe(
+      switchMap(u => {
+        if (!u) return of([]);
+        return objectVal<{ plan: TABS; week: number }[] | null>(
+          ref(this.db, `users/${u.uid}/favouriteWeeks`)
+        );
+      }),
+      map(v => Object.values(v ?? []))
+    );
   }
 }

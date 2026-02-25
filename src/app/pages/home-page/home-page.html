@@ -34,7 +34,6 @@
                                     } @else {
                                         <i class="pi pi-star" (click)="$event.stopPropagation(); addFavouriteWeek(tab)" onkeydown=""></i>
                                     }
-
                                     <span class="flex gap-2" [ngClass]="utils.isMobile() ? 'flex-column align-items-start' : 'align-items-center'">
                                         @if (utils.isMobile()) {
                                             <h4 class="m-0">
@@ -71,7 +70,7 @@
                                         [ngClass]="{'mb-1': i < tab.days.length - 1}"
                                         (click)="goToDay(i, tab)" onkeydown="">
                                         <span class="flex gap-2 align-items-center" [ngClass]="{'read': utils.isEntireDayRead(day.chapters)}">
-                                            <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)" (click)="$event.stopPropagation(); utils.setEntireDayRead(day.chapters)" onkeydown=""></p-checkbox>
+                                            <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)" (click)="toggleDay($event, day.chapters)" onkeydown=""></p-checkbox>
                                             <h3 class="m-0">{{ day.label }}</h3>
                                         </span>
                                         <i class="pi pi-pencil"></i>
@@ -93,6 +92,7 @@
         icon="pi pi-angle-down"
         class="continue-reading sticky-bottom-right"
         [label]="'Continuă citirea'"
+        [disabled]="favouriteWeeksForPlan().length === 0"
         (onClick)="goToNextTargetWeek()">
     </p-button>
 </div>

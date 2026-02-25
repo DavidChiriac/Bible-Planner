@@ -6,13 +6,15 @@ import { FormsModule } from '@angular/forms';
 import BIBLE from '../../../assets/jsons/biblia_cornilescu_carti_capitole.json';
 import { InputText } from 'primeng/inputtext';
 import { MultiSelect } from 'primeng/multiselect';
-import { FirebaseService, NotesCursor } from '../../shared/services/firebase.service';
+import { NotesCursor } from '../../shared/services/firebase.service';
 import { NoteItem } from '../../shared/models/note.models';
 import { Dialog } from 'primeng/dialog';
 import { Textarea } from 'primeng/textarea';
 import { Select } from 'primeng/select';
 import { Note } from '../../shared/components/note/note';
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { NotesService } from './notes.service';
+import { SessionStorageService } from 'ngx-webstorage';
 
 type SortBy = 'createdDate' | 'chapter';
 type SortDir = 'asc' | 'desc';
@@ -36,15 +38,16 @@ type SortDir = 'asc' | 'desc';
 })
 export class Notes {
   utils = inject(Utils);
-  firebase = inject(FirebaseService);
+  private readonly notesService = inject(NotesService);
+  private readonly sessionStorageService = inject(SessionStorageService);
 
   // UI filters
-  searchTerm = signal('');
-  draftSearchTerm = signal('');
+  searchTerm = signal(this.sessionStorageService.retrieve('notes_searchTerm') ?? '');
+  draftSearchTerm = signal(this.sessionStorageService.retrieve('notes_searchTerm') ?? '');
   books = BIBLE.map((b) => b.title);
 
-  selectedBooks = signal<string[]>([]);
-  selectedChapters = signal<string[]>([]);
+  selectedBooks = signal<string[]>(this.sessionStorageService.retrieve('notes_selectedBooks') ?? []);
+  selectedChapters = signal<string[]>(this.sessionStorageService.retrieve('notes_selectedChapters') ?? []);
 
   // Sorting
   sortOptions = [
@@ -53,7 +56,7 @@ export class Notes {
     { label: 'Capitol (asc)', value: 'chapter_asc' },
     { label: 'Capitol (desc)', value: 'chapter_desc' },
   ]
-  sort = signal<string>(this.sortOptions[0].value);
+  sort = signal<string>(this.sessionStorageService.retrieve('notes_sort') ?? this.sortOptions[0].value);
   sortBy = computed<SortBy>(() => this.sort().split('_')[0] as SortBy);
   sortDir = computed<SortDir>(() => this.sort().split('_')[1] as SortDir);
 
@@ -65,9 +68,9 @@ export class Notes {
 
   filtersDialogVisible = signal(false);
 
-  draftSelectedBooks = signal<string[]>([]);
-  draftSelectedChapters = signal<string[]>([]);
-  draftSort = signal<any>(null);
+  draftSelectedBooks = signal<string[]>(this.sessionStorageService.retrieve('notes_selectedBooks') ?? []);
+  draftSelectedChapters = signal<string[]>(this.sessionStorageService.retrieve('notes_selectedChapters') ?? []);
+  draftSort = signal<any>(this.sessionStorageService.retrieve('notes_sort') ?? null);
 
   chapters = computed(() => {
     const selectedBooks = this.selectedBooks();
@@ -103,6 +106,11 @@ export class Notes {
       const _sortBy = this.sortBy();
       const _sortDir = this.sortDir();
 
+      this.sessionStorageService.store('notes_searchTerm', _term);
+      this.sessionStorageService.store('notes_selectedBooks', _books);
+      this.sessionStorageService.store('notes_selectedChapters', _chapters);
+      this.sessionStorageService.store('notes_sort', `${_sortBy}_${_sortDir}`);
+
       void this.loadFirstPage();
     });
 
@@ -127,7 +135,7 @@ export class Notes {
     this.notes.set([]);
     this.hasMore.set(true);
 
-    const res = await this.firebase.getPaginatedNotes({
+    const res = await this.notesService.getPaginatedNotes({
       pageSize: this.pageSize,
       cursor: { offset: 0 },
       search: this.searchTerm(),
@@ -148,7 +156,7 @@ export class Notes {
 
     this.nextPageLoading.set(true);
 
-    const res = await this.firebase.getPaginatedNotes({
+    const res = await this.notesService.getPaginatedNotes({
       pageSize: this.pageSize,
       cursor: this.cursor(),
       search: this.searchTerm(),
@@ -203,7 +211,7 @@ export class Notes {
 
     const chapterLabel = `${book} ${chapter}`;
 
-    await this.firebase.saveNote([chapterLabel], text);
+    await this.notesService.saveNote([chapterLabel], text);
     await this.loadFirstPage();
 
     this.loading.set(false);

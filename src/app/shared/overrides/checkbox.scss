@@ -11,8 +11,9 @@
 }
 
 .p-checkbox-checked:not(.p-disabled):has(.p-checkbox-input:hover) .p-checkbox-box {
-  background: var(--beige-light);
+  background: var(--muted-sage);
   border-color: var(--muted-sage);
+  color: var(--beige-light);
 }
 
 .p-checkbox-checked .p-checkbox-box {

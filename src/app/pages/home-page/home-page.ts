@@ -180,4 +180,9 @@ export class HomePage {
       tab.week
     );
   }
+
+  async toggleDay(event: Event, chapters: string[]) {
+    event.stopPropagation();
+    await this.utils.setEntireDayRead(chapters);
+  }
 }

@@ -52,7 +52,10 @@
         </div>
 
         <div [ngClass]="{'w-6': !utils.isMobile()}">
-            <h2 class="text-center" [ngClass]="utils.isMobile() ? 'mb-3' : 'mb-4'">Notițe</h2>
+            <div class="flex justify-content-between align-items-center">
+                <h2 class="text-center" [ngClass]="utils.isMobile() ? 'mb-3' : 'mb-4 ml-3'">Notițe</h2>
+                <p-select [options]="chapters" appendTo="body" placeholder="Filtrează note" panelStyleClass="dropdown-panel" class="notes-sort" [ngClass]="{'mr-4': !utils.isMobile()}"></p-select>
+            </div>
 
             @if (dayHasNoNotes()) {
                 <p class="text-center">Nu există notițe pentru această zi.</p>
