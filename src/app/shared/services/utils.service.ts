@@ -6,6 +6,9 @@ import { isPlatformBrowser } from '@angular/common';
 import { authState } from '@angular/fire/auth';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import ChapterWithVerses from '../../../assets/jsons/biblia_ro_capitole_cu_versete_complete.json';
+
+const TOTAL_BIBLE_VERSES = 31102;
 
 @Injectable({
   providedIn: 'root',
@@ -168,5 +171,23 @@ export class Utils {
 
   isWeekFavourite(week: { week: number }) {
     return this.favouriteWeeks().some(fav => fav.plan === this.selectedPlan() && fav.week === week.week);
+  }
+
+  toggleChapterRead(chapter: string) {
+    const isRead = this.isChapterRead(chapter);
+    if (isRead) {
+      this.firebase.deleteChapters([chapter]);
+      this.readSet.set(new Set([...this.readSet()].filter((c) => c !== chapter)));
+    } else {
+      this.firebase.addChapters([chapter]);
+      this.readSet.set(new Set([...this.readSet(), chapter]));
+    }
+  }
+
+  readPercentage() {
+    const readChapters = this.readSet();
+    //Use ChaptersWithVerses to get the total number of verses of the read chapters
+    const totalVerses = ChapterWithVerses.flatMap((book) => book.chapters).filter((chapter) => readChapters.has(chapter.chapter)).reduce((sum, chapter) => sum + chapter.verses, 0);
+    return Number.parseFloat((totalVerses / TOTAL_BIBLE_VERSES * 100).toFixed(2));
   }
 }

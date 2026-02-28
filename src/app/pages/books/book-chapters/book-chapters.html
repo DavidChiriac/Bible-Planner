@@ -14,7 +14,7 @@
             <div
                 class="flex w-full justify-content-between align-items-center cursor-pointer chapter"
                 [ngClass]="utils.isMobile() ? 'gap-2' : 'gap-6'"
-                (click)="firebase.addChapters([chapter])" onkeydown="">
+                (click)="utils.toggleChapterRead(chapter)" onkeydown="">
                 <div class="flex gap-2">
                     <p-checkbox
                         [binary]="true"
