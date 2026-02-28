@@ -5,17 +5,21 @@
             [ngClass]="{'selected': utils.selectedPlan() === tab}">{{ tab }}</p-button>
         }
     </div>
-    <div class="details w-100">
-        <div class="flex justify-content-center w-100 status mb-4" [ngClass]="utils.isMobile() ? 'gap-2' : 'gap-4'">
+    <div class="details m-auto mb-4" [ngClass]="utils.isMobile() ? 'w-11' : 'w-6'">
+        <div class="w-full">
+            <h4 class="text-center m-0 mb-1">Progresul tău de citire - {{ utils.readPercentage() }}%</h4>
+            <p-progress-bar [value]="utils.readPercentage()" [showValue]="false"></p-progress-bar>
+        </div>
+        <div class="flex justify-content-center w-100 py-2" [ngClass]="utils.isMobile() ? 'gap-2 status-mobile' : 'gap-4 status'">
             <i class="pi flex align-items-center pi-angle-double-left"></i>
             @if (utils.hasReadWholeBible()) {
-            <p>Felicitări! Ai citit întreaga Biblie! 🎉</p>
+            <span>Felicitări! Ai citit întreaga Biblie! 🎉</span>
             } @else if (currentStatus() > 0) {
-            <p>Ești cu {{ currentStatus() }} zile citite înainte!</p>
+            <span>Ești cu {{ currentStatus() }} zile citite înainte!</span>
             } @else if (currentStatus() < 0) {
-                <p>Ești cu {{ (currentStatus() * -1) }} zile de citit în urmă!</p>
+                <span>Ești cu {{ (currentStatus() * -1) }} zile de citit în urmă!</span>
                 } @else {
-                <p>Ești la zi cu planul de citire!</p>
+                <span>Ești la zi cu planul de citire!</span>
                 }
             <i class="pi flex align-items-center pi-angle-double-right"></i>
         </div>

@@ -10,6 +10,7 @@ import { ButtonModule } from 'primeng/button';
 import { NgClass } from '@angular/common';
 import { TagModule } from 'primeng/tag';
 import { Router } from '@angular/router';
+import { ProgressBar } from 'primeng/progressbar';
 
 export enum TABS {
   CRONOLOGIC = 'Cronologic',
@@ -26,6 +27,7 @@ export enum TABS {
     ButtonModule,
     NgClass,
     TagModule,
+    ProgressBar
   ],
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss',

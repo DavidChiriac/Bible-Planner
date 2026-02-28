@@ -1,3 +1,11 @@
 .p-progressbar {
- background: var(--beige-light) !important;
+  background: var(--beige-light) !important;
+
+  .p-progressbar-value {
+    background: var(--brown-dark) !important;
+
+    .p-progressbar-label {
+      color: var(--beige-light);
+    }
+  }
 }
