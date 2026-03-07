@@ -15,7 +15,15 @@
 }
 
 .small-container {
-    max-height: calc(100dvh - 300px);
+    @media screen and (max-height: 800px) {
+      max-height: calc(100dvh - 250px);
+    }
+    @media screen and (max-height: 650px) {
+      max-height: calc(100dvh);
+    }
+    @media screen and (min-height: 800px) {
+      max-height: calc(100dvh - 300px);
+    }
     overflow-y: auto;
     padding-inline: 1rem;
 }

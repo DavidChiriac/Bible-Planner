@@ -12,7 +12,7 @@
     </div>
 
     <div class="flex justify-content-between gap-3 w-9 mx-auto" [ngClass]="{'flex-column w-11': utils.isMobile()}">
-        <div [ngClass]="{'w-5 small-container': !utils.isMobile()}">
+        <div [ngClass]="{'w-5 mb-5': !utils.isMobile()}">
             <h2 [ngClass]="utils.isMobile() ? 'mb-3' : 'mb-4'">Capitole</h2>
             <div class="flex flex-wrap gap-3 row-gap-1">
                 @for (chapter of chapters; track $index) {

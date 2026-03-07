@@ -296,6 +296,12 @@ export class FirebaseService {
 
     const chaptersRef = ref(this.db, `users/${u.uid}/chapters`);
     await remove(chaptersRef);
+    const favouritesRef = ref(this.db, `users/${u.uid}/favouriteWeeks`);
+    await remove(favouritesRef);
+    const startDateRef = ref(this.db, `users/${u.uid}/startDate`);
+    await remove(startDateRef);
+    const monthsRef = ref(this.db, `users/${u.uid}/months`);
+    await remove(monthsRef);
     return 'progress reset';
   }
 
