@@ -1,20 +1,68 @@
-.filters {
+// Filters card
+.filters-card {
     width: 80%;
-    margin: auto;
-    margin-top: 1rem;
+    margin: 1rem auto 0;
+    background: var(--beige-card);
+    border: 1px solid var(--brown-light);
+    border-radius: 16px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    box-shadow: 0 2px 8px rgba(74, 59, 42, 0.1);
+
+    &--mobile {
+        width: calc(100% - 2rem);
+    }
 }
 
-.filters-mobile {
-    @extend .filters;
+.search-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
 
-    width: 100%;
-    padding-inline: 1rem;
+.search-input-wrap {
+    flex: 1;
+    position: relative;
+
+    .pi-search {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--brown-light);
+        font-size: 0.85rem;
+        pointer-events: none;
+    }
+
+    input {
+        width: 100%;
+        padding-left: 2.25rem;
+    }
+}
+
+.filter-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+}
+
+.actions-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+}
+
+.actions-spacer {
+    flex: 1;
 }
 
 .notes-container {
     width: 80%;
     margin: auto;
-    margin-top: 5rem;
+    margin-top: 2rem;
 }
 
 .error {
@@ -26,5 +74,63 @@
 
     width: 100%;
     padding-inline: 1rem;
-    margin-top: 2rem;
+}
+
+// Skeleton loading styles
+.skeleton-notes {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.skeleton-note-card {
+    padding: 12px;
+    border-radius: 5px;
+    background: var(--beige-card);
+    border: 1px solid var(--brown-light);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.skeleton-line {
+    height: 12px;
+    border-radius: 4px;
+    background: linear-gradient(
+        90deg,
+        rgba(107, 90, 69, 0.08) 25%,
+        rgba(107, 90, 69, 0.16) 50%,
+        rgba(107, 90, 69, 0.08) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+
+    &.w-3 { width: 30%; }
+    &.w-4 { width: 40%; }
+    &.w-8 { width: 80%; }
+    &.ml-auto { margin-left: auto; }
+}
+
+.skeleton-tags {
+    display: flex;
+    gap: 6px;
+}
+
+.skeleton-tag {
+    width: 60px;
+    height: 18px;
+    border-radius: 12px;
+    background: linear-gradient(
+        90deg,
+        rgba(107, 90, 69, 0.08) 25%,
+        rgba(107, 90, 69, 0.16) 50%,
+        rgba(107, 90, 69, 0.08) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
 }

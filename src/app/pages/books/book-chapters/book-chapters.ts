@@ -7,10 +7,11 @@ import { NgClass } from '@angular/common';
 import { Button } from "primeng/button";
 import { ActivatedRoute, Router } from '@angular/router';
 import { FirebaseService } from '../../../shared/services/firebase.service';
+import { ProgressBar } from 'primeng/progressbar';
 
 @Component({
   selector: 'app-book-chapters',
-  imports: [CheckboxModule, FormsModule, NgClass, Button],
+  imports: [CheckboxModule, FormsModule, NgClass, Button, ProgressBar],
   templateUrl: './book-chapters.html',
   styleUrl: './book-chapters.scss',
 })
@@ -26,8 +27,20 @@ export class BookChapters {
     return BOOKS.find((b) => {
       return b.title.toLocaleLowerCase().replaceAll(' ', '-') === this.id();
     })
-  }  );
+  });
 
+  readCount = computed(() => {
+    const chapters = this.book()?.chapters ?? [];
+    return chapters.filter(ch => this.utils.readSet().has(ch)).length;
+  });
+
+  totalCount = computed(() => this.book()?.chapters?.length ?? 0);
+
+  progress = computed(() => {
+    const total = this.totalCount();
+    if (total === 0) return 0;
+    return Math.round((this.readCount() / total) * 100);
+  });
 
   constructor() {
     this.route.params.subscribe(params => {

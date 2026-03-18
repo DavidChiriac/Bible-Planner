@@ -4,4 +4,5 @@
     <string name="title_activity_main">Planificator pentru citirea Bibliei</string>
     <string name="package_name">davidchiriac.github.io.bibleplanner</string>
     <string name="custom_url_scheme">davidchiriac.github.io.bibleplanner</string>
+    <string name="widget_description">Progresul tău de citire a Bibliei</string>
 </resources>

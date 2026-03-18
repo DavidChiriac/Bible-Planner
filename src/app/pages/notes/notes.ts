@@ -7,9 +7,11 @@ import BIBLE from '../../../assets/jsons/biblia_cornilescu_carti_capitole.json';
 import { InputText } from 'primeng/inputtext';
 import { MultiSelect } from 'primeng/multiselect';
 import { NotesCursor } from '../../shared/services/firebase.service';
-import { NoteItem } from '../../shared/models/note.models';
+import { NoteItem, NOTE_TAGS, NoteTag } from '../../shared/models/note.models';
+import { Capacitor } from '@capacitor/core';
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 import { Dialog } from 'primeng/dialog';
-import { Textarea } from 'primeng/textarea';
+import { QuillModule } from 'ngx-quill';
 import { Select } from 'primeng/select';
 import { Note } from '../../shared/components/note/note';
 import { ProgressSpinner } from 'primeng/progressspinner';
@@ -28,7 +30,7 @@ type SortDir = 'asc' | 'desc';
     FormsModule,
     InputText,
     Dialog,
-    Textarea,
+    QuillModule,
     Select,
     Note,
     ProgressSpinner
@@ -65,6 +67,12 @@ export class Notes {
   newNoteText = signal('');
   newNoteBook = signal<string | null>(null);
   newNoteChapter = signal<number | null>(null);
+  newNoteTags = signal<NoteTag[]>([]);
+
+  // Tags
+  tagOptions = NOTE_TAGS;
+  selectedTags = signal<NoteTag[]>(this.sessionStorageService.retrieve('notes_selectedTags') ?? []);
+  draftSelectedTags = signal<NoteTag[]>(this.sessionStorageService.retrieve('notes_selectedTags') ?? []);
 
   filtersDialogVisible = signal(false);
 
@@ -105,11 +113,13 @@ export class Notes {
       const _chapters = this.selectedChapters();
       const _sortBy = this.sortBy();
       const _sortDir = this.sortDir();
+      const _tags = this.selectedTags();
 
       this.sessionStorageService.store('notes_searchTerm', _term);
       this.sessionStorageService.store('notes_selectedBooks', _books);
       this.sessionStorageService.store('notes_selectedChapters', _chapters);
       this.sessionStorageService.store('notes_sort', `${_sortBy}_${_sortDir}`);
+      this.sessionStorageService.store('notes_selectedTags', _tags);
 
       void this.loadFirstPage();
     });
@@ -141,6 +151,7 @@ export class Notes {
       search: this.searchTerm(),
       books: this.selectedBooks(),
       chapters: this.normalizeChapterSelection(),
+      tags: this.selectedTags(),
       sortBy: this.sortBy(),
       sortDir: this.sortDir(),
     });
@@ -162,6 +173,7 @@ export class Notes {
       search: this.searchTerm(),
       books: this.selectedBooks(),
       chapters: this.normalizeChapterSelection(),
+      tags: this.selectedTags(),
       sortBy: this.sortBy(),
       sortDir: this.sortDir(),
     });
@@ -198,6 +210,7 @@ export class Notes {
     this.newNoteText.set('');
     this.newNoteBook.set(null);
     this.newNoteChapter.set(null);
+    this.newNoteTags.set([]);
   }
 
   async confirmAddNote() {
@@ -211,7 +224,7 @@ export class Notes {
 
     const chapterLabel = `${book} ${chapter}`;
 
-    await this.notesService.saveNote([chapterLabel], text);
+    await this.notesService.saveNote([chapterLabel], text, this.newNoteTags());
     await this.loadFirstPage();
 
     this.loading.set(false);
@@ -219,6 +232,7 @@ export class Notes {
     this.newNoteText.set('');
     this.newNoteBook.set(null);
     this.newNoteChapter.set(null);
+    this.newNoteTags.set([]);
   }
 
   getMaxChapterPerBook(): number {
@@ -229,9 +243,213 @@ export class Notes {
   applyFilters() {
     this.selectedBooks.set([...this.draftSelectedBooks()]);
     this.selectedChapters.set([...this.draftSelectedChapters()]);
+    this.selectedTags.set([...this.draftSelectedTags()]);
     this.sort.set(this.draftSort());
     this.filtersDialogVisible.set(false);
 
     this.cursor.set({ offset: 0 });
+  }
+
+  async exportNotes() {
+    const notes = this.notes();
+    if (!notes.length) return;
+
+    const { Document, Packer, Paragraph, TextRun, HeadingLevel, BorderStyle, AlignmentType, NumberFormat, LevelFormat } = await import('docx');
+
+    const children: InstanceType<typeof Paragraph>[] = [];
+
+    // Title
+    children.push(new Paragraph({
+      text: 'Notițe Biblie',
+      heading: HeadingLevel.TITLE,
+      alignment: AlignmentType.CENTER,
+      spacing: { after: 300 },
+    }));
+
+    for (let i = 0; i < notes.length; i++) {
+      const n = notes[i];
+      const tagStr = n.tags?.length ? ` [${n.tags.join(', ')}]` : '';
+      const dateStr = new Date(n.createdDate).toLocaleDateString('ro-RO');
+
+      // Chapter heading
+      children.push(new Paragraph({
+        children: [
+          new TextRun({ text: n.chapterLabel + tagStr, bold: true, size: 26, color: '4C362D' }),
+        ],
+        spacing: { before: 200 },
+      }));
+
+      // Parse HTML content into runs
+      const htmlContent = n.text || '';
+      const parsed = this.parseHtmlToRuns(htmlContent, TextRun, Paragraph);
+      children.push(...parsed);
+
+      // Date
+      children.push(new Paragraph({
+        children: [
+          new TextRun({ text: dateStr, italics: true, size: 18, color: '6B5A45' }),
+        ],
+        alignment: AlignmentType.RIGHT,
+        spacing: { after: 100 },
+      }));
+
+      // Separator between notes
+      if (i < notes.length - 1) {
+        children.push(new Paragraph({
+          border: { bottom: { style: BorderStyle.SINGLE, size: 1, color: 'B8A995' } },
+          spacing: { after: 200 },
+        }));
+      }
+    }
+
+    const doc = new Document({
+      numbering: {
+        config: [{
+          reference: 'notes-bullet',
+          levels: [{
+            level: 0,
+            format: LevelFormat.BULLET,
+            text: '\u2022',
+            alignment: AlignmentType.LEFT,
+          }],
+        }, {
+          reference: 'notes-ordered',
+          levels: [{
+            level: 0,
+            format: LevelFormat.DECIMAL,
+            text: '%1.',
+            alignment: AlignmentType.LEFT,
+          }],
+        }],
+      },
+      sections: [{ children }],
+    });
+
+    const blob = await Packer.toBlob(doc);
+    const fileName = `notite-biblie-${new Date().toISOString().split('T')[0]}.docx`;
+
+    if (Capacitor.isNativePlatform()) {
+      try {
+        let perms = await Filesystem.checkPermissions();
+        if (perms.publicStorage !== 'granted') {
+          await Filesystem.requestPermissions();
+        }
+
+        // Convert blob to base64
+        const base64 = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const result = reader.result as string;
+            resolve(result.split(',')[1]);
+          };
+          reader.readAsDataURL(blob);
+        });
+
+        await Filesystem.writeFile({
+          path: 'Download/' + fileName,
+          data: base64,
+          directory: Directory.ExternalStorage,
+        });
+        globalThis.alert(`Fișierul „${fileName}" a fost salvat în Downloads.`);
+      } catch {
+        const result = await Filesystem.writeFile({
+          path: fileName,
+          data: await this.blobToBase64(blob),
+          directory: Directory.Cache,
+        });
+        const { Share } = await import('@capacitor/share');
+        await Share.share({ title: 'Notițe Biblie', url: result.uri });
+      }
+    } else {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  }
+
+  private blobToBase64(blob: Blob): Promise<string> {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result as string;
+        resolve(result.split(',')[1]);
+      };
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  private parseHtmlToRuns(html: string, TextRun: any, Paragraph: any): any[] {
+    const paragraphs: any[] = [];
+
+    // Strip outer tags and split by block elements
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+
+    const blocks = temp.querySelectorAll('p, li, h1, h2, h3');
+    if (blocks.length === 0) {
+      // Plain text fallback
+      const text = temp.textContent || '';
+      if (text.trim()) {
+        paragraphs.push(new Paragraph({
+          children: [new TextRun({ text, size: 22 })],
+        }));
+      }
+      return paragraphs;
+    }
+
+    blocks.forEach((block) => {
+      const runs: any[] = [];
+      this.extractRuns(block, runs, TextRun, false, false, false);
+      const isList = block.tagName === 'LI';
+      const parent = block.parentElement;
+      const isOrdered = parent?.tagName === 'OL';
+
+      const opts: any = {
+        children: runs.length ? runs : [new TextRun({ text: ' ', size: 22 })],
+      };
+
+      if (isList) {
+        opts.numbering = {
+          reference: isOrdered ? 'notes-ordered' : 'notes-bullet',
+          level: 0,
+        };
+      }
+
+      paragraphs.push(new Paragraph(opts));
+    });
+
+    return paragraphs;
+  }
+
+  private extractRuns(node: Node, runs: any[], TextRun: any, bold: boolean, italic: boolean, underline: boolean): void {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.textContent || '';
+      if (text) {
+        runs.push(new TextRun({
+          text,
+          bold,
+          italics: italic,
+          underline: underline ? {} : undefined,
+          size: 22,
+          color: '4C362D',
+        }));
+      }
+      return;
+    }
+
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      const el = node as Element;
+      const tag = el.tagName;
+      const newBold = bold || tag === 'STRONG' || tag === 'B';
+      const newItalic = italic || tag === 'EM' || tag === 'I';
+      const newUnderline = underline || tag === 'U';
+
+      for (const child of Array.from(el.childNodes)) {
+        this.extractRuns(child, runs, TextRun, newBold, newItalic, newUnderline);
+      }
+    }
   }
 }

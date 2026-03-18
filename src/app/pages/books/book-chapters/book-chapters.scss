@@ -1,37 +1,166 @@
-.chapters-container {
-  width: 70%;
-  margin: auto;
-  padding-top: 1rem;
+// Top bar
+.top-bar {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 0;
 }
 
-.chapters-container-mobile {
-  @extend .chapters-container;
-
-  width: 100%;
-  padding-inline: 1rem;
-}
-
-.book-title {
-  font-size: 48px;
-}
-
-.chapters-container .chapter {
-  flex: 1 1 30%;
-}
-
-.chapter {
-  padding: 10px 12px;
-  border-radius: 5px;
+// Hero card
+.hero-card {
+  margin: 0 auto 1.5rem;
+  padding: 1.25rem;
   background: var(--beige-card);
   border: 1px solid var(--brown-light);
-  gap: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(74, 59, 42, 0.1);
+}
+
+.hero-top {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.hero-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: var(--beige-bg);
+  border: 1px solid var(--brown-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 
   .pi {
-    color: var(--brown);
-    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--terracotta);
+  }
+}
 
-    &:hover {
-      color: var(--beige-light);
+.hero-title {
+  font-size: 1.75rem;
+  color: var(--deep-umber);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 0.8rem;
+  color: var(--brown-light);
+  font-weight: 500;
+}
+
+.hero-progress {
+  margin-bottom: 1rem;
+}
+
+.read-summary {
+  font-size: 0.8rem;
+  color: var(--brown);
+  font-weight: 600;
+}
+
+.read-percentage {
+  font-size: 0.85rem;
+  color: var(--terracotta);
+  font-weight: 700;
+
+  &.complete {
+    color: var(--muted-sage);
+  }
+}
+
+.hero-actions {
+  display: flex;
+}
+
+// Chapter grid
+.chapters-grid {
+  margin: 0 auto 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.chapter-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--beige-card);
+  border: 1px solid var(--brown-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(74, 59, 42, 0.12);
+    border-color: var(--brown);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &.chapter-read {
+    background: rgba(136, 147, 123, 0.15);
+    border-color: var(--muted-sage);
+
+    .chapter-number {
+      background: var(--muted-sage);
+      color: #fff;
+      border-color: var(--muted-sage);
     }
+
+    .chapter-name {
+      color: var(--brown-light);
+      text-decoration: line-through;
+    }
+  }
+}
+
+.chapter-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--beige-bg);
+  border: 1px solid var(--brown-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--deep-umber);
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+
+  .pi {
+    font-size: 0.8rem;
+  }
+}
+
+.chapter-name {
+  flex: 1;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--deep-umber);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chapter-notes-btn {
+  color: var(--brown-light) !important;
+  font-size: 0.85rem;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+
+  &:hover {
+    color: var(--terracotta) !important;
+    background: rgba(164, 100, 71, 0.1);
   }
 }

@@ -7,6 +7,10 @@ import { authState } from '@angular/fire/auth';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import ChapterWithVerses from '../../../assets/jsons/biblia_ro_capitole_cu_versete_complete.json';
+import CRONOLOGIC from '../../../assets/jsons/plan_biblie_cronologic_cornilescu_pe_zile.json';
+import INORDINE from '../../../assets/jsons/plan_biblie_in_ordine_pe_saptamani.json';
+import { HapticsService } from './haptics.service';
+import { WidgetService } from './widget.service';
 
 const TOTAL_BIBLE_VERSES = 31102;
 
@@ -25,6 +29,8 @@ export class Utils {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly breakpointObserver = inject(BreakpointObserver);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly haptics = inject(HapticsService);
+  private readonly widget = inject(WidgetService);
   
   isMobile = signal<boolean | null>(null);
 
@@ -88,6 +94,9 @@ export class Utils {
       }
 
       this.loading.set(false);
+
+      // Update Android home screen widget
+      this.updateWidget();
     });
 
     this.breakpointObserver.observe('(max-width: 767px)')
@@ -103,6 +112,7 @@ export class Utils {
     dayChapters.every((chapter) => this.readSet().has(chapter));
 
   async setEntireDayRead(chapters: string[]) {
+    this.haptics.medium();
 
     const value = !this.isEntireDayRead(chapters);
     if (value) {
@@ -123,11 +133,13 @@ export class Utils {
   }
 
   markAllAsRead(chapters: string[]) {
+    this.haptics.success();
     this.firebase.addChapters(chapters);
     this.readSet.set(new Set([...this.readSet(), ...chapters]));
   }
 
   markAllAsUnread(chapters: string[]) {
+    this.haptics.medium();
     this.firebase.deleteChapters(chapters);
     this.readSet.set(new Set([...this.readSet()].filter((c) => !chapters.includes(c))));
   }
@@ -175,6 +187,7 @@ export class Utils {
 
   toggleChapterRead(chapter: string) {
     const isRead = this.isChapterRead(chapter);
+    this.haptics.light();
     if (isRead) {
       this.firebase.deleteChapters([chapter]);
       this.readSet.set(new Set([...this.readSet()].filter((c) => c !== chapter)));
@@ -189,5 +202,44 @@ export class Utils {
     //Use ChaptersWithVerses to get the total number of verses of the read chapters
     const totalVerses = ChapterWithVerses.flatMap((book) => book.chapters).filter((chapter) => readChapters.has(chapter.chapter)).reduce((sum, chapter) => sum + chapter.verses, 0);
     return Number.parseFloat((totalVerses / TOTAL_BIBLE_VERSES * 100).toFixed(2));
+  }
+
+  private updateWidget() {
+    const pct = this.readPercentage();
+    const status = this.hasReadWholeBible()
+      ? 'Ai citit întreaga Biblie!'
+      : `${pct}% completat`;
+
+    // Calculate days ahead/behind
+    const start = this.startDate() ?? new Date();
+    const diffMs = new Date().getTime() - start.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
+    const expectedDays = (diffDays * 12) / (this.months() ?? 12);
+
+    const plan = this.selectedPlan() === TABS.CRONOLOGIC ? CRONOLOGIC : INORDINE;
+    let daysRead = 0;
+    for (const week of plan) {
+      for (const day of week.days) {
+        if (day.chapters.every((ch: string) => this.readSet().has(ch))) {
+          daysRead++;
+        }
+      }
+    }
+
+    const diff = Math.round(daysRead - expectedDays);
+    let step: string;
+    let stepType: string;
+    if (diff > 0) {
+      step = `\u25B2 ${diff} zile înainte`;
+      stepType = 'ahead';
+    } else if (diff < 0) {
+      step = `\u25BC ${Math.abs(diff)} zile în urmă`;
+      stepType = 'behind';
+    } else {
+      step = '\u2713 La zi';
+      stepType = 'ontrack';
+    }
+
+    this.widget.updateWidget(pct, status, step, stepType, 'Apasă pentru a continua citirea');
   }
 }

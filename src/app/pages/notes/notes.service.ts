@@ -9,7 +9,7 @@ import {
   update,
 } from 'firebase/database';
 import Chapters from '../../../assets/jsons/biblia_cornilescu_carti_capitole.json';
-import { NoteItem } from '../../shared/models/note.models';
+import { NoteItem, NoteTag } from '../../shared/models/note.models';
 
 type BookDef = { title: string; chapters: string[] };
 
@@ -30,7 +30,7 @@ export class NotesService {
 
   readonly user$ = user(this.auth);
 
-  async saveNote(chapters: string[], note: string): Promise<string> {
+  async saveNote(chapters: string[], note: string, tags: NoteTag[] = []): Promise<string> {
     const u = this.auth.currentUser;
     if (!u) throw new Error('Not logged in');
 
@@ -41,7 +41,7 @@ export class NotesService {
 
     const createdDate = new Date().toISOString();
 
-    const updates: Record<string, { text: string; createdDate: string }> = {};
+    const updates: Record<string, { text: string; createdDate: string; tags?: NoteTag[] }> = {};
 
     for (const ch of chapters) {
       const chapterNotes: Record<string, any> = existingData?.[ch] ?? {};
@@ -52,10 +52,13 @@ export class NotesService {
 
       const nextIndex = indices.length ? Math.max(...indices) + 1 : 0;
 
-      updates[`${ch}/${nextIndex}`] = {
+      const noteData: { text: string; createdDate: string; tags?: NoteTag[] } = {
         text: note,
         createdDate,
       };
+      if (tags.length > 0) noteData.tags = tags;
+
+      updates[`${ch}/${nextIndex}`] = noteData;
     }
 
     await update(noteRef, updates);
@@ -76,10 +79,10 @@ export class NotesService {
     const result: Record<string, NoteItem[]> = {};
 
     for (const ch of chapters) {
-      // Now chapterNotes is Record<string, { text: string; createdDate: string }>
+      // Now chapterNotes is Record<string, { text: string; createdDate: string; tags?: NoteTag[] }>
       const chapterNotes: Record<
         string,
-        { text: string; createdDate: string }
+        { text: string; createdDate: string; tags?: NoteTag[] }
       > = data?.[ch] ?? {};
       const items = Object.keys(chapterNotes)
         .map((key) => {
@@ -93,6 +96,7 @@ export class NotesService {
             book: parsed?.book ?? '',
             chapter: parsed?.chapter ?? 0,
             chapterLabel: ch,
+            tags: note.tags ?? [],
           };
         })
         .sort((a, b) => Date.parse(b.createdDate) - Date.parse(a.createdDate));
@@ -121,7 +125,8 @@ export class NotesService {
   async updateNote(
     chapter: string,
     key: string,
-    newText: string
+    newText: string,
+    newTags?: NoteTag[]
   ): Promise<string> {
     const u = this.auth.currentUser;
     if (!u) throw new Error('Not logged in');
@@ -137,9 +142,10 @@ export class NotesService {
       throw new Error('Note not found');
     }
 
-    await update(noteItemRef, {
-      text: newText,
-    });
+    const updates: Record<string, any> = { text: newText };
+    if (newTags !== undefined) updates['tags'] = newTags.length > 0 ? newTags : null;
+
+    await update(noteItemRef, updates);
 
     return 'note updated';
   }
@@ -167,6 +173,7 @@ export class NotesService {
     search?: string; // case-insensitive contains in note text
     books?: string[]; // multiple books
     chapters?: Array<number | string>; // multiple chapters
+    tags?: NoteTag[]; // filter by tags
 
     // sorting
     sortBy?: 'createdDate' | 'chapter' | null;
@@ -180,6 +187,7 @@ export class NotesService {
       search = '',
       books = [],
       chapters = [],
+      tags = [],
       sortBy = 'createdDate',
       sortDir = 'asc',
     } = params;
@@ -191,9 +199,8 @@ export class NotesService {
         .map(Number)
         .filter((n) => Number.isFinite(n) && n > 0)
     );
+    const tagSet = new Set(tags ?? []);
 
-    // Your actual structure:
-    // users/{uid}/notes/{chapterLabel}/{index} -> { text, createdDate }
     const notesRootRef = ref(this.db, `users/${u.uid}/notes`);
     const snap = await get(notesRootRef);
 
@@ -201,37 +208,19 @@ export class NotesService {
 
     const tree: Record<
       string,
-      Record<string, { text: string; createdDate: string }>
+      Record<string, { text: string; createdDate: string; tags?: NoteTag[] }>
     > = snap.val() ?? {};
 
-    // 1) Flatten + attach book/chapter from chapterLabel ("Geneza 1")
-    let all: NoteItem[] = [];
-
-    for (const [chapterLabel, chapterNotes] of Object.entries(tree)) {
-      const parsed = this.parseChapterLabel(chapterLabel);
-      if (!parsed) continue;
-
-      // 2) Filter by books (if provided)
-      if (bookSet.size > 0 && !bookSet.has(parsed.book)) continue;
-
-      // 3) Filter by chapters (if provided)
-      if (chapterSet.size > 0 && !chapterSet.has(parsed.chapter)) continue;
-
-      for (const [key, note] of Object.entries(chapterNotes ?? {})) {
-        all.push({
-          key,
-          text: note?.text ?? '',
-          createdDate: note?.createdDate ?? '',
-          book: parsed.book,
-          chapter: parsed.chapter,
-          chapterLabel,
-        });
-      }
-    }
+    let all = this.flattenNotesTree(tree, bookSet, chapterSet);
 
     // 4) Global search (case-insensitive contains) on note text
     if (term) {
       all = all.filter((n) => (n.text ?? '').toLowerCase().includes(term));
+    }
+
+    // 4b) Filter by tags (if provided)
+    if (tagSet.size > 0) {
+      all = all.filter((n) => (n.tags ?? []).some(t => tagSet.has(t)));
     }
 
     // 5) Sort (stable): primary sort (createdDate or chapter), then chapterLabel, then key
@@ -271,5 +260,35 @@ export class NotesService {
       nextOffset < all.length ? { offset: nextOffset } : undefined;
 
     return { items, nextCursor };
+  }
+
+  private flattenNotesTree(
+    tree: Record<string, Record<string, { text: string; createdDate: string; tags?: NoteTag[] }>>,
+    bookSet: Set<string>,
+    chapterSet: Set<number>
+  ): NoteItem[] {
+    const all: NoteItem[] = [];
+
+    for (const [chapterLabel, chapterNotes] of Object.entries(tree)) {
+      const parsed = this.parseChapterLabel(chapterLabel);
+      if (!parsed) continue;
+
+      if (bookSet.size > 0 && !bookSet.has(parsed.book)) continue;
+      if (chapterSet.size > 0 && !chapterSet.has(parsed.chapter)) continue;
+
+      for (const [key, note] of Object.entries(chapterNotes ?? {})) {
+        all.push({
+          key,
+          text: note?.text ?? '',
+          createdDate: note?.createdDate ?? '',
+          book: parsed.book,
+          chapter: parsed.chapter,
+          chapterLabel,
+          tags: note?.tags ?? [],
+        });
+      }
+    }
+
+    return all;
   }
 }

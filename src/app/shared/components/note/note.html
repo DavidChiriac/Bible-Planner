@@ -10,8 +10,18 @@
             </div>
         </div>
     }
+    @if (note().tags?.length) {
+        <div class="flex gap-1 flex-wrap mb-2">
+            @for (tag of note().tags; track tag) {
+                <span class="note-tag" [style.background]="getTagColor(tag) + '22'" [style.color]="getTagColor(tag)" [style.border-color]="getTagColor(tag)">
+                    <i [class]="getTagIcon(tag)" style="font-size: 0.7rem"></i>
+                    {{ getTagLabel(tag) }}
+                </span>
+            }
+        </div>
+    }
     <div class="flex gap-3 w-full justify-content-between align-items-start">
-        <span>{{ note().text }}</span>
+        <div class="note-content" [innerHTML]="note().text"></div>
 
         @if (!displayChapterLabel()) {
             <div class="flex gap-1">
@@ -51,7 +61,20 @@
     [style]="{ width: utils.isMobile() ? '90%' : '50%' }"
     [ngClass]="utils.isMobile() ? 'edit-dialog-mobile' : ''">
     <div class="flex flex-column align-items-start gap-3 mb-6 mt-1">
-        <textarea rows="10" class="w-full" pTextarea [(ngModel)]="editedText"></textarea>
+        <quill-editor theme="snow" class="w-full note-editor" [(ngModel)]="editedText" [modules]="{toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']]}"></quill-editor>
+        <div class="w-full">
+            <label for="edit-note-tags" class="block mb-1">Etichete</label>
+            <p-multiselect
+                id="edit-note-tags"
+                [options]="tagOptions"
+                optionLabel="label"
+                optionValue="value"
+                appendTo="body"
+                placeholder="Adaugă etichete"
+                [panelStyleClass]="'multiselect-panel'"
+                [(ngModel)]="editedTags">
+            </p-multiselect>
+        </div>
     </div>
 
     <div class="flex justify-content-center gap-2">

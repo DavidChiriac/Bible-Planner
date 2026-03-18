@@ -1,6 +1,7 @@
 @use "primeicons/primeicons.css";
 @use "primeflex/primeflex.css";
 @use "app/shared/overrides/overrides.scss";
+@import "quill/dist/quill.snow.css";
 
 body {
     margin: 0;
@@ -38,4 +39,64 @@ body {
   --beige-bg: #F2E9D8;
   --beige-card: #E5D7BF;
   --beige-light: #FAF6EE;
+}
+
+// Quill editor theme overrides
+.note-editor {
+  .ql-toolbar {
+    background: var(--beige-bg);
+    border: 1px solid var(--brown-light);
+    border-radius: 10px 10px 0 0;
+
+    .ql-stroke {
+      stroke: var(--brown);
+    }
+    .ql-fill {
+      fill: var(--brown);
+    }
+    .ql-picker-label {
+      color: var(--brown);
+    }
+
+    button:hover .ql-stroke,
+    .ql-active .ql-stroke {
+      stroke: var(--terracotta);
+    }
+    button:hover .ql-fill,
+    .ql-active .ql-fill {
+      fill: var(--terracotta);
+    }
+  }
+
+  .ql-container {
+    border: 1px solid var(--brown-light);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    background: var(--beige-light);
+    font-family: "Lora", serif;
+    font-size: 0.95rem;
+    color: var(--deep-umber);
+    min-height: 120px;
+  }
+
+  .ql-editor {
+    min-height: 120px;
+
+    &.ql-blank::before {
+      color: var(--brown-light);
+      font-style: italic;
+    }
+  }
+}
+
+.note-content {
+  word-break: break-word;
+
+  p {
+    margin: 0 0 0.25rem;
+  }
+  ul, ol {
+    margin: 0.25rem 0;
+    padding-left: 1.5rem;
+  }
 }
