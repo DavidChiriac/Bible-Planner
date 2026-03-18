@@ -1,6 +1,11 @@
 @if (utils.loading()) {
   <div class="loading-screen" [class.mobile]="utils.isMobile()">
     <img src="/assets/images/Bible Planner.png" alt="Bible Planner"/>
+    <div class="loading-skeleton">
+      <div class="skeleton-bar"></div>
+      <div class="skeleton-bar short"></div>
+      <div class="skeleton-bar"></div>
+    </div>
   </div>
 } @else {
   @if (auth.isLoggedIn()) {

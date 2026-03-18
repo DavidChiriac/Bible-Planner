@@ -1,27 +1,49 @@
 <div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
-    <div class="mt-3 flex justify-content-between w-100 align-items-center" [ngClass]="{'px-3': !utils.isMobile()}">
+    <div class="top-bar" [ngClass]="{'px-3': !utils.isMobile()}">
         <p-button label="Back" class="go-back" (onClick)="goBack()"><i class="pi pi-arrow-left"></i></p-button>
-
-        @if (utils.isEntireDayRead(book()?.chapters ?? [])) {
-            <p-button label="Mark All as Unread" class="mark-as-unread" (onClick)="utils.markAllAsUnread(book()?.chapters ?? [])"></p-button>
-        } @else {
-            <p-button label="Mark All as Read" class="mark-as-read" (onClick)="utils.markAllAsRead(book()?.chapters ?? [])"></p-button>
-        }
     </div>
-    <h1 class="w-full px-5 text-center book-title">{{ book()?.title }}</h1>
-    <div class="chapters-container flex flex-1 flex-wrap gap-3 row-gap-3 m-auto justify-content-center mb-3" [ngClass]="utils.isMobile() ? 'w-full px-2' : 'w-6'">
+
+    <div class="hero-card" [ngClass]="utils.isMobile() ? 'w-11' : 'w-6'">
+        <div class="hero-top">
+            <div class="hero-icon">
+                <i class="pi" [ngClass]="progress() === 100 ? 'pi-check-circle' : 'pi-book'"></i>
+            </div>
+            <div class="hero-info">
+                <h1 class="hero-title">{{ book()?.title }}</h1>
+                <span class="hero-subtitle">{{ totalCount() }} capitole</span>
+            </div>
+        </div>
+        <div class="hero-progress">
+            <div class="flex justify-content-between align-items-center mb-1">
+                <span class="read-summary">{{ readCount() }} / {{ totalCount() }} citite</span>
+                <span class="read-percentage" [ngClass]="{'complete': progress() === 100}">{{ progress() }}%</span>
+            </div>
+            <p-progress-bar [value]="progress()" [showValue]="false"></p-progress-bar>
+        </div>
+        <div class="hero-actions">
+            @if (utils.isEntireDayRead(book()?.chapters ?? [])) {
+                <p-button label="Marchează toate ca necitite" icon="pi pi-times" class="mark-as-unread" [styleClass]="'w-full'" (onClick)="utils.markAllAsUnread(book()?.chapters ?? [])"></p-button>
+            } @else {
+                <p-button label="Marchează toate ca citite" icon="pi pi-check" class="mark-as-read" [styleClass]="'w-full'" (onClick)="utils.markAllAsRead(book()?.chapters ?? [])"></p-button>
+            }
+        </div>
+    </div>
+
+    <div class="chapters-grid" [ngClass]="utils.isMobile() ? 'w-11' : 'w-6'">
         @for (chapter of book()?.chapters ?? []; track $index) {
             <div
-                class="flex w-full justify-content-between align-items-center cursor-pointer chapter"
-                [ngClass]="utils.isMobile() ? 'gap-2' : 'gap-6'"
+                class="chapter-card"
+                [ngClass]="{'chapter-read': utils.isChapterRead(chapter)}"
                 (click)="utils.toggleChapterRead(chapter)" onkeydown="">
-                <div class="flex gap-2">
-                    <p-checkbox
-                        [binary]="true"
-                        [ngModel]="utils.isEntireDayRead([chapter])"></p-checkbox>
-                    <h3 class="m-0">{{ chapter }}</h3>
+                <div class="chapter-number">
+                    @if (utils.isChapterRead(chapter)) {
+                        <i class="pi pi-check"></i>
+                    } @else {
+                        {{ $index + 1 }}
+                    }
                 </div>
-                <i class="pi pi-pencil" (click)="$event.stopPropagation(); viewChapterNotes(chapter)" onkeydown=""></i>
+                <span class="chapter-name">{{ chapter }}</span>
+                <i class="pi pi-pencil chapter-notes-btn" (click)="$event.stopPropagation(); viewChapterNotes(chapter)" onkeydown=""></i>
             </div>
         }
     </div>

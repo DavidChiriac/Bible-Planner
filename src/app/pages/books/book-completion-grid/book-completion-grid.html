@@ -1,0 +1,52 @@
+<div class="grid-wrapper" [ngClass]="utils.isMobile() ? 'w-11' : 'w-6'" >
+    <div class="stats-row">
+        <div class="stat-card">
+            <span class="stat-value">{{ completedBooks() }}</span>
+            <span class="stat-label">Complete</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">{{ inProgressBooks() }}</span>
+            <span class="stat-label">În curs</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-value">66</span>
+            <span class="stat-label">Total cărți</span>
+        </div>
+    </div>
+
+    <div class="testament-section">
+        <h4 class="testament-title">Vechiul Testament — {{ otProgress() }}%</h4>
+        <div class="books-grid">
+            @for (book of oldTestament(); track book.title) {
+                <div
+                    class="book-cell"
+                    [ngClass]="getProgressClass(book)"
+                    [pTooltip]="book.title + ' (' + book.read + '/' + book.total + ')'"
+                    tooltipPosition="top"
+                    (click)="navigateToBook(book.title)"
+                    onkeydown="">
+                    <span class="book-abbr">{{ abbreviate(book.title) }}</span>
+                    <div class="progress-fill" [style.width.%]="book.percentage"></div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="testament-section">
+        <h4 class="testament-title">Noul Testament — {{ ntProgress() }}%</h4>
+        <div class="books-grid">
+            @for (book of newTestament(); track book.title) {
+                <div
+                    class="book-cell"
+                    [ngClass]="getProgressClass(book)"
+                    [pTooltip]="book.title + ' (' + book.read + '/' + book.total + ')'"
+                    tooltipPosition="top"
+                    (click)="navigateToBook(book.title)"
+                    onkeydown="">
+                    <span class="book-abbr">{{ abbreviate(book.title) }}</span>
+                    <div class="progress-fill" [style.width.%]="book.percentage"></div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

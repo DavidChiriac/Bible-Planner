@@ -1,0 +1,29 @@
+.sync-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+
+  &.online {
+    background: rgba(136, 147, 123, 0.2);
+    color: var(--muted-sage);
+  }
+
+  &.offline {
+    background: rgba(164, 100, 71, 0.2);
+    color: var(--terracotta);
+  }
+
+  &.syncing {
+    background: rgba(195, 181, 158, 0.3);
+    color: var(--brown);
+  }
+
+  i {
+    font-size: 0.8rem;
+  }
+}

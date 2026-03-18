@@ -1,4 +1,7 @@
 <div class="card">
     <p-menubar [model]="computedItems()" breakpoint="767px" />
+    <div class="sync-bar">
+        <app-sync-indicator></app-sync-indicator>
+    </div>
 </div>
 <div [ngClass]="utils.isMobile() ? 'mask-mobile' : 'mask'"></div>

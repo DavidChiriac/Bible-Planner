@@ -1,77 +1,123 @@
 @if (loading()) {
 <div class="container flex flex-column align-items-center gap-3 mt-5">
-    <p-progressSpinner></p-progressSpinner>
-    <p>Se încarcă notițele...</p>
+    <div class="skeleton-loader">
+        <div class="skeleton-hero"></div>
+        <div class="skeleton-grid">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+        </div>
+    </div>
 </div>
 } @else {
 <div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
-    <div class="pl-3 mt-3">
-        <p-button label="Back" class="go-back" (onClick)="goBack()">
-            <i class="pi pi-arrow-left"></i>
-        </p-button>
+    <!-- Top bar -->
+    <div class="top-bar" [ngClass]="{'px-3': !utils.isMobile()}">
+        <p-button label="Back" class="go-back" (onClick)="goBack()"><i class="pi pi-arrow-left"></i></p-button>
+        @if (!chapter && utils.isMobile()) {
+            <span class="swipe-hint">
+                <i class="pi pi-arrow-left"></i> glisează <i class="pi pi-arrow-right"></i>
+            </span>
+        }
     </div>
 
-    <div class="flex justify-content-between gap-3 w-9 mx-auto" [ngClass]="{'flex-column w-11': utils.isMobile()}">
-        <div [ngClass]="{'w-5 mb-5': !utils.isMobile()}">
-            <h2 [ngClass]="utils.isMobile() ? 'mb-3' : 'mb-4'">Capitole</h2>
-            <div class="flex flex-wrap gap-3 row-gap-1">
-                @for (chapter of chapters; track $index) {
+    <div class="day-content" [ngClass]="utils.isMobile() ? 'w-11' : 'w-8'">
+        <!-- Chapters grid -->
+        <div class="section-header">
+            <i class="pi pi-book"></i>
+            <h2>Capitole</h2>
+        </div>
+
+        <div class="chapters-grid">
+            @for (ch of chapters; track $index) {
                 <div
-                    class="flex gap-2 align-items-center cursor-pointer row mb-3"
-                    [ngClass]="{ read: utils.isEntireDayRead([chapter]) }"
-                    (click)="$event.stopPropagation(); utils.setEntireDayRead([chapter])"
+                    class="chapter-card"
+                    [ngClass]="{'chapter-read': utils.isEntireDayRead([ch])}"
+                    (click)="$event.stopPropagation(); utils.setEntireDayRead([ch])"
                     onkeydown="">
-                    <p-checkbox
-                        [binary]="true"
-                        [ngModel]="utils.isEntireDayRead([chapter])"></p-checkbox>
-                    <h3 class="m-0">{{ chapter }}</h3>
+                    <div class="chapter-number">
+                        @if (utils.isEntireDayRead([ch])) {
+                            <i class="pi pi-check"></i>
+                        } @else {
+                            {{ $index + 1 }}
+                        }
+                    </div>
+                    <span class="chapter-name">{{ ch }}</span>
                 </div>
-                }
-            </div>
+            }
+        </div>
 
-            <hr/>
+        <!-- Add note card -->
+        <div class="section-header">
+            <i class="pi pi-pencil"></i>
+            <h2>Adaugă notă</h2>
+        </div>
 
-            <div class="flex align-items-center justify-content-between gap-3 mb-3">
-                <h2 class="mb-4">Adaugă notă</h2>
+        <div class="add-note-card">
+            <div class="note-form-row">
                 <p-multiSelect
                     [options]="chapters"
                     appendTo="body"
                     placeholder="Alege capitolele"
                     panelStyleClass="multiselect-panel"
+                    [styleClass]="'w-full'"
                     [(ngModel)]="noteChapters"></p-multiSelect>
+                <p-multiSelect
+                    [options]="tagOptions"
+                    optionLabel="label"
+                    optionValue="value"
+                    appendTo="body"
+                    placeholder="Adaugă etichete"
+                    panelStyleClass="multiselect-panel"
+                    [styleClass]="'w-full'"
+                    [(ngModel)]="noteTags"></p-multiSelect>
             </div>
 
-            <textarea rows="10" class="w-full mb-5" pTextarea [(ngModel)]="note"></textarea>
+            <quill-editor theme="snow" class="w-full note-editor" [(ngModel)]="note" placeholder="Scrie notița ta aici..." [modules]="{toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']]}"></quill-editor>
 
             <p-button
                 label="Salvează notița"
+                icon="pi pi-save"
                 class="save-note"
                 [styleClass]="'w-full'"
                 [disabled]="!note || !noteChapters || !noteChapters.length"
                 (onClick)="saveNote()"></p-button>
         </div>
 
-        <div [ngClass]="{'w-6': !utils.isMobile()}">
-            <div class="flex justify-content-between align-items-center">
-                <h2 class="text-center" [ngClass]="utils.isMobile() ? 'mb-3' : 'mb-4 ml-3'">Notițe</h2>
-                <p-select [options]="chapters" [(ngModel)]="filterByChapter" appendTo="body" placeholder="Filtrează note" [showClear]="true" (onClear)="filterByChapter.set(null)" panelStyleClass="dropdown-panel" class="notes-sort" [ngClass]="{'mr-4': !utils.isMobile()}"></p-select>
+        <!-- Notes section -->
+        <div class="section-header">
+            <i class="pi pi-comments"></i>
+            <h2>Notițe</h2>
+            <p-select
+                [options]="chapters"
+                [(ngModel)]="filterByChapter"
+                appendTo="body"
+                placeholder="Filtrează"
+                [showClear]="true"
+                (onClear)="filterByChapter.set(null)"
+                panelStyleClass="dropdown-panel"
+                class="notes-filter"></p-select>
+        </div>
+
+        @if (dayHasNoNotes()) {
+            <div class="empty-notes">
+                <i class="pi pi-inbox"></i>
+                <p>Nu există notițe pentru această zi.</p>
             </div>
+        }
 
-            @if (dayHasNoNotes()) {
-                <p class="text-center">Nu există notițe pentru această zi.</p>
-            }
-            
-            <div [ngClass]="{'small-container': !utils.isMobile()}">
-                @for (entry of notesEntries; track entry[0]) {
-                    @if (entry[1].length) {
-                        <h4>{{ entry[0] }}</h4>
-
-                            @for (item of entry[1]; track item.key) {
-                                <app-note [note]="item" (delete)="deleteNote($event)" (edit)="editNote($event)"></app-note>
-                            }
-                    }
+        <div class="notes-list">
+            @for (entry of notesEntries; track entry[0]) {
+                @if (entry[1].length) {
+                    <div class="notes-chapter-group">
+                        <span class="chapter-label">{{ entry[0] }}</span>
+                        @for (item of entry[1]; track item.key) {
+                            <app-note [note]="item" (delete)="deleteNote($event)" (edit)="editNote($event)"></app-note>
+                        }
+                    </div>
                 }
-            </div>
+            }
         </div>
     </div>
 </div>
