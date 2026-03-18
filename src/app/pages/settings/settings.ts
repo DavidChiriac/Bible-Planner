@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FirebaseService } from '../../shared/services/firebase.service';
 import { Utils } from '../../shared/services/utils.service';
+import { TABS } from '../home-page/home-page';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -19,6 +20,7 @@ export class Settings {
   private readonly firebase = inject(FirebaseService);
 
   resetConfirmationVisible = false;
+  deletePlanVisible = false;
 
   setStartDate(date: Date | null) {
     if (!date) return;
@@ -53,5 +55,23 @@ export class Settings {
         this.utils.readSet.set(new Set());
       })
       .catch(err => alert('Error resetting progress: ' + err.message));
+  }
+
+  deleteCustomPlan() {
+    this.deletePlanVisible = true;
+  }
+
+  confirmDeleteCustomPlan() {
+    this.deletePlanVisible = false;
+
+    this.firebase.deleteCustomPlanConfig()
+      .then(() => {
+        this.utils.customPlanConfig.set(null);
+        if (this.utils.selectedPlan() === TABS.PERSONALIZAT) {
+          this.utils.selectedPlan.set(TABS.CRONOLOGIC);
+          this.firebase.setSelectedPlan(TABS.CRONOLOGIC);
+        }
+      })
+      .catch(err => alert('Error deleting custom plan: ' + err.message));
   }
 }

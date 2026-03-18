@@ -1,0 +1,244 @@
+@use "sass:color";
+
+app-plan-builder {
+
+.builder-wrap {
+  width: 70%;
+  margin: auto;
+  padding: 2rem 0;
+
+  &--mobile {
+    width: 92%;
+    padding: 1rem 0;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+// Testament accordion
+.testament-accordion {
+  margin-bottom: 1rem;
+
+  .p-accordionpanel {
+    background: var(--beige-card);
+    border: 1px solid var(--brown-light);
+    border-radius: 16px !important;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+  }
+
+  .p-accordionheader {
+    background: transparent;
+    border: none;
+    padding: 1rem 1.25rem;
+    gap: 0.75rem;
+    font-family: "Lora", serif;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.02);
+    }
+  }
+
+  .p-accordioncontent-content {
+    padding: 0 1.25rem 1rem;
+    background: transparent;
+  }
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.book-count {
+  font-weight: 400;
+  color: var(--brown);
+  font-size: 0.9rem;
+}
+
+// Book grid
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.5rem;
+}
+
+.book-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.25rem;
+  border-radius: 10px;
+  border: 1.5px solid var(--brown-light);
+  background: var(--beige-bg);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+
+  &:hover {
+    border-color: var(--brown);
+  }
+
+  &--selected {
+    background: var(--terracotta);
+    border-color: var(--terracotta);
+    color: #fff;
+
+    .book-chapters {
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
+}
+
+.book-title {
+  font-weight: 600;
+  font-size: 0.85rem;
+  line-height: 1.2;
+}
+
+.book-chapters {
+  font-size: 0.75rem;
+  color: var(--brown);
+  margin-top: 2px;
+}
+
+// Config card
+.config-card {
+  background: var(--beige-card);
+  border: 1px solid var(--brown-light);
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.config-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  label {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+}
+
+.days-input {
+  width: 100px;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--brown);
+  flex-wrap: wrap;
+}
+
+// Actions
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+// Button customizations
+.preview-btn .p-button {
+  border: 1.5px solid var(--brown);
+  color: var(--brown-dark);
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--brown);
+    color: #fff;
+  }
+}
+
+.generate-btn .p-button {
+  background: var(--terracotta);
+  border: 1.5px solid var(--terracotta);
+  color: #fff;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: color.adjust(#A46447, $lightness: -8%);
+    border-color: color.adjust(#A46447, $lightness: -8%);
+  }
+
+  &:disabled {
+    background: var(--brown-light);
+    border-color: var(--brown-light);
+    opacity: 0.6;
+  }
+}
+
+// Preview
+.preview-card {
+  background: var(--beige-card);
+  border: 1px solid var(--brown-light);
+  border-radius: 16px;
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.preview-week {
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--brown-light);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.preview-week-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: var(--beige-bg);
+  gap: 0.5rem;
+}
+
+.preview-week-label {
+  font-size: 0.85rem;
+  color: var(--brown);
+  text-align: right;
+}
+
+.preview-days {
+  padding: 0.5rem 0.75rem;
+}
+
+.preview-day {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.25rem 0;
+  font-size: 0.9rem;
+
+  &:not(:last-child) {
+    border-bottom: 1px dashed var(--brown-light);
+  }
+}
+
+.preview-day-num {
+  font-weight: 600;
+  min-width: 60px;
+  color: var(--terracotta);
+}
+
+.preview-day-label {
+  color: var(--deep-umber);
+}
+
+} // end app-plan-builder

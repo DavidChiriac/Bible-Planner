@@ -5,6 +5,13 @@
             [ngClass]="{'selected': utils.selectedPlan() === tab}">{{ tab }}</p-button>
         }
     </div>
+    @if (utils.selectedPlan() === 'Personalizat' && utils.customPlanConfig()) {
+      <div class="text-center mb-2">
+        <a class="edit-plan-link" routerLink="/plan-builder">
+          <i class="pi pi-pencil"></i> Editează planul
+        </a>
+      </div>
+    }
     <div class="details m-auto mb-4" [ngClass]="utils.isMobile() ? 'w-11' : 'w-6'">
         <div class="w-full">
             <h4 class="text-center m-0 mb-1">Progresul tău de citire - {{ utils.readPercentage() }}%</h4>

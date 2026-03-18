@@ -9,7 +9,7 @@ import { MultiSelect } from 'primeng/multiselect';
 import { NotesCursor } from '../../shared/services/firebase.service';
 import { NoteItem, NOTE_TAGS, NoteTag } from '../../shared/models/note.models';
 import { Capacitor } from '@capacitor/core';
-import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Dialog } from 'primeng/dialog';
 import { QuillModule } from 'ngx-quill';
 import { Select } from 'primeng/select';
@@ -254,7 +254,7 @@ export class Notes {
     const notes = this.notes();
     if (!notes.length) return;
 
-    const { Document, Packer, Paragraph, TextRun, HeadingLevel, BorderStyle, AlignmentType, NumberFormat, LevelFormat } = await import('docx');
+    const { Document, Packer, Paragraph, TextRun, HeadingLevel, BorderStyle, AlignmentType, LevelFormat } = await import('docx');
 
     const children: InstanceType<typeof Paragraph>[] = [];
 
