@@ -91,7 +91,7 @@ export class Day {
       .subscribe(async (params) => {
         this.dayIndex = params['day'];
         this.weekIndex = params['week'];
-        this.plan = params['plan'] === TABS.CRONOLOGIC ? CRONOLOGIC : INORDINE;
+        this.plan = this.resolvePlan(params['plan']);
         this.planName = params['plan'];
         this.chapter = params['chapter'] ?? null;
 
@@ -224,5 +224,11 @@ export class Day {
         });
       }
     }
+  }
+
+  private resolvePlan(planName: string): IPlan[] {
+    if (planName === TABS.CRONOLOGIC) return CRONOLOGIC;
+    if (planName === TABS.PERSONALIZAT) return this.utils.customPlan();
+    return INORDINE;
   }
 }

@@ -1,0 +1,113 @@
+<div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
+  <div class="builder-wrap" [ngClass]="{'builder-wrap--mobile': utils.isMobile()}">
+
+    <div class="header">
+      <p-button icon="pi pi-arrow-left" class="go-back" (onClick)="goBack()"></p-button>
+      <h2 class="m-0">Creează un plan personalizat</h2>
+    </div>
+
+    <!-- OT / NT Sections -->
+    <p-accordion [multiple]="true" class="testament-accordion">
+      <p-accordion-panel value="ot">
+        <p-accordion-header>
+          <div class="section-header" (click)="$event.stopPropagation(); toggleOtAll()" (keydown.enter)="toggleOtAll()">
+            <p-checkbox [binary]="true" [ngModel]="allOtSelected()"
+              [indeterminate]="someOtSelected()"></p-checkbox>
+          </div>
+          <h3 class="m-0">Vechiul Testament <span class="book-count">(39 cărți)</span></h3>
+        </p-accordion-header>
+        <p-accordion-content>
+          <div class="book-grid">
+            @for (book of otBooks(); track book.title; let i = $index) {
+              <div class="book-item" [ngClass]="{'book-item--selected': book.selected}"
+                (click)="toggleBook('ot', i)" (keydown.enter)="toggleBook('ot', i)">
+                <span class="book-title">{{ book.title }}</span>
+                <span class="book-chapters">{{ book.chapters }} cap.</span>
+              </div>
+            }
+          </div>
+        </p-accordion-content>
+      </p-accordion-panel>
+
+      <p-accordion-panel value="nt">
+        <p-accordion-header>
+          <div class="section-header" (click)="$event.stopPropagation(); toggleNtAll()" (keydown.enter)="toggleNtAll()">
+            <p-checkbox [binary]="true" [ngModel]="allNtSelected()"
+              [indeterminate]="someNtSelected()"></p-checkbox>
+          </div>
+          <h3 class="m-0">Noul Testament <span class="book-count">(27 cărți)</span></h3>
+        </p-accordion-header>
+        <p-accordion-content>
+          <div class="book-grid">
+            @for (book of ntBooks(); track book.title; let i = $index) {
+              <div class="book-item" [ngClass]="{'book-item--selected': book.selected}"
+                (click)="toggleBook('nt', i)" (keydown.enter)="toggleBook('nt', i)">
+                <span class="book-title">{{ book.title }}</span>
+                <span class="book-chapters">{{ book.chapters }} cap.</span>
+              </div>
+            }
+          </div>
+        </p-accordion-content>
+      </p-accordion-panel>
+    </p-accordion>
+
+    <!-- Config -->
+    <div class="config-card">
+      <div class="config-row">
+        <label for="plan-start-date">Data de început:</label>
+        <p-datepicker [(ngModel)]="planStartDate" dateFormat="dd/mm/yy"
+          placeholder="dd/mm/yyyy" class="date-input"></p-datepicker>
+      </div>
+
+      <div class="config-row mt-3">
+        <label for="plan-days">Număr de zile:</label>
+        <input id="plan-days" type="number" min="1" [max]="totalChapters()"
+          pInputText [ngModel]="days()" (ngModelChange)="days.set($event)"
+          autocomplete="off" class="days-input" />
+      </div>
+
+      @if (selectedBooks().length > 0) {
+        <div class="summary">
+          <span><strong>{{ selectedBooks().length }}</strong> {{ selectedBooks().length === 1 ? 'carte selectată' : 'cărți selectate' }}</span>
+          <span>·</span>
+          <span><strong>{{ totalChapters() }}</strong> capitole</span>
+          <span>·</span>
+          <span>~<strong>{{ chaptersPerDay() }}</strong> cap./zi</span>
+        </div>
+      }
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <p-button label="Previzualizare" icon="pi pi-eye"
+        [outlined]="true" [disabled]="!canGenerate()"
+        (onClick)="togglePreview()" class="preview-btn"></p-button>
+      <p-button label="Generează planul" icon="pi pi-check"
+        [disabled]="!canGenerate()"
+        (onClick)="generate()" class="generate-btn"></p-button>
+    </div>
+
+    <!-- Preview -->
+    @if (showPreview() && canGenerate()) {
+      <div class="preview-card">
+        <h3 class="m-0 mb-3">Previzualizare plan ({{ preview().length }} săptămâni)</h3>
+        @for (week of preview(); track week.week) {
+          <div class="preview-week">
+            <div class="preview-week-header">
+              <strong>Săptămâna {{ week.week }}</strong>
+              <span class="preview-week-label">{{ week.label }}</span>
+            </div>
+            <div class="preview-days">
+              @for (day of week.days; track day.label; let d = $index) {
+                <div class="preview-day">
+                  <span class="preview-day-num">Ziua {{ (week.week - 1) * 7 + d + 1 }}</span>
+                  <span class="preview-day-label">{{ day.label }}</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

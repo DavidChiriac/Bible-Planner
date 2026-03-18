@@ -14,7 +14,7 @@
 <div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
     <!-- Top bar -->
     <div class="top-bar" [ngClass]="{'px-3': !utils.isMobile()}">
-        <p-button label="Back" class="go-back" (onClick)="goBack()"><i class="pi pi-arrow-left"></i></p-button>
+        <p-button icon="pi pi-arrow-left" class="go-back" (onClick)="goBack()"></p-button>
         @if (!chapter && utils.isMobile()) {
             <span class="swipe-hint">
                 <i class="pi pi-arrow-left"></i> glisează <i class="pi pi-arrow-right"></i>

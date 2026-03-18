@@ -100,3 +100,26 @@ body {
     padding-left: 1.5rem;
   }
 }
+
+// Global back button
+.go-back .p-button {
+  background: var(--beige-card);
+  border: 1.5px solid var(--brown-light);
+  color: var(--brown-dark);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+
+  &.p-button-icon-only::after {
+    display: none;
+  }
+
+  &:hover {
+    background: var(--brown-light);
+    color: #fff;
+  }
+}
+
+// Plan selector buttons full height
+.plan-selector-button .p-button {
+  height: 100%;
+}

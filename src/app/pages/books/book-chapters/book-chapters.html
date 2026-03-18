@@ -1,6 +1,6 @@
 <div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
     <div class="top-bar" [ngClass]="{'px-3': !utils.isMobile()}">
-        <p-button label="Back" class="go-back" (onClick)="goBack()"><i class="pi pi-arrow-left"></i></p-button>
+        <p-button icon="pi pi-arrow-left" class="go-back" (onClick)="goBack()"></p-button>
     </div>
 
     <div class="hero-card" [ngClass]="utils.isMobile() ? 'w-11' : 'w-6'">

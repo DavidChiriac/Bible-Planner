@@ -1,4 +1,4 @@
-import { DestroyRef, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { combineLatest, distinctUntilChanged, EMPTY, from, switchMap } from 'rxjs';
 import { TABS } from '../../pages/home-page/home-page';
@@ -11,6 +11,8 @@ import CRONOLOGIC from '../../../assets/jsons/plan_biblie_cronologic_cornilescu_
 import INORDINE from '../../../assets/jsons/plan_biblie_in_ordine_pe_saptamani.json';
 import { HapticsService } from './haptics.service';
 import { WidgetService } from './widget.service';
+import { CustomPlanConfig, PlanGeneratorService } from './plan-generator.service';
+import { IPlan } from '../models/plan.model';
 
 const TOTAL_BIBLE_VERSES = 31102;
 
@@ -24,6 +26,7 @@ export class Utils {
   months = signal<number | null>(null);
   selectedPlan = signal<TABS | undefined>(undefined);
   favouriteWeeks = signal<{plan: TABS, week: number}[]>([]);
+  customPlanConfig = signal<CustomPlanConfig | null>(null);
 
   private readonly firebase = inject(FirebaseService);
   private readonly platformId = inject(PLATFORM_ID);
@@ -31,8 +34,23 @@ export class Utils {
   private readonly destroyRef = inject(DestroyRef);
   private readonly haptics = inject(HapticsService);
   private readonly widget = inject(WidgetService);
+  private readonly planGenerator = inject(PlanGeneratorService);
   
   isMobile = signal<boolean | null>(null);
+
+  customPlan = computed<IPlan[]>(() => {
+    const config = this.customPlanConfig();
+    if (!config) return [];
+    return this.planGenerator.generate(config);
+  });
+
+  activeStartDate = computed<Date | null>(() => {
+    if (this.selectedPlan() === TABS.PERSONALIZAT) {
+      const sd = this.customPlanConfig()?.startDate;
+      return sd ? this.startDateAsDate(sd) : this.startDate();
+    }
+    return this.startDate();
+  });
 
   constructor() {
     if (!isPlatformBrowser(this.platformId)) return;
@@ -58,12 +76,13 @@ export class Utils {
               months: this.firebase.getMonths(),
               plan: this.firebase.getPlan(),
               favouriteWeeks: this.firebase.getFavouriteWeeks$(),
+              customPlanConfig: this.firebase.getCustomPlanConfig$(),
             })
           ),
         );
       })
     )
-    .subscribe(({ chapters, startDate, months, plan, favouriteWeeks }) => {
+    .subscribe(({ chapters, startDate, months, plan, favouriteWeeks, customPlanConfig }) => {
       // update UI state
       this.readSet.set(new Set(chapters ?? []));
 
@@ -92,6 +111,8 @@ export class Utils {
       } else {
         this.favouriteWeeks.set([]);
       }
+
+      this.customPlanConfig.set(customPlanConfig ?? null);
 
       this.loading.set(false);
 
@@ -211,12 +232,12 @@ export class Utils {
       : `${pct}% completat`;
 
     // Calculate days ahead/behind
-    const start = this.startDate() ?? new Date();
-    const diffMs = new Date().getTime() - start.getTime();
+    const startMs = this.activeStartDate()?.getTime() ?? Date.now();
+    const diffMs = Date.now() - startMs;
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
     const expectedDays = (diffDays * 12) / (this.months() ?? 12);
 
-    const plan = this.selectedPlan() === TABS.CRONOLOGIC ? CRONOLOGIC : INORDINE;
+    const plan = this.getActivePlan();
     let daysRead = 0;
     for (const week of plan) {
       for (const day of week.days) {
@@ -241,5 +262,12 @@ export class Utils {
     }
 
     this.widget.updateWidget(pct, status, step, stepType, 'Apasă pentru a continua citirea');
+  }
+
+  private getActivePlan(): IPlan[] {
+    const selected = this.selectedPlan();
+    if (selected === TABS.CRONOLOGIC) return CRONOLOGIC;
+    if (selected === TABS.PERSONALIZAT) return this.customPlan();
+    return INORDINE;
   }
 }

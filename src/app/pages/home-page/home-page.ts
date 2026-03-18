@@ -9,12 +9,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { NgClass } from '@angular/common';
 import { TagModule } from 'primeng/tag';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ProgressBar } from 'primeng/progressbar';
+import { PlanGeneratorService } from '../../shared/services/plan-generator.service';
 
 export enum TABS {
   CRONOLOGIC = 'Cronologic',
   INORDINE = 'În ordine',
+  PERSONALIZAT = 'Personalizat',
 }
 
 @Component({
@@ -27,7 +29,8 @@ export enum TABS {
     ButtonModule,
     NgClass,
     TagModule,
-    ProgressBar
+    ProgressBar,
+    RouterLink
   ],
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss',
@@ -36,11 +39,15 @@ export class HomePage {
   utils = inject(Utils);
   private readonly firebase = inject(FirebaseService);
   private readonly router = inject(Router);
+  private readonly planGenerator = inject(PlanGeneratorService);
 
-  tabs = [TABS.CRONOLOGIC, TABS.INORDINE];
+  tabs = [TABS.CRONOLOGIC, TABS.INORDINE, TABS.PERSONALIZAT];
 
   weeks = computed(() => {
-    return this.utils.selectedPlan() === TABS.CRONOLOGIC ? CRONOLOGIC : INORDINE;
+    const plan = this.utils.selectedPlan();
+    if (plan === TABS.CRONOLOGIC) return CRONOLOGIC;
+    if (plan === TABS.PERSONALIZAT) return this.utils.customPlan();
+    return INORDINE;
   });
 
   numbersOfDaysRead = computed(() => {
@@ -57,7 +64,7 @@ export class HomePage {
 
   currentStatus = computed(() => {
     const today = new Date();
-    const start = this.utils.startDate() ?? new Date();
+    const start = this.utils.activeStartDate() ?? new Date();
 
     const diffInMs = today.getTime() - start.getTime();
     const diffInDays =
@@ -81,6 +88,10 @@ export class HomePage {
   });
 
   changeTab(tab: TABS) {
+    if (tab === TABS.PERSONALIZAT && !this.utils.customPlanConfig()) {
+      this.router.navigate(['/plan-builder']);
+      return;
+    }
     this.openWeeks.set([]);
     this.utils.selectedPlan.set(tab);
     this.lastNavigatedWeek.set(0);

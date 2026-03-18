@@ -38,6 +38,7 @@
 
 .plan-selector-button {
   flex: 1;
+  align-self: stretch;
 }
 
 .read {
@@ -106,4 +107,20 @@
   outline-offset: 2px;
   border-radius: 16px;
   padding: 1rem;
+}
+
+.edit-plan-link {
+  color: var(--terracotta);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  .pi {
+    font-size: 0.8rem;
+  }
 }
