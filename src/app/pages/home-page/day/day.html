@@ -13,7 +13,7 @@
 } @else {
 <div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
     <!-- Top bar -->
-    <div class="top-bar" [ngClass]="{'px-3': !utils.isMobile()}">
+    <div class="top-bar" [ngClass]="utils.isMobile() ? 'w-11 mx-auto' : 'px-3'">
         <p-button icon="pi pi-arrow-left" class="go-back" (onClick)="goBack()"></p-button>
         @if (!chapter && utils.isMobile()) {
             <span class="swipe-hint">
@@ -33,17 +33,22 @@
             @for (ch of chapters; track $index) {
                 <div
                     class="chapter-card"
-                    [ngClass]="{'chapter-read': utils.isEntireDayRead([ch])}"
-                    (click)="$event.stopPropagation(); utils.setEntireDayRead([ch])"
-                    onkeydown="">
-                    <div class="chapter-number">
+                    [ngClass]="{'chapter-read': utils.isEntireDayRead([ch])}">
+                    <div class="chapter-top">
+                        <span class="chapter-number">{{ $index + 1 }}</span>
                         @if (utils.isEntireDayRead([ch])) {
-                            <i class="pi pi-check"></i>
-                        } @else {
-                            {{ $index + 1 }}
+                            <i class="pi pi-check-circle chapter-check"></i>
                         }
                     </div>
                     <span class="chapter-name">{{ ch }}</span>
+                    <div class="chapter-actions">
+                        <button class="chapter-action-btn mark-btn" [pTooltip]="utils.isEntireDayRead([ch]) ? 'Necitit' : 'Citit'" tooltipPosition="top" (click)="utils.setEntireDayRead([ch])">
+                            <i class="pi" [ngClass]="utils.isEntireDayRead([ch]) ? 'pi-times' : 'pi-check'"></i>
+                        </button>
+                        <button class="chapter-action-btn read-btn" pTooltip="Citește" tooltipPosition="top" (click)="openReader(ch)">
+                            <i class="pi pi-book"></i>
+                        </button>
+                    </div>
                 </div>
             }
         </div>
@@ -103,7 +108,7 @@
         @if (dayHasNoNotes()) {
             <div class="empty-notes">
                 <i class="pi pi-inbox"></i>
-                <p>Nu există notițe pentru această zi.</p>
+                <p>Nu există notițe pentru {{ chapter ? 'acest capitol' : 'această zi' }}.</p>
             </div>
         }
 

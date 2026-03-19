@@ -1,5 +1,5 @@
 <div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
-    <div class="top-bar" [ngClass]="{'px-3': !utils.isMobile()}">
+    <div class="top-bar" [ngClass]="utils.isMobile() ? 'w-11 mx-auto' : 'px-3'">
         <p-button icon="pi pi-arrow-left" class="go-back" (onClick)="goBack()"></p-button>
     </div>
 
@@ -29,21 +29,28 @@
         </div>
     </div>
 
-    <div class="chapters-grid" [ngClass]="utils.isMobile() ? 'w-11' : 'w-6'">
+    <div class="chapters-grid" [ngClass]="utils.isMobile() ? 'w-11' : 'w-8'">
         @for (chapter of book()?.chapters ?? []; track $index) {
             <div
                 class="chapter-card"
-                [ngClass]="{'chapter-read': utils.isChapterRead(chapter)}"
-                (click)="utils.toggleChapterRead(chapter)" onkeydown="">
-                <div class="chapter-number">
+                [ngClass]="{'chapter-read': utils.isChapterRead(chapter)}">
+                <div class="chapter-top">
+                    <span class="chapter-number">{{ $index + 1 }}</span>
                     @if (utils.isChapterRead(chapter)) {
-                        <i class="pi pi-check"></i>
-                    } @else {
-                        {{ $index + 1 }}
+                        <i class="pi pi-check-circle chapter-check"></i>
                     }
                 </div>
-                <span class="chapter-name">{{ chapter }}</span>
-                <i class="pi pi-pencil chapter-notes-btn" (click)="$event.stopPropagation(); viewChapterNotes(chapter)" onkeydown=""></i>
+                <div class="chapter-actions">
+                    <button class="chapter-action-btn mark-btn" [pTooltip]="utils.isChapterRead(chapter) ? 'Necitit' : 'Citit'" tooltipPosition="top" (click)="utils.toggleChapterRead(chapter)">
+                        <i class="pi" [ngClass]="utils.isChapterRead(chapter) ? 'pi-times' : 'pi-check'"></i>
+                    </button>
+                    <button class="chapter-action-btn read-btn" pTooltip="Citește" tooltipPosition="top" (click)="readChapter(chapter)">
+                        <i class="pi pi-book"></i>
+                    </button>
+                    <button class="chapter-action-btn notes-btn" pTooltip="Notițe" tooltipPosition="top" (click)="viewChapterNotes(chapter)">
+                        <i class="pi pi-comment"></i>
+                    </button>
+                </div>
             </div>
         }
     </div>
