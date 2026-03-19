@@ -2,14 +2,39 @@
     <!-- Top bar -->
     <div class="top-bar" [ngClass]="utils.isMobile() ? 'w-11 mx-auto' : 'px-3'">
         <p-button icon="pi pi-arrow-left" class="go-back" (onClick)="goBack()"></p-button>
-        <div class="font-controls">
-            <button class="font-btn" (click)="decreaseFontSize()">
-                <i class="pi pi-minus"></i>
-            </button>
-            <span class="font-size-indicator">{{ (fontSize() * 100) | number:'1.0-0' }}%</span>
-            <button class="font-btn" (click)="increaseFontSize()">
-                <i class="pi pi-plus"></i>
-            </button>
+        <div class="top-bar-controls">
+            <p-select
+                [options]="translations"
+                optionLabel="name"
+                optionValue="id"
+                [ngModel]="bibleText.selectedTranslation()"
+                (ngModelChange)="onTranslationChange($event)"
+                appendTo="body"
+                panelStyleClass="translation-panel"
+                [filter]="true"
+                filterBy="name,id"
+                filterPlaceholder="Caută traducere..."
+                class="translation-select">
+                <ng-template #selectedItem let-item>
+                    <span class="translation-selected">{{ item?.id === 'local-cornilescu' ? 'CRN' : item?.id }}</span>
+                </ng-template>
+                <ng-template #item let-item>
+                    <div class="translation-option">
+                        <span class="translation-option-id">{{ item.id === 'local-cornilescu' ? 'CRN' : item.id }}</span>
+                        <span class="translation-option-name">{{ item.name }}</span>
+                        <span class="translation-option-lang">{{ item.language }}</span>
+                    </div>
+                </ng-template>
+            </p-select>
+            <div class="font-controls">
+                <button class="font-btn" (click)="decreaseFontSize()">
+                    <i class="pi pi-minus"></i>
+                </button>
+                <span class="font-size-indicator">{{ (fontSize() * 100) | number:'1.0-0' }}%</span>
+                <button class="font-btn" (click)="increaseFontSize()">
+                    <i class="pi pi-plus"></i>
+                </button>
+            </div>
         </div>
     </div>
 
