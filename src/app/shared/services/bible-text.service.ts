@@ -22,18 +22,12 @@ export interface BibleTranslation {
 
 export const TRANSLATIONS: BibleTranslation[] = [
   { id: 'local-cornilescu', name: 'Cornilescu 1924', language: 'Română', isLocal: true },
-  { id: 'VDCL', name: 'Cornilescu Literal 1931', language: 'Română' },
   { id: 'NTR', name: 'Noua Traducere Românească', language: 'Română' },
-  { id: 'KJV', name: 'King James Version', language: 'English' },
   { id: 'NIV', name: 'NIV 1984', language: 'English' },
   { id: 'NIV2011', name: 'NIV 2011', language: 'English' },
   { id: 'ESV', name: 'English Standard Version', language: 'English' },
-  { id: 'NASB', name: 'NASB 1995', language: 'English' },
   { id: 'NLT', name: 'New Living Translation', language: 'English' },
   { id: 'NET', name: 'New English Translation', language: 'English' },
-  { id: 'BSB', name: 'Berean Standard Bible', language: 'English' },
-  { id: 'AMP', name: 'Amplified Bible', language: 'English' },
-  { id: 'MSG', name: 'The Message', language: 'English' },
 ];
 
 /** Map Romanian book titles → book number (1-66) */
@@ -61,7 +55,7 @@ function stripHtml(html: string): string {
 
 @Injectable({ providedIn: 'root' })
 export class BibleTextService {
-  private apiCache = new Map<string, BibleChapter>();
+  private readonly apiCache = new Map<string, BibleChapter>();
 
   selectedTranslation = signal<string>(this.loadSavedTranslation());
 
