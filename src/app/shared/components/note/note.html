@@ -4,9 +4,9 @@
             <div class="flex gap-2 align-items-center">
                 <h3 class="m-0">{{ note().chapterLabel }}</h3>
             </div>
-            <div class="flex gap-2">
-                <i class="pi pi-trash cursor-pointer" (click)="deleteNote()" onkeydown=""></i>
-                <i class="pi pi-pencil cursor-pointer" (click)="editNote()" onkeydown=""></i>
+            <div class="flex gap-1">
+                <i class="pi pi-trash icon-action-btn icon-action-btn--danger" (click)="deleteNote()" onkeydown=""></i>
+                <i class="pi pi-pencil icon-action-btn" (click)="editNote()" onkeydown=""></i>
             </div>
         </div>
     }
@@ -26,10 +26,10 @@
         @if (!displayChapterLabel()) {
             <div class="flex gap-1">
                 <i
-                    class="pi pi-trash"
+                    class="pi pi-trash icon-action-btn icon-action-btn--danger"
                     (click)="deleteNote()"
                     onkeydown=""></i>
-                <i class="pi pi-pencil ml-2 cursor-pointer" (click)="editNote()" onkeydown=""></i>
+                <i class="pi pi-pencil icon-action-btn" (click)="editNote()" onkeydown=""></i>
             </div>
         }
     </div>

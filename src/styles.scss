@@ -103,6 +103,31 @@ body {
   }
 }
 
+// Global icon-only action buttons (edit, delete, notes, etc.)
+.icon-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: var(--brown-dark);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+
+  &:hover {
+    background: rgba(107, 90, 69, 0.12);
+    color: var(--terracotta);
+  }
+
+  &.icon-action-btn--danger:hover {
+    background: rgba(164, 100, 71, 0.12);
+    color: #A46447;
+  }
+}
+
 // Global back button
 .go-back .p-button {
   background: var(--beige-card);
