@@ -6,6 +6,28 @@
   padding: 0.75rem 0;
 }
 
+.top-bar-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+// Translation selector
+.translation-select {
+  :host ::ng-deep .p-select {
+    border: 1.5px solid var(--brown-light);
+    border-radius: 10px;
+    background: var(--beige-card);
+    min-width: 0;
+  }
+}
+
+.translation-selected {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--deep-umber);
+}
+
 .font-controls {
   display: flex;
   align-items: center;

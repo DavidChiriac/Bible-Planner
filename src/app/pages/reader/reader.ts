@@ -3,19 +3,21 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DecimalPipe, NgClass } from '@angular/common';
 import { Button } from 'primeng/button';
+import { Select } from 'primeng/select';
+import { FormsModule } from '@angular/forms';
 import { Utils } from '../../shared/services/utils.service';
-import { BibleTextService, BibleChapter } from '../../shared/services/bible-text.service';
+import { BibleTextService, BibleChapter, TRANSLATIONS } from '../../shared/services/bible-text.service';
 
 @Component({
   selector: 'app-reader',
-  imports: [NgClass, Button, DecimalPipe],
+  imports: [NgClass, Button, DecimalPipe, Select, FormsModule],
   templateUrl: './reader.html',
   styleUrl: './reader.scss',
 })
 export class Reader {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly bibleText = inject(BibleTextService);
+  readonly bibleText = inject(BibleTextService);
   utils = inject(Utils);
 
   chapterLabel = signal('');
@@ -23,6 +25,8 @@ export class Reader {
   loading = signal(true);
   error = signal(false);
   fontSize = signal(1.05);
+
+  translations = TRANSLATIONS;
 
   isRead = computed(() => this.utils.isChapterRead(this.chapterLabel()));
   prevChapter = computed(() => this.bibleText.getAdjacentChapter(this.chapterLabel(), 'prev'));
@@ -40,17 +44,22 @@ export class Reader {
       });
   }
 
-  private loadChapter(label: string) {
+  private async loadChapter(label: string) {
     this.loading.set(true);
     this.error.set(false);
 
-    const result = this.bibleText.getChapter(label);
+    const result = await this.bibleText.getChapter(label);
     if (result) {
       this.chapter.set(result);
     } else {
       this.error.set(true);
     }
     this.loading.set(false);
+  }
+
+  async onTranslationChange(translationId: string) {
+    this.bibleText.setTranslation(translationId);
+    await this.loadChapter(this.chapterLabel());
   }
 
   goBack() {

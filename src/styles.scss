@@ -150,3 +150,107 @@ body {
 .plan-selector-button .p-button {
   height: 100%;
 }
+
+// Translation dropdown panel (appended to body)
+.translation-panel {
+  background: var(--beige-light) !important;
+  border: 1.5px solid var(--brown-light) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 8px 24px rgba(74, 59, 42, 0.2) !important;
+  overflow: hidden;
+  max-height: 360px;
+
+  .p-select-header {
+    padding: 10px 12px 6px;
+    background: var(--beige-light);
+    border-bottom: 1px solid var(--toasted-almond);
+
+    .p-select-filter {
+      border: 1.5px solid var(--brown-light);
+      border-radius: 10px;
+      background: var(--beige-bg);
+      color: var(--deep-umber);
+      font-family: "Lora", serif;
+      font-size: 0.82rem;
+      padding: 8px 12px;
+
+      &:focus {
+        border-color: var(--terracotta);
+        box-shadow: 0 0 0 2px rgba(164, 100, 71, 0.15);
+      }
+    }
+  }
+
+  .p-select-list-container {
+    max-height: 300px;
+  }
+
+  .p-select-option {
+    padding: 6px 14px;
+    border-radius: 8px;
+    margin: 1px 6px;
+    transition: background 0.15s ease;
+
+    &.p-select-option-selected {
+      background: var(--terracotta) !important;
+      color: #fff;
+
+      .translation-option-id {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.3);
+        color: #fff;
+      }
+
+      .translation-option-name {
+        color: #fff;
+      }
+
+      .translation-option-lang {
+        color: rgba(255, 255, 255, 0.7);
+      }
+    }
+
+    &:not(.p-select-option-selected):hover {
+      background: rgba(164, 100, 71, 0.1);
+    }
+  }
+
+  .translation-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0;
+    width: 100%;
+  }
+
+  .translation-option-id {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--terracotta);
+    background: var(--beige-bg);
+    border: 1px solid var(--toasted-almond);
+    border-radius: 6px;
+    padding: 2px 6px;
+    min-width: 40px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .translation-option-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--deep-umber);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .translation-option-lang {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--brown-light);
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+}
