@@ -90,7 +90,8 @@ body {
 }
 
 .note-content {
-  word-break: break-word;
+  word-break: normal;
+  overflow-wrap: normal;
 
   p {
     margin: 0 0 0.25rem;

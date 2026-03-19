@@ -21,7 +21,7 @@
         </div>
     }
     <div class="flex gap-3 w-full justify-content-between align-items-start">
-        <div class="note-content" [innerHTML]="note().text"></div>
+        <div class="note-content" [innerHTML]="note().text.replaceAll('&amp;nbsp;', ' ')"></div>
 
         @if (!displayChapterLabel()) {
             <div class="flex gap-1">
@@ -70,6 +70,8 @@
                 optionLabel="label"
                 optionValue="value"
                 appendTo="body"
+                [filter]="false"
+                [pt]="tagsPt"
                 placeholder="Adaugă etichete"
                 [panelStyleClass]="'multiselect-panel'"
                 [(ngModel)]="editedTags">
