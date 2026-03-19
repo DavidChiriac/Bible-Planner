@@ -79,12 +79,15 @@
                                 @for (day of tab.days; track day.label; let i = $index) {
                                     <div class="flex justify-content-between cursor-pointer row"
                                         [ngClass]="{'mb-1': i < tab.days.length - 1}"
-                                        (click)="goToDay(i, tab)" onkeydown="">
+                                        (click)="toggleDay($event, day.chapters)" onkeydown="">
                                         <span class="flex gap-2 align-items-center" [ngClass]="{'read': utils.isEntireDayRead(day.chapters)}">
                                             <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)" (click)="toggleDay($event, day.chapters)" onkeydown=""></p-checkbox>
                                             <h3 class="m-0">{{ day.label }}</h3>
                                         </span>
-                                        <i class="pi pi-pencil"></i>
+                                        <span class="day-actions">
+                                            <i class="pi pi-book day-action-btn" pTooltip="Citește" tooltipPosition="left" (click)="$event.stopPropagation(); readChapter(day.chapters[0])" onkeydown=""></i>
+                                            <i class="pi pi-comment day-action-btn" pTooltip="Notițe" tooltipPosition="left" (click)="$event.stopPropagation(); goToDay(i, tab)" onkeydown=""></i>
+                                        </span>
                                     </div>
                                 }
                             }

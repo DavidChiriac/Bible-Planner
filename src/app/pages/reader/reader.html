@@ -1,0 +1,84 @@
+<div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
+    <!-- Top bar -->
+    <div class="top-bar" [ngClass]="utils.isMobile() ? 'w-11 mx-auto' : 'px-3'">
+        <p-button icon="pi pi-arrow-left" class="go-back" (onClick)="goBack()"></p-button>
+        <div class="font-controls">
+            <button class="font-btn" (click)="decreaseFontSize()">
+                <i class="pi pi-minus"></i>
+            </button>
+            <span class="font-size-indicator">{{ (fontSize() * 100) | number:'1.0-0' }}%</span>
+            <button class="font-btn" (click)="increaseFontSize()">
+                <i class="pi pi-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    @if (loading()) {
+        <div class="reader-loading" [ngClass]="utils.isMobile() ? 'w-11' : 'w-8'">
+            <div class="skeleton-title"></div>
+            @for (i of [1,2,3,4,5,6,7,8]; track i) {
+                <div class="skeleton-verse"></div>
+            }
+        </div>
+    } @else if (error()) {
+        <div class="reader-error" [ngClass]="utils.isMobile() ? 'w-11' : 'w-8'">
+            <i class="pi pi-exclamation-circle"></i>
+            <p>Nu s-a putut încărca textul.</p>
+            <p class="error-hint">Verifică conexiunea la internet și încearcă din nou.</p>
+            <p-button label="Reîncearcă" icon="pi pi-refresh" class="retry-btn" (onClick)="navigateTo(chapterLabel())"></p-button>
+        </div>
+    } @else {
+        <div class="reader-content" [ngClass]="utils.isMobile() ? 'w-11' : 'w-8'">
+            <!-- Chapter title -->
+            <h1 class="chapter-title">{{ chapterLabel() }}</h1>
+
+            <!-- Verses -->
+            <div class="verses" [style.font-size.rem]="fontSize()">
+                @for (verse of chapter()?.verses ?? []; track verse.verse) {
+                    <p class="my-1">
+                        <sup class="verse-num">{{ verse.verse }}</sup>{{ verse.text }}
+                    </p>
+                    {{ ' ' }}
+                }
+            </div>
+
+            <!-- Actions -->
+            <div class="reader-actions">
+                <button class="mark-read-btn" [ngClass]="{'is-read': isRead()}" (click)="toggleRead()">
+                    <span class="mark-read-icon">
+                        <i [class]="isRead() ? 'pi pi-check-circle' : 'pi pi-circle'"></i>
+                    </span>
+                    <span class="mark-read-label">{{ isRead() ? 'Marcat ca citit' : 'Marchează ca citit' }}</span>
+                </button>
+                <button class="notes-btn" (click)="goToNotes()">
+                    <i class="pi pi-comment"></i>
+                    <span>Notițe</span>
+                </button>
+            </div>
+
+            <!-- Navigation -->
+            <div class="chapter-nav">
+                @if (prevChapter(); as prev) {
+                    <button class="nav-btn nav-prev" (click)="navigateTo(prev)">
+                        <i class="pi pi-arrow-left"></i>
+                        <div class="nav-btn-text">
+                            <span class="nav-btn-hint">Capitolul anterior</span>
+                            <span class="nav-btn-label">{{ prev }}</span>
+                        </div>
+                    </button>
+                } @else {
+                    <span></span>
+                }
+                @if (nextChapter(); as next) {
+                    <button class="nav-btn nav-next" (click)="navigateTo(next)">
+                        <div class="nav-btn-text">
+                            <span class="nav-btn-hint">Capitolul următor</span>
+                            <span class="nav-btn-label">{{ next }}</span>
+                        </div>
+                        <i class="pi pi-arrow-right"></i>
+                    </button>
+                }
+            </div>
+        </div>
+    }
+</div>

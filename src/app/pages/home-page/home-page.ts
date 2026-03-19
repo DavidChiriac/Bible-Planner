@@ -11,7 +11,7 @@ import { NgClass } from '@angular/common';
 import { TagModule } from 'primeng/tag';
 import { Router, RouterLink } from '@angular/router';
 import { ProgressBar } from 'primeng/progressbar';
-import { PlanGeneratorService } from '../../shared/services/plan-generator.service';
+import { TooltipModule } from 'primeng/tooltip';
 
 export enum TABS {
   CRONOLOGIC = 'Cronologic',
@@ -30,7 +30,8 @@ export enum TABS {
     NgClass,
     TagModule,
     ProgressBar,
-    RouterLink
+    RouterLink,
+    TooltipModule
   ],
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss',
@@ -39,7 +40,6 @@ export class HomePage {
   utils = inject(Utils);
   private readonly firebase = inject(FirebaseService);
   private readonly router = inject(Router);
-  private readonly planGenerator = inject(PlanGeneratorService);
 
   tabs = [TABS.CRONOLOGIC, TABS.INORDINE, TABS.PERSONALIZAT];
 
@@ -197,5 +197,9 @@ export class HomePage {
   async toggleDay(event: Event, chapters: string[]) {
     event.stopPropagation();
     await this.utils.setEntireDayRead(chapters);
+  }
+
+  readChapter(chapter: string) {
+    this.router.navigate(['/reader'], { queryParams: { chapter } });
   }
 }

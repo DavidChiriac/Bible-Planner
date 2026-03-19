@@ -8,10 +8,11 @@ import { Button } from "primeng/button";
 import { ActivatedRoute, Router } from '@angular/router';
 import { FirebaseService } from '../../../shared/services/firebase.service';
 import { ProgressBar } from 'primeng/progressbar';
+import { Tooltip } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-book-chapters',
-  imports: [CheckboxModule, FormsModule, NgClass, Button, ProgressBar],
+  imports: [CheckboxModule, FormsModule, NgClass, Button, ProgressBar, Tooltip],
   templateUrl: './book-chapters.html',
   styleUrl: './book-chapters.scss',
 })
@@ -57,5 +58,9 @@ export class BookChapters {
 
   viewChapterNotes(chapter: string) {
     this.router.navigate(['/day'], { queryParams: { chapter } });
+  }
+
+  readChapter(chapter: string) {
+    this.router.navigate(['/reader'], { queryParams: { chapter } });
   }
 }

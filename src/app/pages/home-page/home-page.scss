@@ -59,6 +59,37 @@
   }
 }
 
+.day-actions {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.day-action-btn {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  color: var(--brown-dark);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1.5px solid var(--brown-light);
+  background: var(--beige-bg);
+
+  &:hover {
+    background: var(--brown-dark);
+    border-color: var(--brown-dark);
+    color: #fff;
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+}
+
 .sticky-bottom-right {
   position: fixed;
   right: 1.5rem;

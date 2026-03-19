@@ -15,6 +15,7 @@ import { NoteItem, NOTE_TAGS, NoteTag } from '../../../shared/models/note.models
 import { Note } from '../../../shared/components/note/note';
 import { Select } from 'primeng/select';
 import { NotesService } from '../../notes/notes.service';
+import { Tooltip } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-day',
@@ -25,7 +26,8 @@ import { NotesService } from '../../notes/notes.service';
     QuillModule,
     MultiSelect,
     Note,
-    Select
+    Select,
+    Tooltip
   ],
   templateUrl: './day.html',
   styleUrl: './day.scss',
@@ -159,10 +161,10 @@ export class Day {
     });
   }
 
-  dayHasNoNotes() {
+  dayHasNoNotes = computed(() => {
     const notes = this.filteredNotesForDay();
     return !notes || Object.values(notes).every((items) => items.length === 0);
-  }
+  });
 
   editNote(note: NoteItem) {
     this.notesForDay.update((notes) => {
@@ -213,6 +215,7 @@ export class Day {
       if (nextDay < week.days.length) {
         this.router.navigate(['/day'], {
           queryParams: { day: nextDay, week: this.weekIndex, plan: this.planName },
+          replaceUrl: true,
         });
       }
     } else {
@@ -221,9 +224,14 @@ export class Day {
       if (prevDay >= 0) {
         this.router.navigate(['/day'], {
           queryParams: { day: prevDay, week: this.weekIndex, plan: this.planName },
+          replaceUrl: true,
         });
       }
     }
+  }
+
+  openReader(chapter: string) {
+    this.router.navigate(['/reader'], { queryParams: { chapter } });
   }
 
   private resolvePlan(planName: string): IPlan[] {

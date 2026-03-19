@@ -11,5 +11,6 @@ export const routes: Routes = [
     { path: 'books', loadComponent: () => import('./pages/books/books').then(m => m.Books), canActivate: [authGuard] },
     { path: 'books/:id', loadComponent: () => import('./pages/books/book-chapters/book-chapters').then(m => m.BookChapters), canActivate: [authGuard] },
     { path: 'notes', loadComponent: () => import('./pages/notes/notes').then(m => m.Notes), canActivate: [authGuard] },
+    { path: 'reader', loadComponent: () => import('./pages/reader/reader').then(m => m.Reader), canActivate: [authGuard] },
     { path: '**', redirectTo: '' }
 ];
