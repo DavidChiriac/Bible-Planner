@@ -147,6 +147,7 @@ export class Utils {
         new Set([...this.readSet()].filter((c) => !chapters.includes(c))),
       );
     }
+    this.updateWidget();
   }
 
   isChapterRead(chapter: string) {
@@ -157,12 +158,14 @@ export class Utils {
     this.haptics.success();
     this.firebase.addChapters(chapters);
     this.readSet.set(new Set([...this.readSet(), ...chapters]));
+    this.updateWidget();
   }
 
   markAllAsUnread(chapters: string[]) {
     this.haptics.medium();
     this.firebase.deleteChapters(chapters);
     this.readSet.set(new Set([...this.readSet()].filter((c) => !chapters.includes(c))));
+    this.updateWidget();
   }
 
   countDaysReadInAWeek(week: { week: number, days: { chapters: string[] }[] }) {
@@ -216,6 +219,7 @@ export class Utils {
       this.firebase.addChapters([chapter]);
       this.readSet.set(new Set([...this.readSet(), chapter]));
     }
+    this.updateWidget();
   }
 
   readPercentage() {
@@ -261,7 +265,17 @@ export class Utils {
       stepType = 'ontrack';
     }
 
-    this.widget.updateWidget(pct, status, step, stepType, 'Apasă pentru a continua citirea');
+    const todayReading = 'Apasă pentru a continua citirea';
+    this.widget.updateWidget(pct, status, step, stepType, todayReading);
+
+    // Save to Firebase so other devices' widgets can refresh
+    this.firebase.saveWidgetData({
+      progress: String(Math.round(pct * 100) / 100),
+      status,
+      step,
+      stepType,
+      todayReading,
+    });
   }
 
   private getActivePlan(): IPlan[] {
