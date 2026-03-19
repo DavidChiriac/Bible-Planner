@@ -4,6 +4,7 @@ import { NgClass } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 import BOOKS from '../../../../assets/jsons/biblia_cornilescu_carti_capitole.json';
 import { Router } from '@angular/router';
+import { getVerseCount } from '../../../shared/services/plan-generator.service';
 
 interface BookProgress {
   title: string;
@@ -40,17 +41,33 @@ export class BookCompletionGrid {
   });
 
   otProgress = computed(() => {
-    const books = this.oldTestament();
-    const totalChapters = books.reduce((sum, b) => sum + b.total, 0);
-    const readChapters = books.reduce((sum, b) => sum + b.read, 0);
-    return totalChapters > 0 ? Math.round((readChapters / totalChapters) * 100) : 0;
+    const readSet = this.utils.readSet();
+    const otBooks = BOOKS.slice(0, 39);
+    let totalVerses = 0;
+    let readVerses = 0;
+    for (const book of otBooks) {
+      for (const ch of book.chapters) {
+        const v = getVerseCount(ch);
+        totalVerses += v;
+        if (readSet.has(ch)) readVerses += v;
+      }
+    }
+    return totalVerses > 0 ? Number(((readVerses / totalVerses) * 100).toFixed(2)) : 0;
   });
 
   ntProgress = computed(() => {
-    const books = this.newTestament();
-    const totalChapters = books.reduce((sum, b) => sum + b.total, 0);
-    const readChapters = books.reduce((sum, b) => sum + b.read, 0);
-    return totalChapters > 0 ? Math.round((readChapters / totalChapters) * 100) : 0;
+    const readSet = this.utils.readSet();
+    const ntBooks = BOOKS.slice(39);
+    let totalVerses = 0;
+    let readVerses = 0;
+    for (const book of ntBooks) {
+      for (const ch of book.chapters) {
+        const v = getVerseCount(ch);
+        totalVerses += v;
+        if (readSet.has(ch)) readVerses += v;
+      }
+    }
+    return totalVerses > 0 ? Number(((readVerses / totalVerses) * 100).toFixed(2)) : 0;
   });
 
   completedBooks = computed(() => this.booksProgress().filter(b => b.percentage === 100).length);
