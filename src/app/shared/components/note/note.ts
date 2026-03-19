@@ -32,6 +32,7 @@ export class Note {
   editedTags = signal<NoteTag[]>([]);
 
   tagOptions = NOTE_TAGS;
+  tagsPt = { hiddenInput: { inputmode: 'none' } } as any;
 
   deleteNote() {
     this.noteDeleteConfirmation.set({ chapter: this.note().chapterLabel, key: this.note().key });
