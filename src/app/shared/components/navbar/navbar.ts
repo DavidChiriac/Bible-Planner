@@ -4,11 +4,10 @@ import { AuthService } from '../../services/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { Utils } from '../../services/utils.service';
 import { NgClass } from '@angular/common';
-import { SyncIndicator } from '../sync-indicator/sync-indicator';
 
 @Component({
   selector: 'app-navbar',
-  imports: [MenubarModule, ButtonModule, NgClass, SyncIndicator],
+  imports: [MenubarModule, ButtonModule, NgClass],
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
 })
