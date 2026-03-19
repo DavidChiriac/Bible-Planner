@@ -262,6 +262,24 @@ export class NotesService {
     return { items, nextCursor };
   }
 
+  async getAllNotes(): Promise<NoteItem[]> {
+    const u = this.auth.currentUser;
+    if (!u) throw new Error('Not logged in');
+
+    const notesRootRef = ref(this.db, `users/${u.uid}/notes`);
+    const snap = await get(notesRootRef);
+    if (!snap.exists()) return [];
+
+    const tree: Record<
+      string,
+      Record<string, { text: string; createdDate: string; tags?: NoteTag[] }>
+    > = snap.val() ?? {};
+
+    const all = this.flattenNotesTree(tree, new Set(), new Set());
+    all.sort((a, b) => (b.createdDate ?? '').localeCompare(a.createdDate ?? ''));
+    return all;
+  }
+
   private flattenNotesTree(
     tree: Record<string, Record<string, { text: string; createdDate: string; tags?: NoteTag[] }>>,
     bookSet: Set<string>,
