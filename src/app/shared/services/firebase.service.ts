@@ -6,6 +6,7 @@ import {
   ref,
   remove,
   runTransaction,
+  set,
   update,
 } from 'firebase/database';
 import { Observable, switchMap, of, map } from 'rxjs';
@@ -402,5 +403,11 @@ export class FirebaseService {
     if (!u) throw new Error('Not logged in');
 
     await remove(ref(this.db, `users/${u.uid}/customPlanConfig`));
+  }
+
+  async saveWidgetData(data: { progress: string; status: string; step: string; stepType: string; todayReading: string }): Promise<void> {
+    const u = this.auth.currentUser;
+    if (!u) return;
+    await set(ref(this.db, `users/${u.uid}/widgetData`), data);
   }
 }

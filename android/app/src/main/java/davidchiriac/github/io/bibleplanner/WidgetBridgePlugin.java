@@ -39,7 +39,7 @@ public class WidgetBridgePlugin extends Plugin {
         ComponentName widget = new ComponentName(context, ReadingWidgetProvider.class);
         int[] ids = manager.getAppWidgetIds(widget);
         if (ids.length > 0) {
-            new ReadingWidgetProvider().onUpdate(context, manager, ids);
+            ReadingWidgetProvider.renderWidget(context, manager, ids);
         }
 
         JSObject result = new JSObject();
