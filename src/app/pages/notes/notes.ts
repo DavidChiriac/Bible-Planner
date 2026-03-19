@@ -251,7 +251,9 @@ export class Notes {
   }
 
   async exportNotes() {
-    const notes = this.notes();
+    this.loading.set(true);
+    const notes = await this.notesService.getAllNotes();
+    this.loading.set(false);
     if (!notes.length) return;
 
     const { Document, Packer, Paragraph, TextRun, HeadingLevel, BorderStyle, AlignmentType, LevelFormat } = await import('docx');

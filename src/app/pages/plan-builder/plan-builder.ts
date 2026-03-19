@@ -8,13 +8,14 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { BIBLE_BOOKS, FirebaseService } from '../../shared/services/firebase.service';
-import { OT_END_INDEX, PlanGeneratorService } from '../../shared/services/plan-generator.service';
+import { getVerseCount, OT_END_INDEX, PlanGeneratorService } from '../../shared/services/plan-generator.service';
 import { Utils } from '../../shared/services/utils.service';
 import { TABS } from '../home-page/home-page';
 
 interface BookOption {
   title: string;
   chapters: number;
+  verses: number;
   selected: boolean;
 }
 
@@ -44,6 +45,7 @@ export class PlanBuilder {
       BIBLE_BOOKS.slice(0, OT_END_INDEX).map(b => ({
         title: b.title,
         chapters: b.chapters.length,
+        verses: b.chapters.reduce((sum, ch) => sum + getVerseCount(ch), 0),
         selected: selectedSet.has(b.title),
       }))
     );
@@ -52,6 +54,7 @@ export class PlanBuilder {
       BIBLE_BOOKS.slice(OT_END_INDEX).map(b => ({
         title: b.title,
         chapters: b.chapters.length,
+        verses: b.chapters.reduce((sum, ch) => sum + getVerseCount(ch), 0),
         selected: selectedSet.has(b.title),
       }))
     );
@@ -75,6 +78,16 @@ export class PlanBuilder {
   totalChapters = computed(() =>
     this.selectedBooks().reduce((sum, b) => sum + b.chapters, 0)
   );
+
+  totalVerses = computed(() =>
+    this.selectedBooks().reduce((sum, b) => sum + b.verses, 0)
+  );
+
+  versesPerDay = computed(() => {
+    const total = this.totalVerses();
+    const d = this.days();
+    return d > 0 ? Math.ceil(total / d) : 0;
+  });
 
   chaptersPerDay = computed(() => {
     const total = this.totalChapters();
@@ -142,5 +155,9 @@ export class PlanBuilder {
 
   goBack() {
     globalThis.history.back();
+  }
+
+  dayVerses(chapters: string[]): number {
+    return chapters.reduce((sum, ch) => sum + getVerseCount(ch), 0);
   }
 }

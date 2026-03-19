@@ -22,7 +22,7 @@
               <div class="book-item" [ngClass]="{'book-item--selected': book.selected}"
                 (click)="toggleBook('ot', i)" (keydown.enter)="toggleBook('ot', i)">
                 <span class="book-title">{{ book.title }}</span>
-                <span class="book-chapters">{{ book.chapters }} cap.</span>
+                <span class="book-chapters">{{ book.chapters }} cap. · {{ book.verses }} vers.</span>
               </div>
             }
           </div>
@@ -43,7 +43,7 @@
               <div class="book-item" [ngClass]="{'book-item--selected': book.selected}"
                 (click)="toggleBook('nt', i)" (keydown.enter)="toggleBook('nt', i)">
                 <span class="book-title">{{ book.title }}</span>
-                <span class="book-chapters">{{ book.chapters }} cap.</span>
+                <span class="book-chapters">{{ book.chapters }} cap. · {{ book.verses }} vers.</span>
               </div>
             }
           </div>
@@ -72,7 +72,9 @@
           <span>·</span>
           <span><strong>{{ totalChapters() }}</strong> capitole</span>
           <span>·</span>
-          <span>~<strong>{{ chaptersPerDay() }}</strong> cap./zi</span>
+          <span><strong>{{ totalVerses() }}</strong> versete</span>
+          <span>·</span>
+          <span>~<strong>{{ versesPerDay() }}</strong> vers./zi</span>
         </div>
       }
     </div>
@@ -102,6 +104,7 @@
                 <div class="preview-day">
                   <span class="preview-day-num">Ziua {{ (week.week - 1) * 7 + d + 1 }}</span>
                   <span class="preview-day-label">{{ day.label }}</span>
+                  <span class="preview-day-verses">{{ dayVerses(day.chapters) }} vers.</span>
                 </div>
               }
             </div>
