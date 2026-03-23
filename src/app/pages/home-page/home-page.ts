@@ -70,21 +70,25 @@ export class HomePage {
     const diffInDays =
       Math.floor(diffInMs / (1000 * 60 * 60 * 24)) + 1;
 
-    return this.numbersOfDaysRead() - (diffInDays * 12) / this.utils.months()!;
+    const expectedPerDay = this.utils.selectedPlan() === TABS.PERSONALIZAT
+      ? (this.utils.customPlanConfig()?.places ?? 1)
+      : (12 / this.utils.months()!);
+
+    return Math.round(this.numbersOfDaysRead() - diffInDays * expectedPerDay);
   });
 
   openWeeks = signal<number[]>([]);
   private readonly lastNavigatedWeek = signal(0);
 
-  favouriteWeeksForPlan = computed(() => {
+  bookmarkedWeeksForPlan = computed(() => {
     const plan = this.utils.selectedPlan();
 
-    const favWeeks = this.utils
+    const weeks = this.utils
       .favouriteWeeks()
       .filter((f) => f.plan === plan)
       .map((f) => f.week);
 
-    return [...new Set(favWeeks)].sort((a, b) => a - b);
+    return [...new Set(weeks)].sort((a, b) => a - b);
   });
 
   changeTab(tab: TABS) {
@@ -113,13 +117,13 @@ export class HomePage {
   }
 
   goToNextTargetWeek(): void {
-    const favWeeks = this.favouriteWeeksForPlan();
-    if (!favWeeks.length) return;
+    const bookmarked = this.bookmarkedWeeksForPlan();
+    if (!bookmarked.length) return;
 
     const last = this.lastNavigatedWeek();
 
     const nextWeek =
-      favWeeks.find((w) => w > last) ?? favWeeks[0];
+      bookmarked.find((w) => w > last) ?? bookmarked[0];
 
     this.lastNavigatedWeek.set(nextWeek);
 
@@ -150,10 +154,10 @@ export class HomePage {
     });
   }
 
-  async removeFavouriteWeek(tab: { week: number }) {
-    const currentFavs = this.utils.favouriteWeeks();
+  async removeBookmark(tab: { week: number }) {
+    const current = this.utils.favouriteWeeks();
 
-    const updatedFavs = currentFavs.filter(
+    const updated = current.filter(
       (fav) =>
         !(
           fav.plan === this.utils.selectedPlan() &&
@@ -161,7 +165,7 @@ export class HomePage {
         )
     );
 
-    this.utils.favouriteWeeks.set(updatedFavs);
+    this.utils.favouriteWeeks.set(updated);
 
     await this.firebase.deleteFavouriteWeek(
       this.utils.selectedPlan()!,
@@ -169,18 +173,18 @@ export class HomePage {
     );
   }
 
-  async addFavouriteWeek(tab: { week: number }) {
-    const currentFavs = this.utils.favouriteWeeks();
+  async addBookmark(tab: { week: number }) {
+    const current = this.utils.favouriteWeeks();
 
     if (
-      !currentFavs.some(
+      !current.some(
         (fav) =>
           fav.plan === this.utils.selectedPlan() &&
           fav.week === tab.week
       )
     ) {
       this.utils.favouriteWeeks.set([
-        ...currentFavs,
+        ...current,
         {
           plan: this.utils.selectedPlan()!,
           week: tab.week,

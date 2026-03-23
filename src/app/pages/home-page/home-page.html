@@ -40,10 +40,10 @@
                         <p-accordion-header (click)="addWeekToOpen(tab.week)" onkeydown="">
                             <div class="w-full flex justify-content-between pr-2 cursor-pointer gap-2 align-items-center">
                                 <div class="flex gap-2 align-items-center">
-                                    @if (utils.isWeekFavourite(tab)) {
-                                        <i class="pi pi-star-fill" (click)="$event.stopPropagation(); removeFavouriteWeek(tab)" onkeydown=""></i>
+                                    @if (utils.isWeekBookmarked(tab)) {
+                                        <i class="pi pi-bookmark-fill" (click)="$event.stopPropagation(); removeBookmark(tab)" onkeydown=""></i>
                                     } @else {
-                                        <i class="pi pi-star" (click)="$event.stopPropagation(); addFavouriteWeek(tab)" onkeydown=""></i>
+                                        <i class="pi pi-bookmark" (click)="$event.stopPropagation(); addBookmark(tab)" onkeydown=""></i>
                                     }
                                     <span class="flex gap-2" [ngClass]="utils.isMobile() ? 'flex-column align-items-start' : 'align-items-center'">
                                         @if (utils.isMobile()) {
@@ -106,7 +106,7 @@
         icon="pi pi-angle-down"
         class="continue-reading sticky-bottom-right"
         [label]="'Continuă citirea'"
-        [disabled]="favouriteWeeksForPlan().length === 0"
+        [disabled]="bookmarkedWeeksForPlan().length === 0"
         (onClick)="goToNextTargetWeek()">
     </p-button>
 </div>

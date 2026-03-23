@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { Utils } from './shared/services/utils.service';
-import { Router, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { Navbar } from './shared/components/navbar/navbar';
 import { Footer } from './shared/components/footer/footer';
 import { AuthService } from './shared/services/auth.service';
@@ -15,12 +15,11 @@ import { Location } from '@angular/common';
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'bible-planner';
 
   utils = inject(Utils);
   auth = inject(AuthService);
-  private readonly router = inject(Router);
   private readonly location = inject(Location);
 
   async ngOnInit() {
@@ -28,12 +27,6 @@ export class AppComponent {
       await App.addListener('backButton', ({ canGoBack }: { canGoBack: boolean }) => {
         if (canGoBack) {
           globalThis.history.back();
-          return;
-        }
-
-        const url = this.router.url;
-
-        if (url === '/') {
           return;
         }
 

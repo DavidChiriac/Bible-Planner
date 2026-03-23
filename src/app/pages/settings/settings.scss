@@ -2,3 +2,22 @@
     font-size: 24px;
     padding-inline: 1rem;
 }
+
+.delete-plan ::ng-deep .p-button {
+    background: transparent;
+    border: 1.5px solid var(--terracotta);
+    color: var(--terracotta);
+    border-radius: 12px;
+    font-weight: 600;
+    padding: 0.6rem 1.25rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: var(--terracotta);
+        color: #fff;
+    }
+
+    &:active {
+        transform: scale(0.96);
+    }
+}

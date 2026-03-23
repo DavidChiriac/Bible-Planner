@@ -50,7 +50,7 @@ for (const v of (BIBLE as any).verses) {
 
 /** Strip HTML tags and Strong's numbers from API verse text */
 function stripHtml(html: string): string {
-  return html.replace(/<S>\d+<\/S>/gi, '').replace(/<[^>]*>/g, '').replace(/\[[^\]]*\]/g, '').trim();
+  return html.replaceAll(/<S>\d+<\/S>/gi, '').replaceAll(/<[^>]*>/g, '').replaceAll(/\[[^\]]*\]/g, '').trim();
 }
 
 @Injectable({ providedIn: 'root' })
@@ -166,7 +166,7 @@ export class BibleTextService {
       // Move to previous book's last chapter
       if (bookIndex > 0) {
         const prevBook = BOOKS[bookIndex - 1];
-        return prevBook.chapters[prevBook.chapters.length - 1];
+        return prevBook.chapters.at(-1)!;
       }
       return null;
     }

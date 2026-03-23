@@ -24,10 +24,23 @@ export class BookChapters {
 
   id = signal('');
 
+  bookIndex = computed(() =>
+    BOOKS.findIndex(b => b.title.toLocaleLowerCase().replaceAll(' ', '-') === this.id())
+  );
+
   book = computed(() => {
-    return BOOKS.find((b) => {
-      return b.title.toLocaleLowerCase().replaceAll(' ', '-') === this.id();
-    })
+    const idx = this.bookIndex();
+    return idx >= 0 ? BOOKS[idx] : undefined;
+  });
+
+  prevBook = computed(() => {
+    const idx = this.bookIndex();
+    return idx > 0 ? BOOKS[idx - 1] : undefined;
+  });
+
+  nextBook = computed(() => {
+    const idx = this.bookIndex();
+    return idx >= 0 && idx < BOOKS.length - 1 ? BOOKS[idx + 1] : undefined;
   });
 
   readCount = computed(() => {
@@ -54,6 +67,10 @@ export class BookChapters {
 
   goBack() {
     globalThis.history.back();
+  }
+
+  navigateToBook(title: string) {
+    this.router.navigate([`/books/${title.toLocaleLowerCase().replaceAll(/\s/g, '-')}`]);
   }
 
   viewChapterNotes(chapter: string) {

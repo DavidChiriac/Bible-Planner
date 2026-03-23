@@ -40,6 +40,7 @@ export class Reader {
         if (ch) {
           this.chapterLabel.set(ch);
           this.loadChapter(ch);
+          globalThis.scrollTo({ top: 0 });
         }
       });
   }

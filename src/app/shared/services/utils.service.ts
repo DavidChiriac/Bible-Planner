@@ -205,7 +205,7 @@ export class Utils {
     this.loading.set(false);
   }
 
-  isWeekFavourite(week: { week: number }) {
+  isWeekBookmarked(week: { week: number }) {
     return this.favouriteWeeks().some(fav => fav.plan === this.selectedPlan() && fav.week === week.week);
   }
 
