@@ -66,6 +66,13 @@
           autocomplete="off" class="days-input" />
       </div>
 
+      <div class="config-row mt-3">
+        <label for="plan-places">Locuri de citit pe zi:</label>
+        <input id="plan-places" type="number" min="1" max="10"
+          pInputText [ngModel]="places()" (ngModelChange)="places.set($event)"
+          autocomplete="off" class="days-input" />
+      </div>
+
       @if (selectedBooks().length > 0) {
         <div class="summary">
           <span><strong>{{ selectedBooks().length }}</strong> {{ selectedBooks().length === 1 ? 'carte selectată' : 'cărți selectate' }}</span>

@@ -35,6 +35,7 @@ export class PlanBuilder {
   otBooks: ReturnType<typeof signal<BookOption[]>>;
   ntBooks: ReturnType<typeof signal<BookOption[]>>;
   days: ReturnType<typeof signal<number>>;
+  places: ReturnType<typeof signal<number>>;
   planStartDate: ReturnType<typeof signal<Date | null>>;
 
   constructor() {
@@ -60,6 +61,7 @@ export class PlanBuilder {
     );
 
     this.days = signal(existing?.days ?? 30);
+    this.places = signal(existing?.places ?? 1);
     this.planStartDate = signal(
       existing?.startDate ? this.utils.startDateAsDate(existing.startDate) : new Date()
     );
@@ -83,20 +85,22 @@ export class PlanBuilder {
     this.selectedBooks().reduce((sum, b) => sum + b.verses, 0)
   );
 
+  totalPlanDays = computed(() => this.days() * this.places());
+
   versesPerDay = computed(() => {
     const total = this.totalVerses();
-    const d = this.days();
+    const d = this.totalPlanDays();
     return d > 0 ? Math.ceil(total / d) : 0;
   });
 
   chaptersPerDay = computed(() => {
     const total = this.totalChapters();
-    const d = this.days();
+    const d = this.totalPlanDays();
     return d > 0 ? Math.ceil(total / d) : 0;
   });
 
   canGenerate = computed(() =>
-    this.selectedBooks().length > 0 && this.days() > 0
+    this.selectedBooks().length > 0 && this.days() > 0 && this.places() > 0
   );
 
   showPreview = signal(false);
@@ -106,6 +110,7 @@ export class PlanBuilder {
     const config = {
       books: this.selectedBooks().map(b => b.title),
       days: this.days(),
+      places: this.places(),
     };
     return this.planGenerator.generate(config);
   });
@@ -144,6 +149,7 @@ export class PlanBuilder {
     const config = {
       books: this.selectedBooks().map(b => b.title),
       days: this.days(),
+      places: this.places(),
       startDate: iso,
     };
     await this.firebase.setCustomPlanConfig(config);

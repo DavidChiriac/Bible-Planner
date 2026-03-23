@@ -16,11 +16,11 @@
                 filterPlaceholder="Caută traducere..."
                 class="translation-select">
                 <ng-template #selectedItem let-item>
-                    <span class="translation-selected">{{ item?.id === 'local-cornilescu' ? 'CRN' : item?.id }}</span>
+                    <span class="translation-selected">{{ item?.id === 'local-cornilescu' ? 'VDC' : item?.id }}</span>
                 </ng-template>
                 <ng-template #item let-item>
                     <div class="translation-option">
-                        <span class="translation-option-id">{{ item.id === 'local-cornilescu' ? 'CRN' : item.id }}</span>
+                        <span class="translation-option-id">{{ item.id === 'local-cornilescu' ? 'VDC' : item.id }}</span>
                         <span class="translation-option-name">{{ item.name }}</span>
                         <span class="translation-option-lang">{{ item.language }}</span>
                     </div>

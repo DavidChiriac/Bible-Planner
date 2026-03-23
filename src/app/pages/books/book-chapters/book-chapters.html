@@ -1,6 +1,14 @@
 <div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
     <div class="top-bar" [ngClass]="utils.isMobile() ? 'w-11 mx-auto' : 'px-3'">
         <p-button icon="pi pi-arrow-left" class="go-back" (onClick)="goBack()"></p-button>
+        <div class="book-nav">
+            @if (prevBook(); as prev) {
+                <p-button icon="pi pi-chevron-left" [label]="prev.title" [text]="true" (onClick)="navigateToBook(prev.title)" class="book-nav-btn"></p-button>
+            }
+            @if (nextBook(); as next) {
+                <p-button iconPos="right" icon="pi pi-chevron-right" [label]="next.title" [text]="true" (onClick)="navigateToBook(next.title)" class="book-nav-btn"></p-button>
+            }
+        </div>
     </div>
 
     <div class="hero-card" [ngClass]="utils.isMobile() ? 'w-11' : 'w-6'">

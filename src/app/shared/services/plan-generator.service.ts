@@ -8,6 +8,7 @@ export const OT_END_INDEX = 39; // indices 0–38 are OT
 export interface CustomPlanConfig {
   books: string[];
   days: number;
+  places?: number;
   startDate?: string;
 }
 
@@ -29,9 +30,10 @@ export class PlanGeneratorService {
   /** Generate an IPlan[] from a user-defined config */
   generate(config: CustomPlanConfig): IPlan[] {
     const selectedBooks = this.gatherBooks(config.books);
-    if (selectedBooks.length === 0 || config.days <= 0) return [];
+    const totalDays = config.days * (config.places ?? 1);
+    if (selectedBooks.length === 0 || totalDays <= 0) return [];
 
-    const days = this.distributeByBookProportion(selectedBooks, config.days);
+    const days = this.distributeByBookProportion(selectedBooks, totalDays);
     return this.groupIntoWeeks(days);
   }
 
@@ -91,8 +93,8 @@ export class PlanGeneratorService {
       const bookVersesTotal = book.chapters.reduce((s, ch) => s + getVerseCount(ch), 0);
 
       if (bookVersesTotal >= avgDailyVerses) {
-        // Flush any accumulated small-book group
-        this.flushGroup(groups, currentGroup);
+        // Flush any accumulated small-book group (merge into previous if too small)
+        this.flushTrailingGroup(groups, currentGroup, currentGroupVerses, avgDailyVerses);
         currentGroup = [];
         currentGroupVerses = 0;
         // Large book gets its own group
