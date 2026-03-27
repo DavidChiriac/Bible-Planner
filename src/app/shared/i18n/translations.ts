@@ -139,6 +139,10 @@ const RO = {
     versesPerDay: 'vers./zi',
     preview: 'Previzualizare',
     generate: 'Generează planul',
+    previewTitle: 'Previzualizare plan',
+    weeks: 'săptămâni',
+    day: 'Ziua',
+    versesShort: 'vers.',
   },
   tags: {
     rugaciune: 'Rugăciune',
@@ -286,6 +290,10 @@ const EN: typeof RO = {
     versesPerDay: 'v./day',
     preview: 'Preview',
     generate: 'Generate plan',
+    previewTitle: 'Plan preview',
+    weeks: 'weeks',
+    day: 'Day',
+    versesShort: 'v.',
   },
   tags: {
     rugaciune: 'Prayer',
@@ -301,3 +309,84 @@ const EN: typeof RO = {
 
 export const I18N: Record<Lang, typeof RO> = { ro: RO, en: EN };
 export type TranslationTree = typeof RO;
+
+/**
+ * Maps Romanian Bible book names (as they appear in the JSON assets and as
+ * Firebase keys) to their English equivalents.
+ * The chapter identifiers stored in Firebase (e.g. "Geneza 1") use these
+ * Romanian names — they must NEVER be changed.
+ * This map is only used for UI display translation.
+ */
+export const BOOK_NAMES_EN: Record<string, string> = {
+  'Geneza': 'Genesis',
+  'Exodul': 'Exodus',
+  'Leviticul': 'Leviticus',
+  'Numeri': 'Numbers',
+  'Deuteronomul': 'Deuteronomy',
+  'Iosua': 'Joshua',
+  'Judecători': 'Judges',
+  'Rut': 'Ruth',
+  '1 Samuel': '1 Samuel',
+  '2 Samuel': '2 Samuel',
+  '1 Împărați': '1 Kings',
+  '2 Împărați': '2 Kings',
+  '1 Cronici': '1 Chronicles',
+  '2 Cronici': '2 Chronicles',
+  'Ezra': 'Ezra',
+  'Neemia': 'Nehemiah',
+  'Estera': 'Esther',
+  'Iov': 'Job',
+  'Psalmii': 'Psalms',
+  'Proverbe': 'Proverbs',
+  'Eclesiastul': 'Ecclesiastes',
+  'Cântarea Cântărilor': 'Song of Solomon',
+  'Isaia': 'Isaiah',
+  'Plângerile lui Ieremia': 'Lamentations',
+  'Ieremia': 'Jeremiah',
+  'Ezechiel': 'Ezekiel',
+  'Daniel': 'Daniel',
+  'Osea': 'Hosea',
+  'Ioel': 'Joel',
+  'Amos': 'Amos',
+  'Obadia': 'Obadiah',
+  'Iona': 'Jonah',
+  'Mica': 'Micah',
+  'Naum': 'Nahum',
+  'Habacuc': 'Habakkuk',
+  'Țefania': 'Zephaniah',
+  'Hagai': 'Haggai',
+  'Zaharia': 'Zechariah',
+  'Maleahi': 'Malachi',
+  'Matei': 'Matthew',
+  'Marcu': 'Mark',
+  'Luca': 'Luke',
+  'Ioan': 'John',
+  'Faptele Apostolilor': 'Acts',
+  'Romani': 'Romans',
+  '1 Corinteni': '1 Corinthians',
+  '2 Corinteni': '2 Corinthians',
+  'Galateni': 'Galatians',
+  'Efeseni': 'Ephesians',
+  'Filipeni': 'Philippians',
+  'Coloseni': 'Colossians',
+  '1 Tesaloniceni': '1 Thessalonians',
+  '2 Tesaloniceni': '2 Thessalonians',
+  '1 Timotei': '1 Timothy',
+  '2 Timotei': '2 Timothy',
+  'Tit': 'Titus',
+  'Filimon': 'Philemon',
+  'Evrei': 'Hebrews',
+  'Iacov': 'James',
+  '1 Petru': '1 Peter',
+  '2 Petru': '2 Peter',
+  '1 Ioan': '1 John',
+  '2 Ioan': '2 John',
+  '3 Ioan': '3 John',
+  'Iuda': 'Jude',
+  'Apocalipsa': 'Revelation',
+};
+
+// Sorted by key length descending — used by translateLabel() to avoid
+// partial replacements (e.g. replace 'Plângerile lui Ieremia' before 'Ieremia')
+export const BOOK_NAMES_EN_SORTED = Object.entries(BOOK_NAMES_EN)
+  .sort((a, b) => b[0].length - a[0].length);

@@ -3,10 +3,10 @@
         <p-button icon="pi pi-arrow-left" class="go-back" (onClick)="goBack()"></p-button>
         <div class="book-nav">
             @if (prevBook(); as prev) {
-                <p-button icon="pi pi-chevron-left" [label]="prev.title" [text]="true" (onClick)="navigateToBook(prev.title)" class="book-nav-btn"></p-button>
+                <p-button icon="pi pi-chevron-left" [label]="i18n.bookTitle(prev.title)" [text]="true" (onClick)="navigateToBook(prev.title)" class="book-nav-btn"></p-button>
             }
             @if (nextBook(); as next) {
-                <p-button iconPos="right" icon="pi pi-chevron-right" [label]="next.title" [text]="true" (onClick)="navigateToBook(next.title)" class="book-nav-btn"></p-button>
+                <p-button iconPos="right" icon="pi pi-chevron-right" [label]="i18n.bookTitle(next.title)" [text]="true" (onClick)="navigateToBook(next.title)" class="book-nav-btn"></p-button>
             }
         </div>
     </div>
@@ -17,7 +17,7 @@
                 <i class="pi" [ngClass]="progress() === 100 ? 'pi-check-circle' : 'pi-book'"></i>
             </div>
             <div class="hero-info">
-                <h1 class="hero-title">{{ book()?.title }}</h1>
+                <h1 class="hero-title">{{ i18n.bookTitle(book()?.title ?? '') }}</h1>
                 <span class="hero-subtitle">{{ totalCount() }} {{ i18n.t('common.chapters').toLowerCase() }}</span>
             </div>
         </div>

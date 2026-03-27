@@ -39,14 +39,19 @@
 
         <div class="language-section" [ngClass]="{'mt-3': !utils.isMobile(), 'mt-4': utils.isMobile()}">
             <label class="palette-label">{{ i18n.t('settings.language') }}</label>
-            <p-selectbutton
-                [options]="i18n.languages"
-                optionLabel="label"
-                optionValue="id"
-                [ngModel]="i18n.lang()"
-                (ngModelChange)="setLanguage($event)"
-                class="lang-selector">
-            </p-selectbutton>
+            <div class="lang-grid">
+                @for (lang of i18n.languages; track lang.id) {
+                    <button
+                        class="lang-btn"
+                        [class.active]="i18n.lang() === lang.id"
+                        (click)="setLanguage(lang.id)"
+                        [attr.aria-label]="lang.label"
+                        [attr.aria-pressed]="i18n.lang() === lang.id">
+                        <span class="lang-flag">{{ lang.id === 'ro' ? '🇷🇴' : '🇬🇧' }}</span>
+                        <span class="lang-name">{{ lang.label }}</span>
+                    </button>
+                }
+            </div>
         </div>
 
         <div class="mt-6">

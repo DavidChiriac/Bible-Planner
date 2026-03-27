@@ -1,7 +1,7 @@
 import { effect, inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { signal } from '@angular/core';
-import { I18N, LANG_LABELS, Lang } from '../i18n/translations';
+import { I18N, LANG_LABELS, Lang, BOOK_NAMES_EN_SORTED } from '../i18n/translations';
 import { TABS } from '../../pages/home-page/home-page';
 
 const STORAGE_KEY = 'bible-planner-lang';
@@ -60,6 +60,27 @@ export class I18nService {
       'mulțumire': this.t('tags.multumire'),
     };
     return map[value] ?? value;
+  }
+
+  /** Translates a single Romanian Bible book title to the active language. */
+  bookTitle(ro: string): string {
+    if (this.lang() === 'ro' || !ro) return ro;
+    return BOOK_NAMES_EN_SORTED.find(([k]) => k === ro)?.[1] ?? ro;
+  }
+
+  /**
+   * Translates a plan label string (e.g. "Geneza 1-11, Iov 1-20") by
+   * replacing Romanian book names with their English equivalents.
+   * The chapter numbers and separators are left unchanged.
+   * Only runs when the active language is English.
+   */
+  translateLabel(label: string): string {
+    if (this.lang() === 'ro' || !label) return label;
+    let result = label;
+    for (const [ro, en] of BOOK_NAMES_EN_SORTED) {
+      result = result.split(ro).join(en);
+    }
+    return result;
   }
 
   private loadSaved(): Lang {

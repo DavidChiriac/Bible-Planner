@@ -12,10 +12,9 @@ import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { DatePickerModule } from 'primeng/datepicker';
 import { NgClass } from '@angular/common';
-import { SelectButtonModule } from 'primeng/selectbutton';
 @Component({
   selector: 'app-settings',
-  imports: [ButtonModule, InputTextModule, FloatLabelModule, FormsModule, DialogModule, DatePickerModule, NgClass, SelectButtonModule],
+  imports: [ButtonModule, InputTextModule, FloatLabelModule, FormsModule, DialogModule, DatePickerModule, NgClass],
   templateUrl: './settings.html',
   styleUrl: './settings.scss',
 })

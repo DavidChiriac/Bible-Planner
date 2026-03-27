@@ -69,7 +69,7 @@
                                     </span>
                                 </div>
                                 <span class="week-label w-6 text-right flex align-items-center justify-content-end">
-                                    {{ tab.label }}
+                                    {{ i18n.translateLabel(tab.label) }}
                                 </span>
                             </div>
                         </p-accordion-header>
@@ -82,7 +82,7 @@
                                         (click)="toggleDay($event, day.chapters)" onkeydown="">
                                         <span class="flex gap-2 align-items-center" [ngClass]="{'read': utils.isEntireDayRead(day.chapters)}">
                                             <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)" (click)="toggleDay($event, day.chapters)" onkeydown=""></p-checkbox>
-                                            <h3 class="m-0">{{ day.label }}</h3>
+                                            <h3 class="m-0">{{ i18n.translateLabel(day.label) }}</h3>
                                         </span>
                                         <span class="day-actions">
                                             <i class="pi pi-book day-action-btn" [pTooltip]="i18n.t('common.readAction')" tooltipPosition="left" (click)="$event.stopPropagation(); readChapter(day.chapters[0])" onkeydown=""></i>

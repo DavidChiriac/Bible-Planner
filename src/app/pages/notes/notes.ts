@@ -48,7 +48,15 @@ export class Notes {
   // UI filters
   searchTerm = signal(this.sessionStorageService.retrieve('notes_searchTerm') ?? '');
   draftSearchTerm = signal(this.sessionStorageService.retrieve('notes_searchTerm') ?? '');
+
+  /** Romanian titles used as internal filter values (match Firebase chapter keys). */
   books = BIBLE.map((b) => b.title);
+
+  /** Translated options for display in multiselects. Value stays Romanian. */
+  booksOptions = computed(() => BIBLE.map(b => ({
+    label: this.i18n.bookTitle(b.title),
+    value: b.title,
+  })));
 
   selectedBooks = signal<string[]>(this.sessionStorageService.retrieve('notes_selectedBooks') ?? []);
   selectedChapters = signal<string[]>(this.sessionStorageService.retrieve('notes_selectedChapters') ?? []);

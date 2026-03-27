@@ -21,7 +21,7 @@
                 <div
                     class="book-cell"
                     [ngClass]="getProgressClass(book)"
-                    [pTooltip]="book.title + ' (' + book.read + '/' + book.total + ')'"
+                    [pTooltip]="i18n.bookTitle(book.title) + ' (' + book.read + '/' + book.total + ')'"
                     tooltipPosition="top"
                     (click)="navigateToBook(book.title)"
                     onkeydown="">
@@ -39,7 +39,7 @@
                 <div
                     class="book-cell"
                     [ngClass]="getProgressClass(book)"
-                    [pTooltip]="book.title + ' (' + book.read + '/' + book.total + ')'"
+                    [pTooltip]="i18n.bookTitle(book.title) + ' (' + book.read + '/' + book.total + ')'"
                     tooltipPosition="top"
                     (click)="navigateToBook(book.title)"
                     onkeydown="">

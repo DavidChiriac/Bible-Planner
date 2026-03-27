@@ -21,7 +21,7 @@
             @for (book of otBooks(); track book.title; let i = $index) {
               <div class="book-item" [ngClass]="{'book-item--selected': book.selected}"
                 (click)="toggleBook('ot', i)" (keydown.enter)="toggleBook('ot', i)">
-                <span class="book-title">{{ book.title }}</span>
+                <span class="book-title">{{ i18n.bookTitle(book.title) }}</span>
                 <span class="book-chapters">{{ book.chapters }} {{ i18n.t('planBuilder.chaptersAbbr') }} · {{ book.verses }} {{ i18n.t('planBuilder.versesAbbr') }}</span>
               </div>
             }
@@ -42,7 +42,7 @@
             @for (book of ntBooks(); track book.title; let i = $index) {
               <div class="book-item" [ngClass]="{'book-item--selected': book.selected}"
                 (click)="toggleBook('nt', i)" (keydown.enter)="toggleBook('nt', i)">
-                <span class="book-title">{{ book.title }}</span>
+                <span class="book-title">{{ i18n.bookTitle(book.title) }}</span>
                 <span class="book-chapters">{{ book.chapters }} {{ i18n.t('planBuilder.chaptersAbbr') }} · {{ book.verses }} {{ i18n.t('planBuilder.versesAbbr') }}</span>
               </div>
             }
@@ -99,19 +99,19 @@
     <!-- Preview -->
     @if (showPreview() && canGenerate()) {
       <div class="preview-card">
-        <h3 class="m-0 mb-3">Previzualizare plan ({{ preview().length }} săptămâni)</h3>
+        <h3 class="m-0 mb-3">{{ i18n.t('planBuilder.previewTitle') }} ({{ preview().length }} {{ i18n.t('planBuilder.weeks') }})</h3>
         @for (week of preview(); track week.week) {
           <div class="preview-week">
             <div class="preview-week-header">
-              <strong>Săptămâna {{ week.week }}</strong>
-              <span class="preview-week-label">{{ week.label }}</span>
+              <strong>{{ i18n.t('home.weekFull', { n: week.week }) }}</strong>
+              <span class="preview-week-label">{{ i18n.translateLabel(week.label) }}</span>
             </div>
             <div class="preview-days">
               @for (day of week.days; track day.label; let d = $index) {
                 <div class="preview-day">
-                  <span class="preview-day-num">Ziua {{ (week.week - 1) * 7 + d + 1 }}</span>
-                  <span class="preview-day-label">{{ day.label }}</span>
-                  <span class="preview-day-verses">{{ dayVerses(day.chapters) }} vers.</span>
+                  <span class="preview-day-num">{{ i18n.t('planBuilder.day') }} {{ (week.week - 1) * 7 + d + 1 }}</span>
+                  <span class="preview-day-label">{{ i18n.translateLabel(day.label) }}</span>
+                  <span class="preview-day-verses">{{ dayVerses(day.chapters) }} {{ i18n.t('planBuilder.versesShort') }}</span>
                 </div>
               }
             </div>
