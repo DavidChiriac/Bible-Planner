@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { Button } from "primeng/button";
 import { ActivatedRoute, Router } from '@angular/router';
+import { slugify } from '../../../shared/utils/slugify';
 import { FirebaseService } from '../../../shared/services/firebase.service';
 import { ProgressBar } from 'primeng/progressbar';
 import { Tooltip } from 'primeng/tooltip';
@@ -25,7 +26,7 @@ export class BookChapters {
   id = signal('');
 
   bookIndex = computed(() =>
-    BOOKS.findIndex(b => b.title.toLocaleLowerCase().replaceAll(' ', '-') === this.id())
+    BOOKS.findIndex(b => slugify(b.title) === this.id())
   );
 
   book = computed(() => {
@@ -70,7 +71,7 @@ export class BookChapters {
   }
 
   navigateToBook(title: string) {
-    this.router.navigate([`/books/${title.toLocaleLowerCase().replaceAll(/\s/g, '-')}`]);
+    this.router.navigate([`/books/${slugify(title)}`]);
   }
 
   viewChapterNotes(chapter: string) {
