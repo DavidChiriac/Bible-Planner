@@ -15,6 +15,28 @@
             <input id="number-of-months" type="number" min="1" pInputText [ngModel]="utils.months()" (ngModelChange)="setMonths($event)"
                 autocomplete="off" />
         </div>
+
+        <div class="palette-section" [ngClass]="{'mt-3': !utils.isMobile(), 'mt-4': utils.isMobile()}">
+            <label class="palette-label">Temă de culori:</label>
+            <div class="palette-grid">
+                @for (palette of theme.palettes; track palette.id) {
+                    <button
+                        class="palette-swatch"
+                        [class.active]="theme.selectedPaletteId() === palette.id"
+                        (click)="theme.setPalette(palette.id)"
+                        [attr.aria-label]="palette.label"
+                        [attr.aria-pressed]="theme.selectedPaletteId() === palette.id">
+                        <span class="swatch-bg" [style.background]="palette.bg">
+                            <span class="swatch-card" [style.background]="palette.card">
+                                <span class="swatch-accent" [style.background]="palette.accent"></span>
+                            </span>
+                        </span>
+                        <span class="swatch-name">{{ palette.label }}</span>
+                    </button>
+                }
+            </div>
+        </div>
+
         <div class="mt-6">
             <p-button (onClick)="resetProgress()" class="reset-progress">Reset Progress</p-button>
         </div>

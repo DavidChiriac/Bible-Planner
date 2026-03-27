@@ -90,22 +90,6 @@
   }
 }
 
-.sticky-bottom-right {
-  position: fixed;
-  right: 1.5rem;
-  z-index: 1000;
-
-  border-radius: 2rem;
-
-  &.go-to-top {
-    bottom: 5rem;
-  }
-
-  &.continue-reading {
-     bottom: 1.5rem;
-  }
-}
-
 .status {
   span {
     text-align: center;

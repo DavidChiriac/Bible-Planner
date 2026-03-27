@@ -23,7 +23,8 @@ body {
     overflow: auto;
 }
 
-:root {
+:root,
+[data-palette="pergament"] {
   --shadow-soft: 0 4px 12px rgba(74, 59, 42, 0.15);
 
   --terracotta: #A46447;
@@ -39,6 +40,78 @@ body {
   --beige-bg: #F2E9D8;
   --beige-card: #E5D7BF;
   --beige-light: #FAF6EE;
+}
+
+[data-palette="noapte"] {
+  --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+  --terracotta: #e07b5a;
+  --toasted-almond: #b0a0c8;
+  --deep-umber: #f0ecf8;
+  --muted-sage: #c0b4e8;
+  --linen-white: #d8d0f0;
+
+  --brown-dark: #f0ecf8;
+  --brown: #d4ccee;
+  --brown-light: #7a6e9e;
+
+  --beige-bg: #1C1C2E;
+  --beige-card: #252540;
+  --beige-light: #2e2e50;
+}
+
+[data-palette="ocean"] {
+  --shadow-soft: 0 4px 12px rgba(20, 60, 90, 0.15);
+
+  --terracotta: #2471A3;
+  --toasted-almond: #85C1E9;
+  --deep-umber: #1A3A4A;
+  --muted-sage: #5DADE2;
+  --linen-white: #D0E8F5;
+
+  --brown-dark: #0E2535;
+  --brown: #1F618D;
+  --brown-light: #A9CCE3;
+
+  --beige-bg: #EBF4F8;
+  --beige-card: #D6EAF2;
+  --beige-light: #F5FAFD;
+}
+
+[data-palette="padure"] {
+  --shadow-soft: 0 4px 12px rgba(20, 60, 30, 0.15);
+
+  --terracotta: #27AE60;
+  --toasted-almond: #82C89C;
+  --deep-umber: #1E3A2F;
+  --muted-sage: #52BE80;
+  --linen-white: #C8E6D0;
+
+  --brown-dark: #0F2218;
+  --brown: #1D6A48;
+  --brown-light: #A9DFBF;
+
+  --beige-bg: #EEF4EC;
+  --beige-card: #DCE9D8;
+  --beige-light: #F6F9F5;
+}
+
+[data-palette="lavanda"] {
+  --shadow-soft: 0 4px 12px rgba(80, 30, 100, 0.15);
+
+  --terracotta: #8E44AD;
+  --toasted-almond: #C39BD3;
+  --deep-umber: #3A1E5A;
+  --muted-sage: #A569D6;
+  --linen-white: #E8D5F0;
+
+  --brown-dark: #200B35;
+  --brown: #6C3483;
+  --brown-light: #D2B4DE;
+
+  --beige-bg: #F4EEF9;
+  --beige-card: #E8D8F2;
+  --beige-light: #FAF6FD;
 }
 
 // Quill editor theme overrides

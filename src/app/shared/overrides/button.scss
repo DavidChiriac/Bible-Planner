@@ -97,8 +97,23 @@
   white-space: nowrap;
 }
 
-.go-to-top .p-button {
-  background-color: var(--brown) !important;
+.sticky-bottom-right {
+  position: fixed;
+  right: 1.5rem;
+  z-index: 1000;
+  border-radius: 2rem;
+
+  &.scroll-to-top {
+    bottom: 5rem;
+  }
+
+  &.continue-reading-wrapper {
+    bottom: 1.5rem;
+  }
+}
+
+.scroll-to-top .p-button {
+  background-color: var(--terracotta) !important;
   border: none;
   border-radius: 50%;
   width: 48px;
@@ -110,7 +125,7 @@
   cursor: pointer;
 
   .p-button-icon {
-    color: var(--beige-light);
+    color: white;
   }
 
   &:hover {

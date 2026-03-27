@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FirebaseService } from '../../shared/services/firebase.service';
 import { Utils } from '../../shared/services/utils.service';
+import { ThemeService } from '../../shared/services/theme.service';
 import { TABS } from '../home-page/home-page';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -17,6 +18,7 @@ import { NgClass } from '@angular/common';
 })
 export class Settings {
   utils = inject(Utils);
+  theme = inject(ThemeService);
   private readonly firebase = inject(FirebaseService);
 
   resetConfirmationVisible = false;

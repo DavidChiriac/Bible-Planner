@@ -12,6 +12,17 @@
     background: transparent;
   }
 
+  .p-menubar-item:not(.p-menubar-item-link-active) .p-menubar-item-content:hover,
+  .p-menubar-item:not(.p-menubar-item-link-active) .p-menubar-item-link:hover {
+    background: var(--brown-light) !important;
+    border-radius: 6px;
+
+    .p-menubar-item-label,
+    .p-menubar-item-icon {
+      color: var(--beige-light) !important;
+    }
+  }
+
   .p-menubar-item .p-menubar-item-link:not(.p-menubar-item-link-active) {
     .p-menubar-item-label {
       color: var(--beige-light);

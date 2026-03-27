@@ -97,16 +97,16 @@
             }
         </p-accordion>
     </div>
-    <p-button
-        icon="pi pi-arrow-up"
-        class="go-to-top sticky-bottom-right"
-        (onClick)="scrollToTop()">
-    </p-button>
-    <p-button
-        icon="pi pi-angle-down"
-        class="continue-reading sticky-bottom-right"
-        [label]="'Continuă citirea'"
-        [disabled]="bookmarkedWeeksForPlan().length === 0"
-        (onClick)="goToNextTargetWeek()">
-    </p-button>
+    <div class="scroll-to-top sticky-bottom-right">
+        <p-button icon="pi pi-arrow-up" (onClick)="scrollToTop()"></p-button>
+    </div>
+    <div class="continue-reading-wrapper sticky-bottom-right">
+        <p-button
+            icon="pi pi-angle-down"
+            class="continue-reading"
+            [label]="'Continuă citirea'"
+            [disabled]="bookmarkedWeeksForPlan().length === 0"
+            (onClick)="goToNextTargetWeek()">
+        </p-button>
+    </div>
 </div>

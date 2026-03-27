@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, inject, provideAppInitializer, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 
@@ -12,10 +12,12 @@ import { provideNgxWebstorage, withNgxWebstorageConfig, withSessionStorage } fro
 
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
+import { ThemeService } from './shared/services/theme.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
+    provideAppInitializer(() => { inject(ThemeService); }),
     provideRouter(routes, ...(environment.production ? [withHashLocation()] : [])),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideDatabase(() => getDatabase(getApp())),

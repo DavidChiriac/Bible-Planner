@@ -3,6 +3,78 @@
     padding-inline: 1rem;
 }
 
+.palette-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.palette-label {
+    font-weight: 600;
+    color: var(--deep-umber);
+    font-size: 1rem;
+}
+
+.palette-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.palette-swatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    background: none;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease, transform 0.15s ease;
+
+    &:hover {
+        transform: scale(1.06);
+    }
+
+    &.active {
+        border-color: var(--terracotta);
+    }
+
+    .swatch-bg {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 56px;
+        height: 56px;
+        border-radius: 10px;
+        box-shadow: var(--shadow-soft);
+    }
+
+    .swatch-card {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+    }
+
+    .swatch-accent {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+    }
+
+    .swatch-name {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--deep-umber);
+    }
+}
+
 .delete-plan ::ng-deep .p-button {
     background: transparent;
     border: 1.5px solid var(--terracotta);
