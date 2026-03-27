@@ -18,7 +18,7 @@
     "release": "standard-version --commit-all",
     "release:minor": "standard-version --commit-all --release-as minor",
     "release:major": "standard-version --commit-all --release-as major",
-    "ship": "npm run commit && npm run release && git push --follow-tags",
+    "ship": "npm run commit && npm run release && node scripts/create-release-branch.js && git push --follow-tags origin HEAD",
     "prepare": "husky"
   },
   "config": {
