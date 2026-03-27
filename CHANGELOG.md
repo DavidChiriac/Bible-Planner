@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/davidchiriac/Bible-Planner/compare/v2.1.0...v2.2.0) (2026-03-27)
+
+
+### Features
+
+* **component:** add i18n ([94b68fb](https://github.com/davidchiriac/Bible-Planner/commit/94b68fbf6b25fd31a80f80ef1697a70200579593))
+
 ## [2.1.0](https://github.com/davidchiriac/Bible-Planner/compare/v2.0.7...v2.1.0) (2026-03-27)
 
 
