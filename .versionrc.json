@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "postbump": "node scripts/sync-android-version.js && git add android/app/build.gradle"
+  }
+}
