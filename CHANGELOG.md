@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/davidchiriac/Bible-Planner/compare/v2.0.7...v2.1.0) (2026-03-27)
+
+
+### Features
+
+* **component:** add color themes ([592d9d5](https://github.com/davidchiriac/Bible-Planner/commit/592d9d5de94c0836e523312ece52cc91cfab2899))
+
 ### [2.0.7](https://github.com/davidchiriac/Bible-Planner/compare/v2.0.6...v2.0.7) (2026-03-27)
 
 ### [2.0.6](https://github.com/davidchiriac/Bible-Planner/compare/v2.0.5...v2.0.6) (2026-03-27)
