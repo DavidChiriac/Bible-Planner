@@ -3,7 +3,7 @@
 
     <div class="header">
       <p-button icon="pi pi-arrow-left" class="go-back" (onClick)="goBack()"></p-button>
-      <h2 class="m-0">Creează un plan personalizat</h2>
+      <h2 class="m-0">{{ i18n.t('planBuilder.title') }}</h2>
     </div>
 
     <!-- OT / NT Sections -->
@@ -14,7 +14,7 @@
             <p-checkbox [binary]="true" [ngModel]="allOtSelected()"
               [indeterminate]="someOtSelected()"></p-checkbox>
           </div>
-          <h3 class="m-0">Vechiul Testament <span class="book-count">(39 cărți)</span></h3>
+          <h3 class="m-0">{{ i18n.t('planBuilder.oldTestament') }} <span class="book-count">{{ i18n.t('planBuilder.booksCount39') }}</span></h3>
         </p-accordion-header>
         <p-accordion-content>
           <div class="book-grid">
@@ -22,7 +22,7 @@
               <div class="book-item" [ngClass]="{'book-item--selected': book.selected}"
                 (click)="toggleBook('ot', i)" (keydown.enter)="toggleBook('ot', i)">
                 <span class="book-title">{{ book.title }}</span>
-                <span class="book-chapters">{{ book.chapters }} cap. · {{ book.verses }} vers.</span>
+                <span class="book-chapters">{{ book.chapters }} {{ i18n.t('planBuilder.chaptersAbbr') }} · {{ book.verses }} {{ i18n.t('planBuilder.versesAbbr') }}</span>
               </div>
             }
           </div>
@@ -35,7 +35,7 @@
             <p-checkbox [binary]="true" [ngModel]="allNtSelected()"
               [indeterminate]="someNtSelected()"></p-checkbox>
           </div>
-          <h3 class="m-0">Noul Testament <span class="book-count">(27 cărți)</span></h3>
+          <h3 class="m-0">{{ i18n.t('planBuilder.newTestament') }} <span class="book-count">{{ i18n.t('planBuilder.booksCount27') }}</span></h3>
         </p-accordion-header>
         <p-accordion-content>
           <div class="book-grid">
@@ -43,7 +43,7 @@
               <div class="book-item" [ngClass]="{'book-item--selected': book.selected}"
                 (click)="toggleBook('nt', i)" (keydown.enter)="toggleBook('nt', i)">
                 <span class="book-title">{{ book.title }}</span>
-                <span class="book-chapters">{{ book.chapters }} cap. · {{ book.verses }} vers.</span>
+                <span class="book-chapters">{{ book.chapters }} {{ i18n.t('planBuilder.chaptersAbbr') }} · {{ book.verses }} {{ i18n.t('planBuilder.versesAbbr') }}</span>
               </div>
             }
           </div>
@@ -54,20 +54,20 @@
     <!-- Config -->
     <div class="config-card">
       <div class="config-row">
-        <label for="plan-start-date">Data de început:</label>
+        <label for="plan-start-date">{{ i18n.t('planBuilder.startDate') }}</label>
         <p-datepicker [(ngModel)]="planStartDate" dateFormat="dd/mm/yy"
           placeholder="dd/mm/yyyy" class="date-input"></p-datepicker>
       </div>
 
       <div class="config-row mt-3">
-        <label for="plan-days">Număr de zile:</label>
+        <label for="plan-days">{{ i18n.t('planBuilder.numDays') }}</label>
         <input id="plan-days" type="number" min="1" [max]="totalChapters()"
           pInputText [ngModel]="days()" (ngModelChange)="days.set($event)"
           autocomplete="off" class="days-input" />
       </div>
 
       <div class="config-row mt-3">
-        <label for="plan-places">Locuri de citit pe zi:</label>
+        <label for="plan-places">{{ i18n.t('planBuilder.readingSpots') }}</label>
         <input id="plan-places" type="number" min="1" max="10"
           pInputText [ngModel]="places()" (ngModelChange)="places.set($event)"
           autocomplete="off" class="days-input" />
@@ -75,23 +75,23 @@
 
       @if (selectedBooks().length > 0) {
         <div class="summary">
-          <span><strong>{{ selectedBooks().length }}</strong> {{ selectedBooks().length === 1 ? 'carte selectată' : 'cărți selectate' }}</span>
+          <span><strong>{{ selectedBooks().length }}</strong> {{ selectedBooks().length === 1 ? i18n.t('planBuilder.bookSelectedSingular') : i18n.t('planBuilder.bookSelectedPlural') }}</span>
           <span>·</span>
-          <span><strong>{{ totalChapters() }}</strong> capitole</span>
+          <span><strong>{{ totalChapters() }}</strong> {{ i18n.t('planBuilder.chapters') }}</span>
           <span>·</span>
-          <span><strong>{{ totalVerses() }}</strong> versete</span>
+          <span><strong>{{ totalVerses() }}</strong> {{ i18n.t('planBuilder.verses') }}</span>
           <span>·</span>
-          <span>~<strong>{{ versesPerDay() }}</strong> vers./zi</span>
+          <span>~<strong>{{ versesPerDay() }}</strong> {{ i18n.t('planBuilder.versesPerDay') }}</span>
         </div>
       }
     </div>
 
     <!-- Actions -->
     <div class="actions">
-      <p-button label="Previzualizare" icon="pi pi-eye"
+      <p-button [label]="i18n.t('planBuilder.preview')" icon="pi pi-eye"
         [outlined]="true" [disabled]="!canGenerate()"
         (onClick)="togglePreview()" class="preview-btn"></p-button>
-      <p-button label="Generează planul" icon="pi pi-check"
+      <p-button [label]="i18n.t('planBuilder.generate')" icon="pi pi-check"
         [disabled]="!canGenerate()"
         (onClick)="generate()" class="generate-btn"></p-button>
     </div>

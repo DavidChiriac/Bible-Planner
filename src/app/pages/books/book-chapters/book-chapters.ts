@@ -10,6 +10,7 @@ import { slugify } from '../../../shared/utils/slugify';
 import { FirebaseService } from '../../../shared/services/firebase.service';
 import { ProgressBar } from 'primeng/progressbar';
 import { Tooltip } from 'primeng/tooltip';
+import { I18nService } from '../../../shared/services/i18n.service';
 
 @Component({
   selector: 'app-book-chapters',
@@ -22,6 +23,7 @@ export class BookChapters {
   private readonly route = inject(ActivatedRoute);
   firebase = inject(FirebaseService);
   utils = inject(Utils);
+  i18n = inject(I18nService);
 
   id = signal('');
 

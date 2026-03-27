@@ -13,7 +13,7 @@
                 panelStyleClass="translation-panel"
                 [filter]="true"
                 filterBy="name,id"
-                filterPlaceholder="Caută traducere..."
+                [filterPlaceholder]="i18n.t('reader.searchTranslation')"
                 class="translation-select">
                 <ng-template #selectedItem let-item>
                     <span class="translation-selected">{{ item?.id === 'local-cornilescu' ? 'VDC' : item?.id }}</span>
@@ -48,9 +48,9 @@
     } @else if (error()) {
         <div class="reader-error" [ngClass]="utils.isMobile() ? 'w-11' : 'w-8'">
             <i class="pi pi-exclamation-circle"></i>
-            <p>Nu s-a putut încărca textul.</p>
-            <p class="error-hint">Verifică conexiunea la internet și încearcă din nou.</p>
-            <p-button label="Reîncearcă" icon="pi pi-refresh" class="retry-btn" (onClick)="navigateTo(chapterLabel())"></p-button>
+            <p>{{ i18n.t('reader.loadError') }}</p>
+            <p class="error-hint">{{ i18n.t('reader.loadErrorHint') }}</p>
+            <p-button [label]="i18n.t('reader.retry')" icon="pi pi-refresh" class="retry-btn" (onClick)="navigateTo(chapterLabel())"></p-button>
         </div>
     } @else {
         <div class="reader-content" [ngClass]="utils.isMobile() ? 'w-11' : 'w-8'">
@@ -73,11 +73,11 @@
                     <span class="mark-read-icon">
                         <i [class]="isRead() ? 'pi pi-check-circle' : 'pi pi-circle'"></i>
                     </span>
-                    <span class="mark-read-label">{{ isRead() ? 'Marcat ca citit' : 'Marchează ca citit' }}</span>
+                    <span class="mark-read-label">{{ isRead() ? i18n.t('reader.markedRead') : i18n.t('reader.markRead') }}</span>
                 </button>
-                <button class="notes-btn" (click)="goToNotes()">
+                    <button class="notes-btn" (click)="goToNotes()">
                     <i class="pi pi-comment"></i>
-                    <span>Notițe</span>
+                    <span>{{ i18n.t('common.notes') }}</span>
                 </button>
             </div>
 
@@ -87,7 +87,7 @@
                     <button class="nav-btn nav-prev" (click)="navigateTo(prev)">
                         <i class="pi pi-arrow-left"></i>
                         <div class="nav-btn-text">
-                            <span class="nav-btn-hint">Capitolul anterior</span>
+                            <span class="nav-btn-hint">{{ i18n.t('reader.prevChapter') }}</span>
                             <span class="nav-btn-label">{{ prev }}</span>
                         </div>
                     </button>
@@ -97,7 +97,7 @@
                 @if (nextChapter(); as next) {
                     <button class="nav-btn nav-next" (click)="navigateTo(next)">
                         <div class="nav-btn-text">
-                            <span class="nav-btn-hint">Capitolul următor</span>
+                            <span class="nav-btn-hint">{{ i18n.t('reader.nextChapter') }}</span>
                             <span class="nav-btn-label">{{ next }}</span>
                         </div>
                         <i class="pi pi-arrow-right"></i>

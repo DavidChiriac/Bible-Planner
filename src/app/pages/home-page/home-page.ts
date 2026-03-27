@@ -12,6 +12,7 @@ import { TagModule } from 'primeng/tag';
 import { Router, RouterLink } from '@angular/router';
 import { ProgressBar } from 'primeng/progressbar';
 import { TooltipModule } from 'primeng/tooltip';
+import { I18nService } from '../../shared/services/i18n.service';
 
 export enum TABS {
   CRONOLOGIC = 'Cronologic',
@@ -38,6 +39,7 @@ export enum TABS {
 })
 export class HomePage {
   utils = inject(Utils);
+  i18n = inject(I18nService);
   private readonly firebase = inject(FirebaseService);
   private readonly router = inject(Router);
 

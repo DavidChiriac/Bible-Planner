@@ -11,6 +11,7 @@ import { BIBLE_BOOKS, FirebaseService } from '../../shared/services/firebase.ser
 import { getVerseCount, OT_END_INDEX, PlanGeneratorService } from '../../shared/services/plan-generator.service';
 import { Utils } from '../../shared/services/utils.service';
 import { TABS } from '../home-page/home-page';
+import { I18nService } from '../../shared/services/i18n.service';
 
 interface BookOption {
   title: string;
@@ -28,6 +29,7 @@ interface BookOption {
 })
 export class PlanBuilder {
   utils = inject(Utils);
+  i18n = inject(I18nService);
   private readonly router = inject(Router);
   private readonly firebase = inject(FirebaseService);
   private readonly planGenerator = inject(PlanGeneratorService);

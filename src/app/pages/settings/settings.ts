@@ -2,6 +2,8 @@ import { Component, inject } from '@angular/core';
 import { FirebaseService } from '../../shared/services/firebase.service';
 import { Utils } from '../../shared/services/utils.service';
 import { ThemeService } from '../../shared/services/theme.service';
+import { I18nService } from '../../shared/services/i18n.service';
+import { Lang } from '../../shared/i18n/translations';
 import { TABS } from '../home-page/home-page';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -10,16 +12,22 @@ import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { DatePickerModule } from 'primeng/datepicker';
 import { NgClass } from '@angular/common';
+import { SelectButtonModule } from 'primeng/selectbutton';
 @Component({
   selector: 'app-settings',
-  imports: [ButtonModule, InputTextModule, FloatLabelModule, FormsModule, DialogModule, DatePickerModule, NgClass],
+  imports: [ButtonModule, InputTextModule, FloatLabelModule, FormsModule, DialogModule, DatePickerModule, NgClass, SelectButtonModule],
   templateUrl: './settings.html',
   styleUrl: './settings.scss',
 })
 export class Settings {
   utils = inject(Utils);
   theme = inject(ThemeService);
+  i18n = inject(I18nService);
   private readonly firebase = inject(FirebaseService);
+
+  setLanguage(lang: Lang) {
+    this.i18n.setLang(lang);
+  }
 
   resetConfirmationVisible = false;
   deletePlanVisible = false;

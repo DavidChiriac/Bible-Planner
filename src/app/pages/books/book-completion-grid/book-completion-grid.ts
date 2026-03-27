@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { getVerseCount } from '../../../shared/services/plan-generator.service';
 import { BOOK_ABBREVIATIONS } from '../../../shared/constants/book-abbreviations';
 import { slugify } from '../../../shared/utils/slugify';
+import { I18nService } from '../../../shared/services/i18n.service';
 
 interface BookProgress {
   title: string;
@@ -23,6 +24,7 @@ interface BookProgress {
 })
 export class BookCompletionGrid {
   utils = inject(Utils);
+  i18n = inject(I18nService);
   private readonly router = inject(Router);
 
   oldTestament = computed<BookProgress[]>(() => this.booksProgress().slice(0, 39));

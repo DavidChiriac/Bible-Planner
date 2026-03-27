@@ -17,6 +17,7 @@ import { Note } from '../../shared/components/note/note';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { NotesService } from './notes.service';
 import { SessionStorageService } from 'ngx-webstorage';
+import { I18nService } from '../../shared/services/i18n.service';
 
 type SortBy = 'createdDate' | 'chapter';
 type SortDir = 'asc' | 'desc';
@@ -40,6 +41,7 @@ type SortDir = 'asc' | 'desc';
 })
 export class Notes {
   utils = inject(Utils);
+  i18n = inject(I18nService);
   private readonly notesService = inject(NotesService);
   private readonly sessionStorageService = inject(SessionStorageService);
 
@@ -52,13 +54,13 @@ export class Notes {
   selectedChapters = signal<string[]>(this.sessionStorageService.retrieve('notes_selectedChapters') ?? []);
 
   // Sorting
-  sortOptions = [
-    { label: 'Data adăugării (desc)', value: 'createdDate_desc' },
-    { label: 'Data adăugării (asc)', value: 'createdDate_asc' },
-    { label: 'Capitol (asc)', value: 'chapter_asc' },
-    { label: 'Capitol (desc)', value: 'chapter_desc' },
-  ]
-  sort = signal<string>(this.sessionStorageService.retrieve('notes_sort') ?? this.sortOptions[0].value);
+  sortOptions = computed(() => [
+    { label: this.i18n.t('notes.sortDateDesc'), value: 'createdDate_desc' },
+    { label: this.i18n.t('notes.sortDateAsc'), value: 'createdDate_asc' },
+    { label: this.i18n.t('notes.sortChapterAsc'), value: 'chapter_asc' },
+    { label: this.i18n.t('notes.sortChapterDesc'), value: 'chapter_desc' },
+  ]);
+  sort = signal<string>(this.sessionStorageService.retrieve('notes_sort') ?? 'createdDate_desc');
   sortBy = computed<SortBy>(() => this.sort().split('_')[0] as SortBy);
   sortDir = computed<SortDir>(() => this.sort().split('_')[1] as SortDir);
 

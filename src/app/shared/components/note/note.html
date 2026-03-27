@@ -39,23 +39,23 @@
 </div>
 
 <p-dialog
-    header="Șterge Notița"
+    [header]="i18n.t('note.deleteDialogHeader')"
     [modal]="true"
     [(visible)]="noteDeleteDialogVisible"
     [style]="{ width: '25rem' }">
-    <span class="p-text-secondary block mb-8">Ești sigur că vrei să ștergi această notă?</span>
+    <span class="p-text-secondary block mb-8">{{ i18n.t('note.deleteConfirm') }}</span>
     <div class="flex justify-content-center gap-2">
         <p-button
-            label="Confirmă"
+            [label]="i18n.t('common.confirm')"
             class="confirm-reset-progress"
             (onClick)="confirmDelete()"></p-button>
         <p-button
-            label="Anulează"
+            [label]="i18n.t('common.cancel')"
             class="cancel-reset-progress"
             (onClick)="noteDeleteConfirmation.set(null); noteDeleteDialogVisible.set(false)"></p-button>
     </div>
 </p-dialog>
-<p-dialog header="Editează Notița"
+<p-dialog [header]="i18n.t('note.editDialogHeader')"
     [modal]="true"
     [(visible)]="editMode"
     [style]="{ width: utils.isMobile() ? '90%' : '50%' }"
@@ -63,7 +63,7 @@
     <div class="flex flex-column align-items-start gap-3 mb-6 mt-1">
         <quill-editor theme="snow" class="w-full note-editor" [(ngModel)]="editedText" [modules]="{toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']]}"></quill-editor>
         <div class="w-full">
-            <label for="edit-note-tags" class="block mb-1">Etichete</label>
+            <label for="edit-note-tags" class="block mb-1">{{ i18n.t('common.tags') }}</label>
             <p-multiselect
                 id="edit-note-tags"
                 [options]="tagOptions"
@@ -72,7 +72,7 @@
                 appendTo="body"
                 [filter]="false"
                 [pt]="tagsPt"
-                placeholder="Adaugă etichete"
+                [placeholder]="i18n.t('common.addTags')"
                 [panelStyleClass]="'multiselect-panel'"
                 [(ngModel)]="editedTags">
             </p-multiselect>
@@ -81,11 +81,11 @@
 
     <div class="flex justify-content-center gap-2">
         <p-button
-            label="Salvează"
+            [label]="i18n.t('note.saveBtnLabel')"
             class="confirm-reset-progress"
             (onClick)="confirmEdit()"></p-button>
         <p-button
-            label="Anulează"
+            [label]="i18n.t('common.cancel')"
             class="cancel-reset-progress"
             (onClick)="editMode.set(false); editedText.set('')"></p-button>
     </div>

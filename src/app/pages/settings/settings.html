@@ -1,14 +1,14 @@
 <div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
     <div class="w-100 mt-5 flex flex-column align-items-center gap-3 justify-content-center" [ngClass]="{'mobile': utils.isMobile()}">
         <div class="flex align-items-center" [ngClass]="{'gap-3': !utils.isMobile(), 'mt-5 flex-column': utils.isMobile()}">
-            <label for="start-date">Data de început:</label>
+            <label for="start-date">{{ i18n.t('settings.startDate') }}</label>
             @if (utils.isMobile()) {
                 <br/>
             }
             <p-datepicker [(ngModel)]="utils.startDate" dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" pInputMask="99/99/9999" (ngModelChange)="setStartDate($event)"></p-datepicker>
         </div>
         <div class="flex align-items-center" [ngClass]="{'gap-3': !utils.isMobile(), 'mt-3 flex-column': utils.isMobile()}">
-            <label for="number-of-months">Numărul de luni:</label>
+            <label for="number-of-months">{{ i18n.t('settings.months') }}</label>
             @if (utils.isMobile()) {
                 <br/>
             }
@@ -17,7 +17,7 @@
         </div>
 
         <div class="palette-section" [ngClass]="{'mt-3': !utils.isMobile(), 'mt-4': utils.isMobile()}">
-            <label class="palette-label">Temă de culori:</label>
+            <label class="palette-label">{{ i18n.t('settings.colorTheme') }}</label>
             <div class="palette-grid">
                 @for (palette of theme.palettes; track palette.id) {
                     <button
@@ -37,30 +37,42 @@
             </div>
         </div>
 
+        <div class="language-section" [ngClass]="{'mt-3': !utils.isMobile(), 'mt-4': utils.isMobile()}">
+            <label class="palette-label">{{ i18n.t('settings.language') }}</label>
+            <p-selectbutton
+                [options]="i18n.languages"
+                optionLabel="label"
+                optionValue="id"
+                [ngModel]="i18n.lang()"
+                (ngModelChange)="setLanguage($event)"
+                class="lang-selector">
+            </p-selectbutton>
+        </div>
+
         <div class="mt-6">
-            <p-button (onClick)="resetProgress()" class="reset-progress">Reset Progress</p-button>
+            <p-button (onClick)="resetProgress()" class="reset-progress">{{ i18n.t('settings.resetProgress') }}</p-button>
         </div>
         @if (utils.customPlanConfig()) {
           <div class="mt-3">
-              <p-button (onClick)="deleteCustomPlan()" class="delete-plan" severity="danger" [outlined]="true">Șterge planul personalizat</p-button>
+              <p-button (onClick)="deleteCustomPlan()" class="delete-plan" severity="danger" [outlined]="true">{{ i18n.t('settings.deleteCustomPlan') }}</p-button>
           </div>
         }
     </div>
 </div>
 
-<p-dialog header="Resetează Progresul" [modal]="true" [(visible)]="resetConfirmationVisible" [style]="{ width: '25rem' }">
-    <span class="p-text-secondary block mb-2">Ești sigur că vrei să resetezi progresul?</span>
-    <span class="p-text-secondary block mb-8 font-italic">(Asta NU va afecta notițele tale)</span>
+<p-dialog [header]="i18n.t('settings.resetDialogHeader')" [modal]="true" [(visible)]="resetConfirmationVisible" [style]="{ width: '25rem' }">
+    <span class="p-text-secondary block mb-2">{{ i18n.t('settings.resetDialogConfirm') }}</span>
+    <span class="p-text-secondary block mb-8 font-italic">{{ i18n.t('settings.resetDialogNote') }}</span>
     <div class="flex justify-content-center gap-2">
-        <p-button label="Confirmă" class="confirm-reset-progress" (onClick)="confirmResetProgress()"></p-button>
-        <p-button label="Anulează" class="cancel-reset-progress" (onClick)="resetConfirmationVisible = false"></p-button>
+        <p-button [label]="i18n.t('common.confirm')" class="confirm-reset-progress" (onClick)="confirmResetProgress()"></p-button>
+        <p-button [label]="i18n.t('common.cancel')" class="cancel-reset-progress" (onClick)="resetConfirmationVisible = false"></p-button>
     </div>
 </p-dialog>
 
-<p-dialog header="Șterge Planul Personalizat" [modal]="true" [(visible)]="deletePlanVisible" [style]="{ width: '25rem' }">
-    <span class="p-text-secondary block mb-8">Ești sigur că vrei să ștergi planul personalizat?</span>
+<p-dialog [header]="i18n.t('settings.deletePlanDialogHeader')" [modal]="true" [(visible)]="deletePlanVisible" [style]="{ width: '25rem' }">
+    <span class="p-text-secondary block mb-8">{{ i18n.t('settings.deletePlanDialogConfirm') }}</span>
     <div class="flex justify-content-center gap-2">
-        <p-button label="Confirmă" class="confirm-reset-progress" severity="danger" (onClick)="confirmDeleteCustomPlan()"></p-button>
-        <p-button label="Anulează" class="cancel-reset-progress" (onClick)="deletePlanVisible = false"></p-button>
+        <p-button [label]="i18n.t('common.confirm')" class="confirm-reset-progress" severity="danger" (onClick)="confirmDeleteCustomPlan()"></p-button>
+        <p-button [label]="i18n.t('common.cancel')" class="cancel-reset-progress" (onClick)="deletePlanVisible = false"></p-button>
     </div>
 </p-dialog>

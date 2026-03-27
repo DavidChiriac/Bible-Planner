@@ -16,6 +16,7 @@ import { Note } from '../../../shared/components/note/note';
 import { Select } from 'primeng/select';
 import { NotesService } from '../../notes/notes.service';
 import { Tooltip } from 'primeng/tooltip';
+import { I18nService } from '../../../shared/services/i18n.service';
 
 @Component({
   selector: 'app-day',
@@ -38,6 +39,7 @@ import { Tooltip } from 'primeng/tooltip';
 })
 export class Day {
   utils = inject(Utils);
+  i18n = inject(I18nService);
   private readonly notesService = inject(NotesService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);

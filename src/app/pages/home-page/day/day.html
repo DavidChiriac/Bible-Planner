@@ -17,7 +17,7 @@
         <p-button icon="pi pi-arrow-left" class="go-back" (onClick)="goBack()"></p-button>
         @if (!chapter && utils.isMobile()) {
             <span class="swipe-hint">
-                <i class="pi pi-arrow-left"></i> glisează <i class="pi pi-arrow-right"></i>
+                <i class="pi pi-arrow-left"></i> {{ i18n.t('day.swipeHint') }} <i class="pi pi-arrow-right"></i>
             </span>
         }
     </div>
@@ -26,7 +26,7 @@
         <!-- Chapters grid -->
         <div class="section-header">
             <i class="pi pi-book"></i>
-            <h2>Capitole</h2>
+            <h2>{{ i18n.t('common.chapters') }}</h2>
         </div>
 
         <div class="chapters-grid">
@@ -42,10 +42,10 @@
                     </div>
                     <span class="chapter-name">{{ ch }}</span>
                     <div class="chapter-actions">
-                        <button class="chapter-action-btn mark-btn" [pTooltip]="utils.isEntireDayRead([ch]) ? 'Necitit' : 'Citit'" tooltipPosition="top" (click)="utils.setEntireDayRead([ch])">
+                        <button class="chapter-action-btn mark-btn" [pTooltip]="utils.isEntireDayRead([ch]) ? i18n.t('common.unread') : i18n.t('common.read')" tooltipPosition="top" (click)="utils.setEntireDayRead([ch])">
                             <i class="pi" [ngClass]="utils.isEntireDayRead([ch]) ? 'pi-times' : 'pi-check'"></i>
                         </button>
-                        <button class="chapter-action-btn read-btn" pTooltip="Citește" tooltipPosition="top" (click)="openReader(ch)">
+                        <button class="chapter-action-btn read-btn" [pTooltip]="i18n.t('common.readAction')" tooltipPosition="top" (click)="openReader(ch)">
                             <i class="pi pi-book"></i>
                         </button>
                     </div>
@@ -56,7 +56,7 @@
         <!-- Add note card -->
         <div class="section-header">
             <i class="pi pi-pencil"></i>
-            <h2>Adaugă notă</h2>
+            <h2>{{ i18n.t('day.addNote') }}</h2>
         </div>
 
         <div class="add-note-card">
@@ -64,7 +64,7 @@
                 <p-multiSelect
                     [options]="chapters"
                     appendTo="body"
-                    placeholder="Alege capitolele"
+                    [placeholder]="i18n.t('day.chooseChapters')"
                     panelStyleClass="multiselect-panel"
                     [styleClass]="'w-full'"
                     [(ngModel)]="noteChapters"></p-multiSelect>
@@ -73,16 +73,16 @@
                     optionLabel="label"
                     optionValue="value"
                     appendTo="body"
-                    placeholder="Adaugă etichete"
+                    [placeholder]="i18n.t('common.addTags')"
                     panelStyleClass="multiselect-panel"
                     [styleClass]="'w-full'"
                     [(ngModel)]="noteTags"></p-multiSelect>
             </div>
 
-            <quill-editor theme="snow" class="w-full note-editor" [(ngModel)]="note" placeholder="Scrie notița ta aici..." [modules]="{toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']]}"></quill-editor>
+            <quill-editor theme="snow" class="w-full note-editor" [(ngModel)]="note" [placeholder]="i18n.t('day.writeNote')" [modules]="{toolbar: [['bold', 'italic', 'underline'], [{ 'list': 'ordered'}, { 'list': 'bullet' }], ['clean']]}"></quill-editor>
 
             <p-button
-                label="Salvează notița"
+                [label]="i18n.t('day.saveNote')"
                 icon="pi pi-save"
                 class="save-note"
                 [styleClass]="'w-full'"
@@ -93,7 +93,7 @@
         <!-- Notes section -->
         <div class="section-header">
             <i class="pi pi-comments"></i>
-            <h2>Notițe</h2>
+            <h2>{{ i18n.t('common.notes') }}</h2>
             <p-select
                 [options]="chapters"
                 [(ngModel)]="filterByChapter"

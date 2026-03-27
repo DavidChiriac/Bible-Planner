@@ -2,31 +2,31 @@
     <div [ngClass]="utils.isMobile() ? 'plan-selector-mobile' : 'plan-selector'">
         @for (tab of tabs; track tab) {
         <p-button (onClick)="changeTab(tab)" class="plan-selector-button"
-            [ngClass]="{'selected': utils.selectedPlan() === tab}">{{ tab }}</p-button>
+            [ngClass]="{'selected': utils.selectedPlan() === tab}">{{ i18n.tabLabel(tab) }}</p-button>
         }
     </div>
     @if (utils.selectedPlan() === 'Personalizat' && utils.customPlanConfig()) {
       <div class="text-center mb-2">
         <a class="edit-plan-link" routerLink="/plan-builder">
-          <i class="pi pi-pencil"></i> Editează planul
+          <i class="pi pi-pencil"></i> {{ i18n.t('home.editPlan') }}
         </a>
       </div>
     }
     <div class="details m-auto mb-4" [ngClass]="utils.isMobile() ? 'w-11' : 'w-6'">
         <div class="w-full">
-            <h4 class="text-center m-0 mb-1">Progresul tău de citire - {{ utils.readPercentage() }}%</h4>
+            <h4 class="text-center m-0 mb-1">{{ i18n.t('home.readingProgress') }} - {{ utils.readPercentage() }}%</h4>
             <p-progress-bar [value]="utils.readPercentage()" [showValue]="false"></p-progress-bar>
         </div>
         <div class="flex justify-content-center w-100 py-2" [ngClass]="utils.isMobile() ? 'gap-2 status-mobile' : 'gap-4 status'">
             <i class="pi flex align-items-center pi-angle-double-left"></i>
             @if (utils.hasReadWholeBible()) {
-            <span>Felicitări! Ai citit întreaga Biblie! 🎉</span>
+            <span>{{ i18n.t('home.congratulations') }}</span>
             } @else if (currentStatus() > 0) {
-            <span>Ești cu {{ currentStatus() }} zile citite înainte!</span>
+            <span>{{ i18n.t('home.daysAhead', { count: currentStatus() }) }}</span>
             } @else if (currentStatus() < 0) {
-                <span>Ești cu {{ (currentStatus() * -1) }} zile de citit în urmă!</span>
+                <span>{{ i18n.t('home.daysBehind', { count: currentStatus() * -1 }) }}</span>
                 } @else {
-                <span>Ești la zi cu planul de citire!</span>
+                <span>{{ i18n.t('home.onTrack') }}</span>
                 }
             <i class="pi flex align-items-center pi-angle-double-right"></i>
         </div>
@@ -48,11 +48,11 @@
                                     <span class="flex gap-2" [ngClass]="utils.isMobile() ? 'flex-column align-items-start' : 'align-items-center'">
                                         @if (utils.isMobile()) {
                                             <h4 class="m-0">
-                                                {{ 'Săpt. ' + tab.week }}
+                                                {{ i18n.t('home.weekShort', { n: tab.week }) }}
                                             </h4>
                                         } @else {
                                             <span>
-                                                {{ 'Săptămâna ' + tab.week }}
+                                                {{ i18n.t('home.weekFull', { n: tab.week }) }}
                                             </span>
                                         }
 
@@ -60,11 +60,11 @@
                                         @let total = tab.days.length;
 
                                         @if (read === total) {
-                                            <p-tag value="Complet" severity="success"></p-tag>
+                                            <p-tag [value]="i18n.t('home.complete')" severity="success"></p-tag>
                                         } @else if (read > 0) {
-                                            <p-tag [value]="'În curs (' + read + '/' + total + ')'" severity="warn"></p-tag>
+                                            <p-tag [value]="i18n.t('home.inProgress') + ' (' + read + '/' + total + ')'" severity="warn"></p-tag>
                                         } @else {
-                                            <p-tag value="Neînceput" severity="secondary"></p-tag>
+                                            <p-tag [value]="i18n.t('home.notStarted')" severity="secondary"></p-tag>
                                         }
                                     </span>
                                 </div>
@@ -85,8 +85,8 @@
                                             <h3 class="m-0">{{ day.label }}</h3>
                                         </span>
                                         <span class="day-actions">
-                                            <i class="pi pi-book day-action-btn" pTooltip="Citește" tooltipPosition="left" (click)="$event.stopPropagation(); readChapter(day.chapters[0])" onkeydown=""></i>
-                                            <i class="pi pi-comment day-action-btn" pTooltip="Notițe" tooltipPosition="left" (click)="$event.stopPropagation(); goToDay(i, tab)" onkeydown=""></i>
+                                            <i class="pi pi-book day-action-btn" [pTooltip]="i18n.t('common.readAction')" tooltipPosition="left" (click)="$event.stopPropagation(); readChapter(day.chapters[0])" onkeydown=""></i>
+                                            <i class="pi pi-comment day-action-btn" [pTooltip]="i18n.t('common.notes')" tooltipPosition="left" (click)="$event.stopPropagation(); goToDay(i, tab)" onkeydown=""></i>
                                         </span>
                                     </div>
                                 }
@@ -104,7 +104,7 @@
         <p-button
             icon="pi pi-angle-down"
             class="continue-reading"
-            [label]="'Continuă citirea'"
+            [label]="i18n.t('home.continueReading')"
             [disabled]="bookmarkedWeeksForPlan().length === 0"
             (onClick)="goToNextTargetWeek()">
         </p-button>

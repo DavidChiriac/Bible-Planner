@@ -7,6 +7,7 @@ import { Select } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { Utils } from '../../shared/services/utils.service';
 import { BibleTextService, BibleChapter, TRANSLATIONS } from '../../shared/services/bible-text.service';
+import { I18nService } from '../../shared/services/i18n.service';
 
 @Component({
   selector: 'app-reader',
@@ -19,6 +20,7 @@ export class Reader {
   private readonly router = inject(Router);
   readonly bibleText = inject(BibleTextService);
   utils = inject(Utils);
+  i18n = inject(I18nService);
 
   chapterLabel = signal('');
   chapter = signal<BibleChapter | null>(null);

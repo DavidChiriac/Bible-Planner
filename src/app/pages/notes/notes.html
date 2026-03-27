@@ -4,19 +4,19 @@
         <div class="search-row">
             <div class="search-input-wrap">
                 <i class="pi pi-search"></i>
-                <input type="text" [(ngModel)]="draftSearchTerm" (keydown.enter)="searchTerm.set(draftSearchTerm())" (ngModelChange)="draftSearchTerm().length === 0 && searchTerm.set('')" pInputText placeholder="Caută în notițe..."/>
+                <input type="text" [(ngModel)]="draftSearchTerm" (keydown.enter)="searchTerm.set(draftSearchTerm())" (ngModelChange)="draftSearchTerm().length === 0 && searchTerm.set('')" pInputText [placeholder]="i18n.t('notes.search')"/>
             </div>
             <p-button icon="pi pi-search" (onClick)="searchTerm.set(draftSearchTerm())" class="search-btn" [disabled]="!draftSearchTerm()"></p-button>
-            <p-button icon="pi pi-times" class="reset-btn" [ngClass]="{'reset-btn--disabled': !searchTerm() && selectedBooks().length === 0 && selectedChapters().length === 0 && !sort() && selectedTags().length === 0}" (onClick)="searchTerm.set(''); draftSearchTerm.set(''); selectedBooks.set([]); selectedChapters.set([]); selectedTags.set([]); sort.set(sortOptions[0].value); cursor.set({ offset: 0 });" [disabled]="!searchTerm() && selectedBooks().length === 0 && selectedChapters().length === 0 && sort() === sortOptions[0].value && selectedTags().length === 0"></p-button>
+            <p-button icon="pi pi-times" class="reset-btn" [ngClass]="{'reset-btn--disabled': !searchTerm() && selectedBooks().length === 0 && selectedChapters().length === 0 && !sort() && selectedTags().length === 0}" (onClick)="searchTerm.set(''); draftSearchTerm.set(''); selectedBooks.set([]); selectedChapters.set([]); selectedTags.set([]); sort.set(sortOptions()[0].value); cursor.set({ offset: 0 });" [disabled]="!searchTerm() && selectedBooks().length === 0 && selectedChapters().length === 0 && sort() === sortOptions()[0].value && selectedTags().length === 0"></p-button>
         </div>
 
         <!-- Desktop filters -->
         @if (!utils.isMobile()) {
             <div class="filter-row">
-                <p-multiselect [options]="books" appendTo="body" [showClear]="true" (onClear)="selectedBooks.set([])" [panelStyleClass]="'multiselect-panel'" placeholder="Cărți" class="w-full" [(ngModel)]="selectedBooks"></p-multiselect>
-                <p-multiselect [options]="chapters()" appendTo="body" [showClear]="true" (onClear)="selectedChapters.set([])" [disabled]="selectedBooks().length === 0" [panelStyleClass]="'multiselect-panel'" placeholder="Capitole" class="w-full" [(ngModel)]="selectedChapters"></p-multiselect>
-                <p-multiselect [options]="tagOptions" optionLabel="label" optionValue="value" appendTo="body" [filter]="false" [pt]="$any({ hiddenInput: { inputmode: 'none' } })" [showClear]="true" (onClear)="selectedTags.set([])" [panelStyleClass]="'multiselect-panel'" placeholder="Etichete" class="w-full" [(ngModel)]="selectedTags"></p-multiselect>
-                <p-select [options]="sortOptions" appendTo="body" [showClear]="sort() !== sortOptions[0].value" (onClear)="sort.set(sortOptions[0].value)" [placeholder]="sortOptions[0].label" class="notes-sort w-full" [panelStyleClass]="'dropdown-panel'" optionLabel="label" optionValue="value" [(ngModel)]="sort"></p-select>
+                <p-multiselect [options]="books" appendTo="body" [showClear]="true" (onClear)="selectedBooks.set([])" [panelStyleClass]="'multiselect-panel'" [placeholder]="i18n.t('notes.books')" class="w-full" [(ngModel)]="selectedBooks"></p-multiselect>
+                <p-multiselect [options]="chapters()" appendTo="body" [showClear]="true" (onClear)="selectedChapters.set([])" [disabled]="selectedBooks().length === 0" [panelStyleClass]="'multiselect-panel'" [placeholder]="i18n.t('notes.chapters')" class="w-full" [(ngModel)]="selectedChapters"></p-multiselect>
+                <p-multiselect [options]="tagOptions" optionLabel="label" optionValue="value" appendTo="body" [filter]="false" [pt]="$any({ hiddenInput: { inputmode: 'none' } })" [showClear]="true" (onClear)="selectedTags.set([])" [panelStyleClass]="'multiselect-panel'" [placeholder]="i18n.t('notes.tags')" class="w-full" [(ngModel)]="selectedTags"></p-multiselect>
+                <p-select [options]="sortOptions()" appendTo="body" [showClear]="sort() !== sortOptions()[0].value" (onClear)="sort.set(sortOptions()[0].value)" [placeholder]="sortOptions()[0].label" class="notes-sort w-full" [panelStyleClass]="'dropdown-panel'" optionLabel="label" optionValue="value" [(ngModel)]="sort"></p-select>
             </div>
         }
 
@@ -26,8 +26,8 @@
                 <p-button class="filters-btn" icon="pi pi-filter" (onClick)="filtersDialogVisible.set(true)"/>
             }
             <span class="actions-spacer"></span>
-            <p-button icon="pi pi-download" label="Exportă" class="export-btn" [disabled]="notes().length === 0" (onClick)="exportNotes()"></p-button>
-            <p-button icon="pi pi-plus" label="Adaugă" class="add-note" (onClick)="addNewNote()"></p-button>
+            <p-button icon="pi pi-download" [label]="i18n.t('notes.export')" class="export-btn" [disabled]="notes().length === 0" (onClick)="exportNotes()"></p-button>
+            <p-button icon="pi pi-plus" [label]="i18n.t('notes.add')" class="add-note" (onClick)="addNewNote()"></p-button>
         </div>
     </div>
     <div [ngClass]="utils.isMobile() ? 'notes-container-mobile' : 'notes-container'">
@@ -50,7 +50,7 @@
             @if (notes().length === 0) {
                 <div class="no-notes flex flex-column align-items-center gap-3">
                     <i class="pi pi-sticky-note" style="font-size: 4rem"></i>
-                    <h2 class="m-0">Nicio notă găsită</h2>
+                    <h2 class="m-0">{{ i18n.t('notes.noNotes') }}</h2>
                 </div>
             } @else {
                 @for (note of notes(); track $index) {
@@ -62,65 +62,65 @@
             @if (nextPageLoading()) {
                 <p-progressSpinner></p-progressSpinner>
             } @else if (hasMore()) {
-                <p-button label="Încarcă mai multe" class="add-note" (onClick)="loadNextPage()"></p-button>
+                <p-button [label]="i18n.t('notes.loadMore')" class="add-note" (onClick)="loadNextPage()"></p-button>
             }
         </div>
     </div>
 </div>
 
 <p-dialog 
-    header="Filtre"
+    [header]="i18n.t('notes.filters')"
     [modal]="true"
     [(visible)]="filtersDialogVisible"
     [style]="{ width: '90%' }"
     [ngClass]="utils.isMobile() ? 'filters-dialog-mobile' : ''">
     <div class="flex flex-column gap-4">
         <div class="flex flex-column gap-2">
-            <label for="books">Cărți</label>
-            <p-multiselect id="books" appendTo="body" [options]="books" [showClear]="true" (onClear)="draftSelectedBooks.set([])" [panelStyleClass]="'multiselect-panel'" placeholder="Selectează cărțile" [(ngModel)]="draftSelectedBooks"></p-multiselect>
+            <label for="books">{{ i18n.t('notes.books') }}</label>
+            <p-multiselect id="books" appendTo="body" [options]="books" [showClear]="true" (onClear)="draftSelectedBooks.set([])" [panelStyleClass]="'multiselect-panel'" [placeholder]="i18n.t('notes.selectBooks')" [(ngModel)]="draftSelectedBooks"></p-multiselect>
         </div>
 
         <div class="flex flex-column gap-2">
-            <label for="chapters">Capitole</label>
-            <p-multiselect id="chapters" appendTo="body" [options]="chapters()" [showClear]="true" (onClear)="draftSelectedChapters.set([])" [disabled]="draftSelectedBooks().length === 0" [panelStyleClass]="'multiselect-panel'" placeholder="Selectează capitolele" [(ngModel)]="draftSelectedChapters"></p-multiselect>
+            <label for="chapters">{{ i18n.t('notes.chapters') }}</label>
+            <p-multiselect id="chapters" appendTo="body" [options]="chapters()" [showClear]="true" (onClear)="draftSelectedChapters.set([])" [disabled]="draftSelectedBooks().length === 0" [panelStyleClass]="'multiselect-panel'" [placeholder]="i18n.t('notes.selectChapters')" [(ngModel)]="draftSelectedChapters"></p-multiselect>
         </div>
 
         <div class="flex flex-column gap-2">
-            <label for="tags">Etichete</label>
-            <p-multiselect id="tags" appendTo="body" [options]="tagOptions" optionLabel="label" optionValue="value" [filter]="false" [pt]="$any({ hiddenInput: { inputmode: 'none' } })" [showClear]="true" (onClear)="draftSelectedTags.set([])" [panelStyleClass]="'multiselect-panel'" placeholder="Selectează etichetele" [(ngModel)]="draftSelectedTags"></p-multiselect>
+            <label for="tags">{{ i18n.t('notes.tags') }}</label>
+            <p-multiselect id="tags" appendTo="body" [options]="tagOptions" optionLabel="label" optionValue="value" [filter]="false" [pt]="$any({ hiddenInput: { inputmode: 'none' } })" [showClear]="true" (onClear)="draftSelectedTags.set([])" [panelStyleClass]="'multiselect-panel'" [placeholder]="i18n.t('notes.selectTags')" [(ngModel)]="draftSelectedTags"></p-multiselect>
         </div>
 
         <div class="flex flex-column gap-2">
-            <label for="sort">Sortează</label>
-            <p-select [options]="sortOptions" appendTo="body" [showClear]="draftSort() !== sortOptions[0].value" (onClear)="draftSort.set(sortOptions[0].value)" [placeholder]="sortOptions[0].label" class="notes-sort" [panelStyleClass]="'dropdown-panel'" optionLabel="label" optionValue="value" [(ngModel)]="draftSort"></p-select>
+            <label for="sort">{{ i18n.t('notes.sort') }}</label>
+            <p-select [options]="sortOptions()" appendTo="body" [showClear]="draftSort() !== sortOptions()[0].value" (onClear)="draftSort.set(sortOptions()[0].value)" [placeholder]="sortOptions()[0].label" class="notes-sort" [panelStyleClass]="'dropdown-panel'" optionLabel="label" optionValue="value" [(ngModel)]="draftSort"></p-select>
         </div>
 
         <div class="flex justify-content-end gap-2">
-            <p-button label="Aplică" class="confirm-reset-progress" [disabled]="draftSelectedBooks().length === 0 && draftSelectedChapters().length === 0 && draftSelectedTags().length === 0 && draftSort() === sortOptions[0].value" (onClick)="applyFilters()"></p-button>
-            <p-button label="Resetează" class="cancel-reset-progress" (onClick)="draftSelectedBooks.set([]); draftSelectedChapters.set([]); draftSelectedTags.set([]); draftSort.set(sortOptions[0].value); filtersDialogVisible.set(false); applyFilters()"></p-button>
+            <p-button [label]="i18n.t('notes.apply')" class="confirm-reset-progress" [disabled]="draftSelectedBooks().length === 0 && draftSelectedChapters().length === 0 && draftSelectedTags().length === 0 && draftSort() === sortOptions()[0].value" (onClick)="applyFilters()"></p-button>
+            <p-button [label]="i18n.t('notes.reset')" class="cancel-reset-progress" (onClick)="draftSelectedBooks.set([]); draftSelectedChapters.set([]); draftSelectedTags.set([]); draftSort.set(sortOptions()[0].value); filtersDialogVisible.set(false); applyFilters()"></p-button>
         </div>
 
     </div>
 
 </p-dialog>
 
-<p-dialog header="Adaugă Notiță"
+<p-dialog [header]="i18n.t('notes.addNoteDialogHeader')"
     [modal]="true"
     [(visible)]="addNoteVisible"
     [style]="{ width: utils.isMobile() ? '90%' : '50%' }"
     [ngClass]="utils.isMobile() ? 'edit-dialog-mobile' : ''">
     <div class="flex flex-column align-items-start gap-3 mb-6 mt-1">
         <div class="flex gap-2 align-items-center">
-            <p-select [options]="books" class="notes-sort" [filter]="true" [panelStyleClass]="'dropdown-panel'" placeholder="Selectează cartea" [(ngModel)]="newNoteBook"></p-select>
-            <input pInputText class="chapter-index" type="number" min="0" [max]="getMaxChapterPerBook()" placeholder="Capitol" [(ngModel)]="newNoteChapter" [disabled]="!newNoteBook" />
+            <p-select [options]="books" class="notes-sort" [filter]="true" [panelStyleClass]="'dropdown-panel'" [placeholder]="i18n.t('notes.selectBook')" [(ngModel)]="newNoteBook"></p-select>
+            <input pInputText class="chapter-index" type="number" min="0" [max]="getMaxChapterPerBook()" [placeholder]="i18n.t('notes.chapterPlaceholder')" [(ngModel)]="newNoteChapter" [disabled]="!newNoteBook" />
             @if (newNoteChapter() && newNoteBook() && (newNoteChapter() ?? 0) > getMaxChapterPerBook()) {
                 <span class="error">
-                    Capitolul trebuie să fie între 1 și {{ getMaxChapterPerBook() }}
+                    {{ i18n.t('notes.chapterRangeError', { max: getMaxChapterPerBook() }) }}
                 </span>
             }
         </div>
         <div class="w-full">
-            <label for="add-note-tags" class="block mb-1">Etichete</label>
+            <label for="add-note-tags" class="block mb-1">{{ i18n.t('common.tags') }}</label>
             <p-multiselect
                 id="add-note-tags"
                 [options]="tagOptions"
@@ -129,7 +129,7 @@
                 appendTo="body"
                 [filter]="false"
                 [pt]="$any({ hiddenInput: { inputmode: 'none' } })"
-                placeholder="Adaugă etichete"
+                [placeholder]="i18n.t('common.addTags')"
                 [panelStyleClass]="'multiselect-panel'"
                 [(ngModel)]="newNoteTags">
             </p-multiselect>
@@ -139,12 +139,12 @@
 
     <div class="flex justify-content-center gap-2">
         <p-button
-            label="Salvează"
+            [label]="i18n.t('common.save')"
             [disabled]="getMaxChapterPerBook() < (newNoteChapter() ?? 0)"
             class="confirm-reset-progress"
             (onClick)="confirmAddNote()"></p-button>
         <p-button
-            label="Anulează"
+            [label]="i18n.t('common.cancel')"
             class="cancel-reset-progress"
             (onClick)="addNoteVisible.set(false); newNoteText.set(''); newNoteBook.set(null); newNoteChapter.set(null); newNoteTags.set([]);"></p-button>
     </div>

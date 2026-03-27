@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { NotesService } from '../../../pages/notes/notes.service';
 import { MultiSelect } from 'primeng/multiselect';
+import { I18nService } from '../../services/i18n.service';
 
 @Component({
   selector: 'app-note',
@@ -18,6 +19,7 @@ import { MultiSelect } from 'primeng/multiselect';
 export class Note {
   private readonly notesService = inject(NotesService);
   utils = inject(Utils);
+  i18n = inject(I18nService);
   note = input.required<NoteItem>();
   displayChapterLabel = input(false);
 
@@ -74,7 +76,7 @@ export class Note {
   }
 
   getTagLabel(tag: NoteTag): string {
-    return NOTE_TAGS.find(t => t.value === tag)?.label ?? tag;
+    return this.i18n.tagLabel(tag) ?? NOTE_TAGS.find(t => t.value === tag)?.label ?? tag;
   }
 
   getTagIcon(tag: NoteTag): string {
