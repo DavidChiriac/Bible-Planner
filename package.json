@@ -15,9 +15,9 @@
     "capacitor:sync": "npx cap sync android",
     "capacitor": "npm run build && npm run capacitor:sync && npx cap run android",
     "commit": "git cz",
-    "release": "standard-version",
-    "release:minor": "standard-version --release-as minor",
-    "release:major": "standard-version --release-as major",
+    "release": "standard-version --commit-all",
+    "release:minor": "standard-version --commit-all --release-as minor",
+    "release:major": "standard-version --commit-all --release-as major",
     "ship": "npm run commit && npm run release && git push --follow-tags",
     "prepare": "husky"
   },
