@@ -1,0 +1,64 @@
+{
+  "project_info": {
+    "project_number": "820329179054",
+    "firebase_url": "https://bible-planner-prod-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "bible-planner-prod",
+    "storage_bucket": "bible-planner-prod.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:820329179054:android:c8e6a58189db3a6fe54a3f",
+        "android_client_info": {
+          "package_name": "davidchiriac.github.io.bibleplanner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "820329179054-m18lhtlj66p2uiv2ssce5kh839jvcrak.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "davidchiriac.github.io.bibleplanner",
+            "certificate_hash": "aaff8065079d8970a2db16f697a955627aa0502c"
+          }
+        },
+        {
+          "client_id": "820329179054-pfpnvp4gqdldmq485t57uuv8f13vtefi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "davidchiriac.github.io.bibleplanner",
+            "certificate_hash": "989eadb1392445695b9fdf38f87decb29d07c430"
+          }
+        },
+        {
+          "client_id": "820329179054-so6vqcti77o2mpp50f912ht38jfd84o7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "davidchiriac.github.io.bibleplanner",
+            "certificate_hash": "c566ca4bd2048095289ad9362bfba5ee688501f3"
+          }
+        },
+        {
+          "client_id": "820329179054-2uem7c7j3lb6ukr0lvu6uqle0avqouia.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMMThgTLVARUyJcsoXt1obCzc00r6cFXU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "820329179054-2uem7c7j3lb6ukr0lvu6uqle0avqouia.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
