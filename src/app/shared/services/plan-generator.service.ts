@@ -10,6 +10,7 @@ export interface CustomPlanConfig {
   days: number;
   places?: number;
   startDate?: string;
+  targetDate?: string;
 }
 
 /** Verse count lookup: "Geneza 1" → 31 */

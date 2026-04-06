@@ -55,14 +55,20 @@
     <div class="config-card">
       <div class="config-row">
         <label for="plan-start-date">{{ i18n.t('planBuilder.startDate') }}</label>
-        <p-datepicker [(ngModel)]="planStartDate" dateFormat="dd/mm/yy"
+        <p-datepicker [ngModel]="planStartDate()" (ngModelChange)="onStartDateChange($event)" dateFormat="dd/mm/yy"
           placeholder="dd/mm/yyyy" class="date-input"></p-datepicker>
+      </div>
+
+      <div class="config-row mt-3">
+        <label for="plan-target-date">{{ i18n.t('planBuilder.targetDate') }}</label>
+        <p-datepicker [ngModel]="planTargetDate()" (ngModelChange)="onTargetDateChange($event)" dateFormat="dd/mm/yy"
+          placeholder="dd/mm/yyyy" class="date-input" [showClear]="true"></p-datepicker>
       </div>
 
       <div class="config-row mt-3">
         <label for="plan-days">{{ i18n.t('planBuilder.numDays') }}</label>
         <input id="plan-days" type="number" min="1" [max]="totalChapters()"
-          pInputText [ngModel]="days()" (ngModelChange)="days.set($event)"
+          pInputText [ngModel]="days()" (ngModelChange)="onDaysChange($event)"
           autocomplete="off" class="days-input" />
       </div>
 

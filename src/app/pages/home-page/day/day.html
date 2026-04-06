@@ -35,7 +35,6 @@
                     class="chapter-card"
                     [ngClass]="{'chapter-read': utils.isEntireDayRead([ch])}">
                     <div class="chapter-top">
-                        <span class="chapter-number">{{ $index + 1 }}</span>
                         @if (utils.isEntireDayRead([ch])) {
                             <i class="pi pi-check-circle chapter-check"></i>
                         }

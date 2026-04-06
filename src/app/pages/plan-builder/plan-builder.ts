@@ -39,6 +39,7 @@ export class PlanBuilder {
   days: ReturnType<typeof signal<number>>;
   places: ReturnType<typeof signal<number>>;
   planStartDate: ReturnType<typeof signal<Date | null>>;
+  planTargetDate: ReturnType<typeof signal<Date | null>>;
 
   constructor() {
     const existing = this.utils.customPlanConfig();
@@ -67,6 +68,40 @@ export class PlanBuilder {
     this.planStartDate = signal(
       existing?.startDate ? this.utils.startDateAsDate(existing.startDate) : new Date()
     );
+    this.planTargetDate = signal(
+      existing?.targetDate ? this.utils.startDateAsDate(existing.targetDate) : null
+    );
+  }
+
+  onStartDateChange(date: Date | null) {
+    this.planStartDate.set(date);
+    this.recalcDaysFromTarget();
+  }
+
+  onTargetDateChange(date: Date | null) {
+    this.planTargetDate.set(date);
+    this.recalcDaysFromTarget();
+  }
+
+  onDaysChange(days: number) {
+    this.days.set(days);
+    const start = this.planStartDate();
+    if (start && days > 0) {
+      const target = new Date(start);
+      target.setDate(target.getDate() + days);
+      this.planTargetDate.set(target);
+    }
+  }
+
+  private recalcDaysFromTarget() {
+    const start = this.planStartDate();
+    const target = this.planTargetDate();
+    if (start && target && target > start) {
+      const diffDays = Math.round((target.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+      if (diffDays > 0) {
+        this.days.set(diffDays);
+      }
+    }
   }
 
   allOtSelected = computed(() => this.otBooks().every(b => b.selected));
@@ -148,11 +183,17 @@ export class PlanBuilder {
       ? `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
       : new Date().toISOString().split('T')[0];
 
+    const t = this.planTargetDate();
+    const targetIso = t
+      ? `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`
+      : undefined;
+
     const config = {
       books: this.selectedBooks().map(b => b.title),
       days: this.days(),
       places: this.places(),
       startDate: iso,
+      ...(targetIso ? { targetDate: targetIso } : {}),
     };
     await this.firebase.setCustomPlanConfig(config);
     this.utils.customPlanConfig.set(config);
