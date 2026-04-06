@@ -79,6 +79,32 @@
           autocomplete="off" class="days-input" />
       </div>
 
+      <div class="exclude-section mt-3">
+        <span class="exclude-label">{{ i18n.t('planBuilder.excludeSections') }}</span>
+        <div class="exclude-toggles">
+          <div class="exclude-row">
+            <p-toggleswitch [ngModel]="excludeGenealogies()" (ngModelChange)="excludeGenealogies.set($event)"></p-toggleswitch>
+            <span>{{ i18n.t('planBuilder.excludeGenealogies') }}</span>
+          </div>
+          <div class="exclude-row">
+            <p-toggleswitch [ngModel]="excludeLaw()" (ngModelChange)="excludeLaw.set($event)"></p-toggleswitch>
+            <span>{{ i18n.t('planBuilder.excludeLaw') }}</span>
+          </div>
+          <div class="exclude-row">
+            <p-toggleswitch [ngModel]="excludeLand()" (ngModelChange)="excludeLand.set($event)"></p-toggleswitch>
+            <span>{{ i18n.t('planBuilder.excludeLand') }}</span>
+          </div>
+          <div class="exclude-row">
+            <p-toggleswitch [ngModel]="excludeTabernacle()" (ngModelChange)="excludeTabernacle.set($event)"></p-toggleswitch>
+            <span>{{ i18n.t('planBuilder.excludeTabernacle') }}</span>
+          </div>
+          <div class="exclude-row">
+            <p-toggleswitch [ngModel]="excludeProphecies()" (ngModelChange)="excludeProphecies.set($event)"></p-toggleswitch>
+            <span>{{ i18n.t('planBuilder.excludeProphecies') }}</span>
+          </div>
+        </div>
+      </div>
+
       @if (selectedBooks().length > 0) {
         <div class="summary">
           <span><strong>{{ selectedBooks().length }}</strong> {{ selectedBooks().length === 1 ? i18n.t('planBuilder.bookSelectedSingular') : i18n.t('planBuilder.bookSelectedPlural') }}</span>

@@ -11,7 +11,46 @@ export interface CustomPlanConfig {
   places?: number;
   startDate?: string;
   targetDate?: string;
+  excludeCategories?: string[];
 }
+
+export type ExclusionCategory = 'genealogies' | 'law' | 'land' | 'tabernacle' | 'prophecies';
+
+export const EXCLUSION_CATEGORIES: Record<ExclusionCategory, Set<string>> = {
+  genealogies: new Set([
+    'Geneza 5', 'Geneza 10', 'Geneza 36', 'Geneza 46',
+    'Numeri 1', 'Numeri 2', 'Numeri 3', 'Numeri 4', 'Numeri 7', 'Numeri 26', 'Numeri 33',
+    '1 Cronici 1', '1 Cronici 2', '1 Cronici 3', '1 Cronici 4', '1 Cronici 5',
+    '1 Cronici 6', '1 Cronici 7', '1 Cronici 8', '1 Cronici 9',
+    'Ezra 2', 'Ezra 8', 'Neemia 7', 'Neemia 11', 'Neemia 12',
+  ]),
+  law: new Set([
+    'Leviticul 1', 'Leviticul 2', 'Leviticul 3', 'Leviticul 4', 'Leviticul 5',
+    'Leviticul 6', 'Leviticul 7', 'Leviticul 11', 'Leviticul 12', 'Leviticul 13',
+    'Leviticul 14', 'Leviticul 15', 'Leviticul 21', 'Leviticul 22',
+    'Numeri 5', 'Numeri 6', 'Numeri 15', 'Numeri 18', 'Numeri 19',
+    'Numeri 28', 'Numeri 29', 'Numeri 30',
+  ]),
+  land: new Set([
+    'Iosua 12', 'Iosua 13', 'Iosua 14', 'Iosua 15', 'Iosua 16',
+    'Iosua 17', 'Iosua 18', 'Iosua 19', 'Iosua 20', 'Iosua 21',
+  ]),
+  tabernacle: new Set([
+    'Exodul 25', 'Exodul 26', 'Exodul 27', 'Exodul 28', 'Exodul 29', 'Exodul 30', 'Exodul 31',
+    'Exodul 35', 'Exodul 36', 'Exodul 37', 'Exodul 38', 'Exodul 39', 'Exodul 40',
+    '1 Împărați 6', '1 Împărați 7',
+    '2 Cronici 3', '2 Cronici 4',
+    'Ezechiel 40', 'Ezechiel 41', 'Ezechiel 42', 'Ezechiel 43', 'Ezechiel 44',
+    'Ezechiel 45', 'Ezechiel 46', 'Ezechiel 47', 'Ezechiel 48',
+  ]),
+  prophecies: new Set([
+    'Isaia 13', 'Isaia 14', 'Isaia 15', 'Isaia 16', 'Isaia 17', 'Isaia 18',
+    'Isaia 19', 'Isaia 20', 'Isaia 21', 'Isaia 22', 'Isaia 23',
+    'Ieremia 46', 'Ieremia 47', 'Ieremia 48', 'Ieremia 49', 'Ieremia 50', 'Ieremia 51',
+    'Ezechiel 25', 'Ezechiel 26', 'Ezechiel 27', 'Ezechiel 28',
+    'Ezechiel 29', 'Ezechiel 30', 'Ezechiel 31', 'Ezechiel 32',
+  ]),
+};
 
 /** Verse count lookup: "Geneza 1" → 31 */
 const VERSE_MAP: Record<string, number> = {};
@@ -30,7 +69,7 @@ export class PlanGeneratorService {
 
   /** Generate an IPlan[] from a user-defined config */
   generate(config: CustomPlanConfig): IPlan[] {
-    const selectedBooks = this.gatherBooks(config.books);
+    const selectedBooks = this.gatherBooks(config.books, config.excludeCategories);
     const totalDays = config.days * (config.places ?? 1);
     if (selectedBooks.length === 0 || totalDays <= 0) return [];
 
@@ -39,11 +78,25 @@ export class PlanGeneratorService {
   }
 
   /** Gather selected books with their chapters in canonical order */
-  private gatherBooks(selectedTitles: string[]): { title: string; chapters: string[] }[] {
+  private gatherBooks(selectedTitles: string[], excludeCategories?: string[]): { title: string; chapters: string[] }[] {
     const set = new Set(selectedTitles);
+    const excluded = this.buildExcludedSet(excludeCategories);
     return BIBLE_BOOKS
       .filter(b => set.has(b.title))
-      .map(b => ({ title: b.title, chapters: [...b.chapters] }));
+      .map(b => ({ title: b.title, chapters: b.chapters.filter(ch => !excluded.has(ch)) }))
+      .filter(b => b.chapters.length > 0);
+  }
+
+  private buildExcludedSet(categories?: string[]): Set<string> {
+    if (!categories || categories.length === 0) return new Set();
+    const excluded = new Set<string>();
+    for (const cat of categories) {
+      const chapters = EXCLUSION_CATEGORIES[cat as ExclusionCategory];
+      if (chapters) {
+        for (const ch of chapters) excluded.add(ch);
+      }
+    }
+    return excluded;
   }
 
   /** Allocate days to each book proportionally by verse count,

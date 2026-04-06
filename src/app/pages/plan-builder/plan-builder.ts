@@ -7,8 +7,9 @@ import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { BIBLE_BOOKS, FirebaseService } from '../../shared/services/firebase.service';
-import { getVerseCount, OT_END_INDEX, PlanGeneratorService } from '../../shared/services/plan-generator.service';
+import { getVerseCount, OT_END_INDEX, PlanGeneratorService, EXCLUSION_CATEGORIES, ExclusionCategory } from '../../shared/services/plan-generator.service';
 import { Utils } from '../../shared/services/utils.service';
 import { TABS } from '../home-page/home-page';
 import { I18nService } from '../../shared/services/i18n.service';
@@ -22,7 +23,7 @@ interface BookOption {
 
 @Component({
   selector: 'app-plan-builder',
-  imports: [NgClass, FormsModule, AccordionModule, ButtonModule, CheckboxModule, DatePickerModule, InputTextModule],
+  imports: [NgClass, FormsModule, AccordionModule, ButtonModule, CheckboxModule, DatePickerModule, InputTextModule, ToggleSwitchModule],
   templateUrl: './plan-builder.html',
   styleUrl: './plan-builder.scss',
   encapsulation: ViewEncapsulation.None,
@@ -41,9 +42,16 @@ export class PlanBuilder {
   planStartDate: ReturnType<typeof signal<Date | null>>;
   planTargetDate: ReturnType<typeof signal<Date | null>>;
 
+  excludeGenealogies: ReturnType<typeof signal<boolean>>;
+  excludeLaw: ReturnType<typeof signal<boolean>>;
+  excludeLand: ReturnType<typeof signal<boolean>>;
+  excludeTabernacle: ReturnType<typeof signal<boolean>>;
+  excludeProphecies: ReturnType<typeof signal<boolean>>;
+
   constructor() {
     const existing = this.utils.customPlanConfig();
     const selectedSet = new Set(existing?.books ?? []);
+    const excludeSet = new Set(existing?.excludeCategories ?? []);
 
     this.otBooks = signal(
       BIBLE_BOOKS.slice(0, OT_END_INDEX).map(b => ({
@@ -71,6 +79,12 @@ export class PlanBuilder {
     this.planTargetDate = signal(
       existing?.targetDate ? this.utils.startDateAsDate(existing.targetDate) : null
     );
+
+    this.excludeGenealogies = signal(excludeSet.has('genealogies'));
+    this.excludeLaw = signal(excludeSet.has('law'));
+    this.excludeLand = signal(excludeSet.has('land'));
+    this.excludeTabernacle = signal(excludeSet.has('tabernacle'));
+    this.excludeProphecies = signal(excludeSet.has('prophecies'));
   }
 
   onStartDateChange(date: Date | null) {
@@ -109,18 +123,49 @@ export class PlanBuilder {
   allNtSelected = computed(() => this.ntBooks().every(b => b.selected));
   someNtSelected = computed(() => this.ntBooks().some(b => b.selected) && !this.allNtSelected());
 
+  activeExclusions = computed<string[]>(() => {
+    const cats: string[] = [];
+    if (this.excludeGenealogies()) cats.push('genealogies');
+    if (this.excludeLaw()) cats.push('law');
+    if (this.excludeLand()) cats.push('land');
+    if (this.excludeTabernacle()) cats.push('tabernacle');
+    if (this.excludeProphecies()) cats.push('prophecies');
+    return cats;
+  });
+
+  excludedChapterSet = computed(() => {
+    const excluded = new Set<string>();
+    for (const cat of this.activeExclusions()) {
+      const chapters = EXCLUSION_CATEGORIES[cat as ExclusionCategory];
+      if (chapters) {
+        for (const ch of chapters) excluded.add(ch);
+      }
+    }
+    return excluded;
+  });
+
   selectedBooks = computed(() => [
     ...this.otBooks().filter(b => b.selected),
     ...this.ntBooks().filter(b => b.selected),
   ]);
 
-  totalChapters = computed(() =>
-    this.selectedBooks().reduce((sum, b) => sum + b.chapters, 0)
-  );
+  totalChapters = computed(() => {
+    const excluded = this.excludedChapterSet();
+    return this.selectedBooks().reduce((sum, b) => {
+      const book = BIBLE_BOOKS.find(bb => bb.title === b.title);
+      if (!book) return sum + b.chapters;
+      return sum + book.chapters.filter(ch => !excluded.has(ch)).length;
+    }, 0);
+  });
 
-  totalVerses = computed(() =>
-    this.selectedBooks().reduce((sum, b) => sum + b.verses, 0)
-  );
+  totalVerses = computed(() => {
+    const excluded = this.excludedChapterSet();
+    return this.selectedBooks().reduce((sum, b) => {
+      const book = BIBLE_BOOKS.find(bb => bb.title === b.title);
+      if (!book) return sum + b.verses;
+      return sum + book.chapters.filter(ch => !excluded.has(ch)).reduce((s, ch) => s + getVerseCount(ch), 0);
+    }, 0);
+  });
 
   totalPlanDays = computed(() => this.days() * this.places());
 
@@ -148,6 +193,7 @@ export class PlanBuilder {
       books: this.selectedBooks().map(b => b.title),
       days: this.days(),
       places: this.places(),
+      excludeCategories: this.activeExclusions(),
     };
     return this.planGenerator.generate(config);
   });
@@ -188,12 +234,15 @@ export class PlanBuilder {
       ? `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`
       : undefined;
 
+    const exclusions = this.activeExclusions();
+
     const config = {
       books: this.selectedBooks().map(b => b.title),
       days: this.days(),
       places: this.places(),
       startDate: iso,
       ...(targetIso ? { targetDate: targetIso } : {}),
+      ...(exclusions.length > 0 ? { excludeCategories: exclusions } : {}),
     };
     await this.firebase.setCustomPlanConfig(config);
     this.utils.customPlanConfig.set(config);
