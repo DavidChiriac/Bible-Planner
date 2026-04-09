@@ -1,4 +1,12 @@
 <div class="card">
-    <p-menubar [model]="computedItems()" breakpoint="767px" />
+    <p-menubar [model]="computedItems()" breakpoint="767px">
+        @if (utils.isMobile()) {
+            <ng-template #start>
+                <a routerLink="/" class="home-btn">
+                    <i class="pi pi-home"></i>
+                </a>
+            </ng-template>
+        }
+    </p-menubar>
 </div>
 <div [ngClass]="utils.isMobile() ? 'mask-mobile' : 'mask'"></div>

@@ -4,7 +4,8 @@ import { guestGuard } from './shared/guards/guest.guard';
 
 export const routes: Routes = [
     { path: '', loadComponent: () => import('./pages/home-page/home-page').then(m => m.HomePage), canActivate: [authGuard], pathMatch: 'full' },
-    { path: 'day', loadComponent: () => import('./pages/home-page/day/day').then(m => m.Day), canActivate: [authGuard] },
+    { path: 'plans', loadComponent: () => import('./pages/plans/plans').then(m => m.Plans), canActivate: [authGuard] },
+    { path: 'day', loadComponent: () => import('./pages/plans/day/day').then(m => m.Day), canActivate: [authGuard] },
     { path: 'plan-builder', loadComponent: () => import('./pages/plan-builder/plan-builder').then(m => m.PlanBuilder), canActivate: [authGuard] },
     { path: 'login', loadComponent: () => import('./pages/login/login').then(m => m.Login), canActivate: [guestGuard] },
     { path: 'settings', loadComponent: () => import('./pages/settings/settings').then(m => m.Settings), canActivate: [authGuard] },

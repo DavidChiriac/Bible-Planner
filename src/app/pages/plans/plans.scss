@@ -1,0 +1,172 @@
+.card {
+  width: 70%;
+  margin: auto;
+  overflow: hidden;
+  background: var(--beige-card);
+  border: 1px solid var(--brown-light);
+  border-radius: 16px;
+  padding: 0.25rem;
+  margin-bottom: 6rem;
+  box-shadow: -1px 1px 1px var(--brown-light)
+}
+
+.card-mobile {
+  @extend .card;
+
+  width: 95%;
+}
+
+.plan-selector {
+  width: 60%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  margin-top: 2rem;
+  border-radius: 15px;
+  border: 1px solid var(--brown-light);
+  box-shadow: -1px 1px 1px var(--brown-light);
+  outline: 1px solid var(--brown-light);
+  outline-offset: 2px;
+}
+
+.plan-selector-mobile {
+  @extend .plan-selector;
+
+  width: 80%;
+}
+
+.plan-selector-button {
+  flex: 1;
+  align-self: stretch;
+}
+
+.read {
+  text-decoration: line-through;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 5px;
+  background: var(--beige-card);
+  border: 1px solid var(--brown-light);
+
+  .pi {
+    color: var(--brown);
+  }
+}
+
+.day-actions {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.day-action-btn {
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  color: var(--brown-dark);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1.5px solid var(--brown-light);
+  background: var(--beige-bg);
+
+  &:hover {
+    background: var(--brown-dark);
+    border-color: var(--brown-dark);
+    color: #fff;
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+
+  &--sm {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+  }
+}
+
+// Individual chapter rows inside sub-accordion
+.chapter-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 5px;
+  background: var(--beige-bg);
+  border: 1px solid var(--brown-light);
+  margin-bottom: 4px;
+  margin-left: 4px;
+  border-left: 3px solid var(--terracotta);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.chapter-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--deep-umber);
+}
+
+.status {
+  span {
+    text-align: center;
+    color: var(--brown);
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+}
+
+.status-mobile {
+  @extend .status;
+
+  span {
+    font-size: 1rem;
+  }
+}
+
+.pi.pi-bookmark, .pi.pi-bookmark-fill {
+  color: var(--terracotta);
+  font-size: 22px;
+}
+
+.week-label {
+  word-break: keep-all;
+}
+
+.details {
+  border: 1px solid var(--brown-light);
+  outline: 1px solid var(--brown-light);
+  outline-offset: 2px;
+  border-radius: 16px;
+  padding: 1rem;
+}
+
+.edit-plan-link {
+  color: var(--terracotta);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  .pi {
+    font-size: 0.8rem;
+  }
+}

@@ -2,7 +2,7 @@ import { effect, inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { signal } from '@angular/core';
 import { I18N, LANG_LABELS, Lang, BOOK_NAMES_EN_SORTED } from '../i18n/translations';
-import { TABS } from '../../pages/home-page/home-page';
+import { TABS } from '../../pages/plans/plans';
 
 const STORAGE_KEY = 'bible-planner-lang';
 

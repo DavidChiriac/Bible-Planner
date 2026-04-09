@@ -1,7 +1,7 @@
 import { computed, DestroyRef, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { combineLatest, distinctUntilChanged, EMPTY, from, switchMap } from 'rxjs';
-import { TABS } from '../../pages/home-page/home-page';
+import { TABS } from '../../pages/plans/plans';
 import { isPlatformBrowser } from '@angular/common';
 import { authState } from '@angular/fire/auth';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';

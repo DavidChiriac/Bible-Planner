@@ -10,6 +10,7 @@
   .p-menubar-button,
   .p-menubar-button:hover {
     background: transparent;
+    color: var(--beige-light);
   }
 
   .p-menubar-item:not(.p-menubar-item-link-active) .p-menubar-item-content:hover,
@@ -60,10 +61,34 @@
       margin-left: auto;
     }
   }
+
+  .p-menubar-end {
+    display: none;
+  }
 }
 
 .p-menubar-mobile {
   height: 60px;
+  justify-content: flex-start;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+
+  .p-menubar-start {
+    order: 0;
+  }
+
+  .p-menubar-button {
+    order: 1;
+    margin-left: auto;
+  }
+
+  .p-menubar-root-list {
+    order: 2;
+  }
+
+  .p-menubar-end {
+    display: none;
+  }
 
   .p-menubar-button .p-icon {
     height: 32px;

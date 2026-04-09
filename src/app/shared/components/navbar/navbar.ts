@@ -5,10 +5,11 @@ import { ButtonModule } from 'primeng/button';
 import { Utils } from '../../services/utils.service';
 import { NgClass } from '@angular/common';
 import { I18nService } from '../../services/i18n.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
-  imports: [MenubarModule, ButtonModule, NgClass],
+  imports: [MenubarModule, ButtonModule, NgClass, RouterLink],
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
 })
@@ -24,6 +25,12 @@ export class Navbar {
         icon: 'pi pi-home',
         routerLink: '/',
         routerLinkActiveOptions: { exact: true }
+      },
+      { separator: true },
+      {
+        label: this.i18n.t('nav.plans'),
+        icon: 'pi pi-calendar',
+        routerLink: '/plans',
       },
       { separator: true },
       {
@@ -51,7 +58,7 @@ export class Navbar {
     ];
 
     if (this.utils.isMobile()) {
-      return allItems.filter(item => !item.separator);
+      return allItems.filter(item => !('separator' in item) && !('routerLink' in item && item.routerLink === '/'));
     }
     return allItems;
   });

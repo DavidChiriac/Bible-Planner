@@ -11,3 +11,22 @@
 .mask-mobile {
     height: 60px;
 }
+
+.home-btn {
+    display: flex;
+    align-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    color: var(--beige-light);
+    text-decoration: none;
+    transition: all 0.2s ease;
+
+    .pi {
+        font-size: 2rem;
+    }
+
+    &:active {
+        transform: scale(0.9);
+    }
+}

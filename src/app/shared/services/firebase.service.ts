@@ -11,7 +11,7 @@ import {
 } from 'firebase/database';
 import { Observable, switchMap, of, map } from 'rxjs';
 import { object, objectVal } from 'rxfire/database';
-import { TABS } from '../../pages/home-page/home-page';
+import { TABS } from '../../pages/plans/plans';
 import Chapters from '../../../assets/jsons/biblia_cornilescu_carti_capitole.json';
 import { migrateChaptersSameRefIfNeeded } from './migration';
 

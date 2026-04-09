@@ -24,10 +24,20 @@ const RO = {
   },
   nav: {
     home: 'Acasă',
+    plans: 'Planuri',
     books: 'Cărți',
     notes: 'Note',
     settings: 'Setări',
     logout: 'Deconectare',
+  },
+  homepage: {
+    subtitle: 'Studiază Biblia în ritmul tău',
+    plans: 'Planuri de citire',
+    plansDesc: 'Urmărește-ți progresul zilnic de citire',
+    reading: 'Citește Biblia',
+    readingDesc: 'Alege o carte și începe să citești',
+    notes: 'Notițe',
+    notesDesc: 'Scrie și organizează-ți gândurile',
   },
   home: {
     readingProgress: 'Progresul tău de citire',
@@ -186,10 +196,20 @@ const EN: typeof RO = {
   },
   nav: {
     home: 'Home',
+    plans: 'Plans',
     books: 'Books',
     notes: 'Notes',
     settings: 'Settings',
     logout: 'Sign Out',
+  },
+  homepage: {
+    subtitle: 'Study the Bible at your own pace',
+    plans: 'Reading Plans',
+    plansDesc: 'Track your daily reading progress',
+    reading: 'Read the Bible',
+    readingDesc: 'Pick a book and start reading',
+    notes: 'Notes',
+    notesDesc: 'Write and organize your thoughts',
   },
   home: {
     readingProgress: 'Your reading progress',

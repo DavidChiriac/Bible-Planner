@@ -4,7 +4,7 @@ import { Utils } from '../../shared/services/utils.service';
 import { ThemeService } from '../../shared/services/theme.service';
 import { I18nService } from '../../shared/services/i18n.service';
 import { Lang } from '../../shared/i18n/translations';
-import { TABS } from '../home-page/home-page';
+import { TABS } from '../plans/plans';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';

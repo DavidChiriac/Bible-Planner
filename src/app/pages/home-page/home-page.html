@@ -1,148 +1,58 @@
 <div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
-    <div [ngClass]="utils.isMobile() ? 'plan-selector-mobile' : 'plan-selector'">
-        @for (tab of tabs; track tab) {
-        <p-button (onClick)="changeTab(tab)" class="plan-selector-button"
-            [ngClass]="{'selected': utils.selectedPlan() === tab}">{{ i18n.tabLabel(tab) }}</p-button>
-        }
+  <div class="home-wrapper" [ngClass]="utils.isMobile() ? 'w-11' : 'w-7'" >
+
+    <!-- Hero section -->
+    <div class="hero">
+      <img src="/assets/images/Bible Planner.png" alt="Bible Planner" class="hero-logo" />
+      <h1 class="hero-title">Bible Planner</h1>
+      <p class="hero-subtitle">{{ i18n.t('homepage.subtitle') }}</p>
     </div>
-    @if (utils.selectedPlan() === 'Personalizat' && utils.customPlanConfig()) {
-      <div class="text-center mb-2">
-        <a class="edit-plan-link" routerLink="/plan-builder">
-          <i class="pi pi-pencil"></i> {{ i18n.t('home.editPlan') }}
-        </a>
+
+    <!-- Progress card -->
+    <div class="progress-card">
+      <div class="progress-header">
+        <span class="progress-label">{{ i18n.t('home.readingProgress') }}</span>
+        <span class="progress-pct">{{ utils.readPercentage() }}%</span>
       </div>
-    }
-    <div class="details m-auto mb-4" [ngClass]="utils.isMobile() ? 'w-11' : 'w-6'">
-        <div class="w-full">
-            <h4 class="text-center m-0 mb-1">{{ i18n.t('home.readingProgress') }} - {{ utils.readPercentage() }}%</h4>
-            <p-progress-bar [value]="utils.readPercentage()" [showValue]="false"></p-progress-bar>
+      <p-progress-bar [value]="utils.readPercentage()" [showValue]="false"></p-progress-bar>
+      <p class="progress-detail">{{ chaptersRead() }} / {{ totalChapters }} {{ i18n.t('common.chapters') }}</p>
+    </div>
+
+    <!-- Quick links grid -->
+    <div class="quick-links">
+      <a routerLink="/plans" class="quick-link-card plans-card">
+        <div class="quick-link-icon">
+          <i class="pi pi-calendar"></i>
         </div>
-        <div class="flex justify-content-center w-100 py-2" [ngClass]="utils.isMobile() ? 'gap-2 status-mobile' : 'gap-4 status'">
-            <i class="pi flex align-items-center pi-angle-double-left"></i>
-            @if (utils.hasCompletedPlan()) {
-            <span>{{ i18n.t('home.congratulations') }}</span>
-            } @else if (currentStatus() > 0) {
-            <span>{{ i18n.t('home.daysAhead', { count: currentStatus() }) }}</span>
-            } @else if (currentStatus() < 0) {
-                <span>{{ i18n.t('home.daysBehind', { count: currentStatus() * -1 }) }}</span>
-                } @else {
-                <span>{{ i18n.t('home.onTrack') }}</span>
-                }
-            <i class="pi flex align-items-center pi-angle-double-right"></i>
+        <div class="quick-link-body">
+          <h3>{{ i18n.t('homepage.plans') }}</h3>
+          <p>{{ i18n.t('homepage.plansDesc') }}</p>
         </div>
+        <i class="pi pi-chevron-right quick-link-arrow"></i>
+      </a>
+
+      <a routerLink="/books" class="quick-link-card books-card">
+        <div class="quick-link-icon">
+          <i class="pi pi-book"></i>
+        </div>
+        <div class="quick-link-body">
+          <h3>{{ i18n.t('homepage.reading') }}</h3>
+          <p>{{ i18n.t('homepage.readingDesc') }}</p>
+        </div>
+        <i class="pi pi-chevron-right quick-link-arrow"></i>
+      </a>
+
+      <a routerLink="/notes" class="quick-link-card notes-card">
+        <div class="quick-link-icon">
+          <i class="pi pi-pencil"></i>
+        </div>
+        <div class="quick-link-body">
+          <h3>{{ i18n.t('homepage.notes') }}</h3>
+          <p>{{ i18n.t('homepage.notesDesc') }}</p>
+        </div>
+        <i class="pi pi-chevron-right quick-link-arrow"></i>
+      </a>
     </div>
 
-    <div [ngClass]="utils.isMobile() ? 'card-mobile' : 'card'">
-        <p-accordion [multiple]="true" [ngClass]="{'mobile': utils.isMobile()}" animationDuration="0">
-            @for (tab of weeks(); track tab.week) {
-                <div class="week-anchor" [attr.id]="'week-' + tab.week">
-                    <p-accordion-panel [value]="tab.week">
-                        <p-accordion-header (click)="addWeekToOpen(tab.week)" onkeydown="">
-                            <div class="w-full flex justify-content-between pr-2 cursor-pointer gap-2 align-items-center">
-                                <div class="flex gap-2 align-items-center">
-                                    @if (utils.isWeekBookmarked(tab)) {
-                                        <i class="pi pi-bookmark-fill" (click)="$event.stopPropagation(); removeBookmark(tab)" onkeydown=""></i>
-                                    } @else {
-                                        <i class="pi pi-bookmark" (click)="$event.stopPropagation(); addBookmark(tab)" onkeydown=""></i>
-                                    }
-                                    <span class="flex gap-2" [ngClass]="utils.isMobile() ? 'flex-column align-items-start' : 'align-items-center'">
-                                        @if (utils.isMobile()) {
-                                            <h4 class="m-0">
-                                                {{ i18n.t('home.weekShort', { n: tab.week }) }}
-                                            </h4>
-                                        } @else {
-                                            <span>
-                                                {{ i18n.t('home.weekFull', { n: tab.week }) }}
-                                            </span>
-                                        }
-
-                                        @let read = utils.countDaysReadInAWeek(tab);
-                                        @let total = tab.days.length;
-
-                                        @if (read === total) {
-                                            <p-tag [value]="i18n.t('home.complete')" severity="success"></p-tag>
-                                        } @else if (read > 0) {
-                                            <p-tag [value]="i18n.t('home.inProgress') + ' (' + read + '/' + total + ')'" severity="warn"></p-tag>
-                                        } @else {
-                                            <p-tag [value]="i18n.t('home.notStarted')" severity="secondary"></p-tag>
-                                        }
-                                    </span>
-                                </div>
-                                <span class="week-label w-6 text-right flex align-items-center justify-content-end">
-                                    {{ i18n.translateLabel(tab.label) }}
-                                </span>
-                            </div>
-                        </p-accordion-header>
-
-                        <p-accordion-content>
-                            @if (openWeeks().includes(tab.week)) {
-                                @for (day of tab.days; track day.label; let i = $index) {
-                                    @if (day.chapters.length > 1) {
-                                        <!-- Multi-chapter day: sub-accordion -->
-                                        <p-accordion [multiple]="true" [value]="[]" class="day-sub-accordion" [ngClass]="{'mb-1': i < tab.days.length - 1}" animationDuration="0">
-                                            <p-accordion-panel [value]="day.label">
-                                                <p-accordion-header>
-                                                    <div class="w-full flex justify-content-between pr-2 cursor-pointer gap-2 align-items-center">
-                                                        <span class="flex gap-2 align-items-center" [ngClass]="{'read': utils.isEntireDayRead(day.chapters)}">
-                                                            <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)" (click)="toggleDay($event, day.chapters)" onkeydown=""></p-checkbox>
-                                                            <h3 class="m-0">{{ i18n.translateLabel(day.label) }}</h3>
-                                                        </span>
-                                                        <span class="day-actions">
-                                                            <i class="pi pi-book day-action-btn" [pTooltip]="i18n.t('common.readAction')" tooltipPosition="left" (click)="$event.stopPropagation(); readFirstUnread(day.chapters)" onkeydown=""></i>
-                                                            <i class="pi pi-comment day-action-btn" [pTooltip]="i18n.t('common.notes')" tooltipPosition="left" (click)="$event.stopPropagation(); goToDay(i, tab)" onkeydown=""></i>
-                                                        </span>
-                                                    </div>
-                                                </p-accordion-header>
-                                                <p-accordion-content>
-                                                    @for (ch of day.chapters; track ch) {
-                                                        <div class="flex justify-content-between cursor-pointer chapter-row"
-                                                             (click)="toggleChapter($event, ch)" onkeydown="">
-                                                            <span class="flex gap-2 align-items-center" [ngClass]="{'read': utils.isChapterRead(ch)}">
-                                                                <p-checkbox [binary]="true" [ngModel]="utils.isChapterRead(ch)" (click)="toggleChapter($event, ch)" onkeydown=""></p-checkbox>
-                                                                <span class="chapter-label">{{ i18n.translateLabel(ch) }}</span>
-                                                            </span>
-                                                            <span class="day-actions">
-                                                                <i class="pi pi-book day-action-btn day-action-btn--sm" [pTooltip]="i18n.t('common.readAction')" tooltipPosition="left" (click)="$event.stopPropagation(); readChapter(ch)" onkeydown=""></i>
-                                                                <i class="pi pi-comment day-action-btn day-action-btn--sm" [pTooltip]="i18n.t('common.notes')" tooltipPosition="left" (click)="$event.stopPropagation(); goToChapterNotes(ch)" onkeydown=""></i>
-                                                            </span>
-                                                        </div>
-                                                    }
-                                                </p-accordion-content>
-                                            </p-accordion-panel>
-                                        </p-accordion>
-                                    } @else {
-                                        <!-- Single-chapter day: flat row -->
-                                        <div class="flex justify-content-between cursor-pointer row"
-                                            [ngClass]="{'mb-1': i < tab.days.length - 1}"
-                                            (click)="toggleDay($event, day.chapters)" onkeydown="">
-                                            <span class="flex gap-2 align-items-center" [ngClass]="{'read': utils.isEntireDayRead(day.chapters)}">
-                                                <p-checkbox [binary]="true" [ngModel]="utils.isEntireDayRead(day.chapters)" (click)="toggleDay($event, day.chapters)" onkeydown=""></p-checkbox>
-                                                <h3 class="m-0">{{ i18n.translateLabel(day.label) }}</h3>
-                                            </span>
-                                            <span class="day-actions">
-                                                <i class="pi pi-book day-action-btn" [pTooltip]="i18n.t('common.readAction')" tooltipPosition="left" (click)="$event.stopPropagation(); readFirstUnread(day.chapters)" onkeydown=""></i>
-                                                <i class="pi pi-comment day-action-btn" [pTooltip]="i18n.t('common.notes')" tooltipPosition="left" (click)="$event.stopPropagation(); goToDay(i, tab)" onkeydown=""></i>
-                                            </span>
-                                        </div>
-                                    }
-                                }
-                            }
-                        </p-accordion-content>
-                    </p-accordion-panel>
-                </div>
-            }
-        </p-accordion>
-    </div>
-    <div class="scroll-to-top sticky-bottom-right">
-        <p-button icon="pi pi-arrow-up" (onClick)="scrollToTop()"></p-button>
-    </div>
-    <div class="continue-reading-wrapper sticky-bottom-right">
-        <p-button
-            icon="pi pi-angle-down"
-            class="continue-reading"
-            [label]="i18n.t('home.continueReading')"
-            [disabled]="!hasTargetWeek()"
-            (onClick)="goToNextTargetWeek()">
-        </p-button>
-    </div>
+  </div>
 </div>
