@@ -1,6 +1,6 @@
 {
   "name": "bible-agenda",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -17,8 +17,6 @@
     "release:major": "standard-version --commit-all --release-as major",
     "ship": "npm run commit && npm run release && node scripts/create-release-branch.js && git push --follow-tags origin HEAD",
     "prepare": "husky",
-
-
     "build:pages": "ng build --configuration production --base-href \"/Bible-Planner/\"",
     "deploy": "npm run build:pages && npm run postbuild:pages && gh-pages -d dist/bible-planner/browser",
     "serve:ssr:bible-planner": "node dist/bible-planner/server/server.mjs"
