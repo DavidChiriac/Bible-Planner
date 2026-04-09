@@ -13,6 +13,7 @@ import { HapticsService } from './haptics.service';
 import { WidgetService } from './widget.service';
 import { CustomPlanConfig, PlanGeneratorService } from './plan-generator.service';
 import { IPlan } from '../models/plan.model';
+import { BibleTextService } from './bible-text.service';
 
 const TOTAL_BIBLE_VERSES = 31102;
 
@@ -27,6 +28,7 @@ export class Utils {
   selectedPlan = signal<TABS | undefined>(undefined);
   favouriteWeeks = signal<{plan: TABS, week: number}[]>([]);
   customPlanConfig = signal<CustomPlanConfig | null>(null);
+  selectedTranslation = signal<string | null>(null);
 
   private readonly firebase = inject(FirebaseService);
   private readonly platformId = inject(PLATFORM_ID);
@@ -35,6 +37,7 @@ export class Utils {
   private readonly haptics = inject(HapticsService);
   private readonly widget = inject(WidgetService);
   private readonly planGenerator = inject(PlanGeneratorService);
+  private readonly bibleText = inject(BibleTextService);
   
   isMobile = signal<boolean | null>(null);
 
@@ -77,12 +80,13 @@ export class Utils {
               plan: this.firebase.getPlan(),
               favouriteWeeks: this.firebase.getFavouriteWeeks$(),
               customPlanConfig: this.firebase.getCustomPlanConfig$(),
+              selectedTranslation: this.firebase.getSelectedTranslation$(),
             })
           ),
         );
       })
     )
-    .subscribe(({ chapters, startDate, months, plan, favouriteWeeks, customPlanConfig }) => {
+    .subscribe(({ chapters, startDate, months, plan, favouriteWeeks, customPlanConfig, selectedTranslation }) => {
       // update UI state
       this.readSet.set(new Set(chapters ?? []));
 
@@ -113,6 +117,11 @@ export class Utils {
       }
 
       this.customPlanConfig.set(customPlanConfig ?? null);
+
+      this.selectedTranslation.set(selectedTranslation);
+      if (selectedTranslation) {
+        this.bibleText.setTranslation(selectedTranslation);
+      }
 
       this.loading.set(false);
 
@@ -192,16 +201,15 @@ export class Utils {
     return new Date(y, m - 1, d);
   }
 
-  hasReadWholeBible() {
-    const readChapters = this.readSet();
-    const totalChapters = 1189;
-    return readChapters.size === totalChapters;
+  hasCompletedPlan() {
+    return this.readPercentage() >= 100;
   }
 
   reset() {
     this.readSet.set(new Set());
     this.months.set(null);
     this.selectedPlan.set(undefined);
+    this.selectedTranslation.set(null);
     this.loading.set(false);
   }
 
@@ -224,15 +232,24 @@ export class Utils {
 
   readPercentage() {
     const readChapters = this.readSet();
-    //Use ChaptersWithVerses to get the total number of verses of the read chapters
+
+    if (this.selectedPlan() === TABS.PERSONALIZAT) {
+      const planChapters = new Set(
+        this.customPlan().flatMap(week => week.days.flatMap(day => day.chapters))
+      );
+      if (planChapters.size === 0) return 0;
+      const readInPlan = [...planChapters].filter(ch => readChapters.has(ch)).length;
+      return Number.parseFloat((readInPlan / planChapters.size * 100).toFixed(2));
+    }
+
     const totalVerses = ChapterWithVerses.flatMap((book) => book.chapters).filter((chapter) => readChapters.has(chapter.chapter)).reduce((sum, chapter) => sum + chapter.verses, 0);
     return Number.parseFloat((totalVerses / TOTAL_BIBLE_VERSES * 100).toFixed(2));
   }
 
   private updateWidget() {
     const pct = this.readPercentage();
-    const status = this.hasReadWholeBible()
-      ? 'Ai citit întreaga Biblie!'
+    const status = this.hasCompletedPlan()
+      ? 'Ai completat planul!'
       : `${pct}% completat`;
 
     // Calculate days ahead/behind

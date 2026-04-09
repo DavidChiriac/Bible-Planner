@@ -118,32 +118,51 @@ export class HomePage {
     requestAnimationFrame(() => requestAnimationFrame(fn));
   }
 
+  hasTargetWeek = computed(() => {
+    if (this.bookmarkedWeeksForPlan().length > 0) return true;
+    return this.weeks().some((w) => this.utils.countDaysReadInAWeek(w) < w.days.length);
+  });
+
   goToNextTargetWeek(): void {
     const bookmarked = this.bookmarkedWeeksForPlan();
-    if (!bookmarked.length) return;
 
-    const last = this.lastNavigatedWeek();
+    if (bookmarked.length) {
+      const last = this.lastNavigatedWeek();
+      const nextWeek = bookmarked.find((w) => w > last) ?? bookmarked[0];
+      this.scrollToWeek(nextWeek);
+      return;
+    }
 
-    const nextWeek =
-      bookmarked.find((w) => w > last) ?? bookmarked[0];
+    const allWeeks = this.weeks();
 
-    this.lastNavigatedWeek.set(nextWeek);
+    const firstStarted = allWeeks.find((w) => {
+      const read = this.utils.countDaysReadInAWeek(w);
+      return read > 0 && read < w.days.length;
+    });
+
+    if (firstStarted) {
+      this.scrollToWeek(firstStarted.week);
+      return;
+    }
+
+    const firstUnstarted = allWeeks.find(
+      (w) => this.utils.countDaysReadInAWeek(w) === 0
+    );
+
+    if (firstUnstarted) {
+      this.scrollToWeek(firstUnstarted.week);
+    }
+  }
+
+  private scrollToWeek(weekNumber: number): void {
+    this.lastNavigatedWeek.set(weekNumber);
 
     this.afterRender(() => {
-      const el = document.getElementById(
-        `week-${nextWeek}`
-      );
+      const el = document.getElementById(`week-${weekNumber}`);
       if (!el) return;
 
-      const y =
-        el.getBoundingClientRect().top +
-        window.scrollY -
-        60;
-
-      window.scrollTo({
-        top: y,
-        behavior: 'smooth',
-      });
+      const y = el.getBoundingClientRect().top + window.scrollY - 60;
+      window.scrollTo({ top: y, behavior: 'smooth' });
     });
   }
 
@@ -205,7 +224,21 @@ export class HomePage {
     await this.utils.setEntireDayRead(chapters);
   }
 
+  toggleChapter(event: Event, chapter: string) {
+    event.stopPropagation();
+    this.utils.toggleChapterRead(chapter);
+  }
+
   readChapter(chapter: string) {
     this.router.navigate(['/reader'], { queryParams: { chapter } });
+  }
+
+  readFirstUnread(chapters: string[]) {
+    const first = chapters.find(ch => !this.utils.isChapterRead(ch)) ?? chapters[0];
+    this.readChapter(first);
+  }
+
+  goToChapterNotes(chapter: string) {
+    this.router.navigate(['/day'], { queryParams: { chapter } });
   }
 }

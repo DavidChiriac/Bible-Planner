@@ -2,30 +2,13 @@
     <!-- Top bar -->
     <div class="top-bar" [ngClass]="utils.isMobile() ? 'w-11 mx-auto' : 'px-3'">
         <p-button icon="pi pi-arrow-left" class="go-back" (onClick)="goBack()"></p-button>
+        @if (utils.selectedTranslation()) {
         <div class="top-bar-controls">
-            <p-select
-                [options]="translations"
-                optionLabel="name"
-                optionValue="id"
-                [ngModel]="bibleText.selectedTranslation()"
-                (ngModelChange)="onTranslationChange($event)"
-                appendTo="body"
-                panelStyleClass="translation-panel"
-                [filter]="true"
-                filterBy="name,id"
-                [filterPlaceholder]="i18n.t('reader.searchTranslation')"
-                class="translation-select">
-                <ng-template #selectedItem let-item>
-                    <span class="translation-selected">{{ item?.id === 'local-cornilescu' ? 'VDC' : item?.id }}</span>
-                </ng-template>
-                <ng-template #item let-item>
-                    <div class="translation-option">
-                        <span class="translation-option-id">{{ item.id === 'local-cornilescu' ? 'VDC' : item.id }}</span>
-                        <span class="translation-option-name">{{ item.name }}</span>
-                        <span class="translation-option-lang">{{ item.language }}</span>
-                    </div>
-                </ng-template>
-            </p-select>
+            <button class="translation-trigger" (click)="openTranslationPicker()">
+                <i class="pi pi-globe"></i>
+                <span>{{ currentTranslationLabel() }}</span>
+                <i class="pi pi-chevron-down trigger-chevron"></i>
+            </button>
             <div class="font-controls">
                 <button class="font-btn" (click)="decreaseFontSize()">
                     <i class="pi pi-minus"></i>
@@ -36,9 +19,91 @@
                 </button>
             </div>
         </div>
+        }
     </div>
 
-    @if (loading()) {
+    <!-- Translation picker dialog (forced on first visit OR on-demand) -->
+    @if (showTranslationPicker() || (!utils.selectedTranslation() && !utils.loading())) {
+    <div class="translation-picker-overlay" (click)="utils.selectedTranslation() ? closeTranslationPicker() : null" (keydown.escape)="utils.selectedTranslation() ? closeTranslationPicker() : null">
+        <div class="translation-picker" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+            <div class="picker-header">
+                <i class="pi pi-book translation-picker-icon"></i>
+                <h2>{{ i18n.t('reader.selectTranslation') }}</h2>
+                <p class="translation-picker-hint">{{ i18n.t('reader.selectTranslationHint') }}</p>
+                @if (utils.selectedTranslation()) {
+                    <button class="picker-close" (click)="closeTranslationPicker()">
+                        <i class="pi pi-times"></i>
+                    </button>
+                }
+            </div>
+
+            <!-- Search -->
+            <div class="picker-search">
+                <i class="pi pi-search"></i>
+                <input
+                    type="text"
+                    [ngModel]="searchQuery()"
+                    (ngModelChange)="searchQuery.set($event)"
+                    [placeholder]="i18n.t('reader.searchTranslations')"
+                    class="picker-search-input"
+                    autocomplete="off" />
+                @if (searchQuery()) {
+                    <button class="picker-search-clear" (click)="searchQuery.set('')">
+                        <i class="pi pi-times"></i>
+                    </button>
+                }
+            </div>
+
+            <!-- Language filter chips -->
+            <div class="picker-languages-wrapper">
+                <button class="picker-languages-toggle" (click)="showLanguages.set(!showLanguages())">
+                    <i class="pi pi-globe"></i>
+                    <span>{{ selectedLanguage() || i18n.t('reader.allLanguages') }}</span>
+                    <i class="pi" [ngClass]="showLanguages() ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+                </button>
+                @if (showLanguages()) {
+                <div class="picker-languages">
+                    <button
+                        class="language-chip"
+                        [ngClass]="{'active': !selectedLanguage()}"
+                        (click)="selectLanguage(null); showLanguages.set(false)">
+                        {{ i18n.t('reader.allLanguages') }}
+                    </button>
+                    @for (lang of languages; track lang) {
+                        <button
+                            class="language-chip"
+                            [ngClass]="{'active': selectedLanguage() === lang}"
+                            (click)="selectLanguage(lang); showLanguages.set(false)">
+                            {{ lang }}
+                        </button>
+                    }
+                </div>
+                }
+            </div>
+
+            <!-- Translation list -->
+            <div class="translation-picker-list">
+                @for (t of filteredTranslations(); track t.id) {
+                    <button
+                        class="translation-picker-item"
+                        [ngClass]="{'is-selected': bibleText.selectedTranslation() === t.id}"
+                        (click)="onTranslationChange(t.id)">
+                        <span class="translation-option-id">{{ t.id === 'local-cornilescu' ? 'VDC' : t.id }}</span>
+                        <span class="translation-option-name">{{ t.name }}</span>
+                        <span class="translation-option-lang">{{ t.language }}</span>
+                    </button>
+                } @empty {
+                    <div class="picker-empty">
+                        <i class="pi pi-search"></i>
+                        <p>{{ i18n.t('reader.noTranslationsFound') }}</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    }
+
+    @if (loading() || (!utils.selectedTranslation() && utils.loading()) || (!chapter() && !error() && utils.selectedTranslation())) {
         <div class="reader-loading" [ngClass]="utils.isMobile() ? 'w-11' : 'w-8'">
             <div class="skeleton-title"></div>
             @for (i of [1,2,3,4,5,6,7,8]; track i) {

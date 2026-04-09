@@ -10,6 +10,30 @@ body {
     font-family: "Lora", serif;
 }
 
+// Global custom scrollbar
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--toasted-almond) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--toasted-almond);
+  border-radius: 100px;
+
+  &:hover {
+    background: var(--terracotta);
+  }
+}
+
 .container {
     min-height: calc(100dvh - 82px - 20px);
     width: 100%;

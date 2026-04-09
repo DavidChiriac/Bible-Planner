@@ -1,17 +1,17 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, effect, untracked } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DecimalPipe, NgClass } from '@angular/common';
 import { Button } from 'primeng/button';
-import { Select } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { Utils } from '../../shared/services/utils.service';
-import { BibleTextService, BibleChapter, TRANSLATIONS } from '../../shared/services/bible-text.service';
+import { BibleTextService, BibleChapter, TRANSLATIONS, TRANSLATION_LANGUAGES } from '../../shared/services/bible-text.service';
+import { FirebaseService } from '../../shared/services/firebase.service';
 import { I18nService } from '../../shared/services/i18n.service';
 
 @Component({
   selector: 'app-reader',
-  imports: [NgClass, Button, DecimalPipe, Select, FormsModule],
+  imports: [NgClass, Button, DecimalPipe, FormsModule],
   templateUrl: './reader.html',
   styleUrl: './reader.scss',
 })
@@ -19,6 +19,7 @@ export class Reader {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   readonly bibleText = inject(BibleTextService);
+  private readonly firebase = inject(FirebaseService);
   utils = inject(Utils);
   i18n = inject(I18nService);
 
@@ -28,7 +29,37 @@ export class Reader {
   error = signal(false);
   fontSize = signal(1.05);
 
+  // Translation picker dialog state
+  showTranslationPicker = signal(false);
+  searchQuery = signal('');
+  selectedLanguage = signal<string | null>(null);
+  showLanguages = signal(false);
+
   translations = TRANSLATIONS;
+  languages = TRANSLATION_LANGUAGES;
+
+  filteredTranslations = computed(() => {
+    let list = this.translations;
+    const lang = this.selectedLanguage();
+    if (lang) {
+      list = list.filter(t => t.language === lang);
+    }
+    const q = this.searchQuery().toLowerCase().trim();
+    if (q) {
+      list = list.filter(t =>
+        t.id.toLowerCase().includes(q) ||
+        t.name.toLowerCase().includes(q) ||
+        t.language.toLowerCase().includes(q)
+      );
+    }
+    return list;
+  });
+
+  currentTranslationLabel = computed(() => {
+    const id = this.bibleText.selectedTranslation();
+    if (!id) return null;
+    return id === 'local-cornilescu' ? 'VDC' : id;
+  });
 
   isRead = computed(() => this.utils.isChapterRead(this.chapterLabel()));
   prevChapter = computed(() => this.bibleText.getAdjacentChapter(this.chapterLabel(), 'prev'));
@@ -41,10 +72,28 @@ export class Reader {
         const ch = params['chapter'];
         if (ch) {
           this.chapterLabel.set(ch);
-          this.loadChapter(ch);
+          if (this.utils.selectedTranslation()) {
+            this.loadChapter(ch);
+          } else {
+            this.loading.set(false);
+          }
           globalThis.scrollTo({ top: 0 });
         }
       });
+
+    // When translation arrives from Firebase after the component initialised,
+    // load the chapter that was deferred because the translation wasn't ready.
+    effect(() => {
+      const translation = this.utils.selectedTranslation();
+      const ch = this.chapterLabel();
+      if (translation && ch) {
+        untracked(() => {
+          if (!this.chapter() && !this.loading()) {
+            this.loadChapter(ch);
+          }
+        });
+      }
+    });
   }
 
   private async loadChapter(label: string) {
@@ -62,7 +111,28 @@ export class Reader {
 
   async onTranslationChange(translationId: string) {
     this.bibleText.setTranslation(translationId);
+    this.utils.selectedTranslation.set(translationId);
+    this.showTranslationPicker.set(false);
+    this.searchQuery.set('');
+    this.selectedLanguage.set(null);
+    await this.firebase.setSelectedTranslation(translationId);
     await this.loadChapter(this.chapterLabel());
+  }
+
+  openTranslationPicker() {
+    this.searchQuery.set('');
+    this.selectedLanguage.set(null);
+    this.showTranslationPicker.set(true);
+  }
+
+  closeTranslationPicker() {
+    this.showTranslationPicker.set(false);
+    this.searchQuery.set('');
+    this.selectedLanguage.set(null);
+  }
+
+  selectLanguage(lang: string | null) {
+    this.selectedLanguage.set(lang);
   }
 
   goBack() {

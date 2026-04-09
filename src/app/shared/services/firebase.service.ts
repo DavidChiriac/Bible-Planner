@@ -335,6 +335,26 @@ export class FirebaseService {
     await migrateChaptersSameRefIfNeeded(this.db, u.uid);
   }
 
+  // --------------------- SELECTED TRANSLATION ----------------
+
+  getSelectedTranslation$(): Observable<string | null> {
+    return this.user$.pipe(
+      switchMap(u => {
+        if (!u) return of(null);
+        return objectVal<string | null>(ref(this.db, `users/${u.uid}/selectedTranslation`));
+      }),
+      map(v => v ?? null)
+    );
+  }
+
+  async setSelectedTranslation(translationId: string): Promise<void> {
+    const u = this.auth.currentUser;
+    if (!u) throw new Error('Not logged in');
+
+    const translationRef = ref(this.db, `users/${u.uid}/selectedTranslation`);
+    await runTransaction(translationRef, () => translationId);
+  }
+
   // --------------------- FAVOURITE WEEKS ----------------
 
   async addFavouriteWeek(plan: TABS, week: number): Promise<void> {

@@ -15,6 +15,8 @@
 
     &:hover {
       background: inherit;
+      color: inherit;
+      box-shadow: none;
     }
   }
 
@@ -89,6 +91,8 @@
 
     &:hover {
       background: var(--muted-sage);
+      color: var(--beige-light);
+      box-shadow: var(--shadow-soft);
     }
   }
 }
@@ -129,7 +133,8 @@
   }
 
   &:hover {
-    background-color: var(--brown-dark) !important;
+    background-color: var(--terracotta) !important;
+    box-shadow: var(--shadow-soft);
   }
 }
 
@@ -144,7 +149,9 @@
   }
   
   &:hover {
-    background: var(--brown);
+    background: var(--brown-dark);
+    color: inherit;
+    box-shadow: none;
   }
 }
 
@@ -172,8 +179,8 @@
   }
 
   &:hover {
-    color: var(--brown-dark);
-    background: none;
+    color: var(--brown);
+    background: transparent;
   }
 }
 
@@ -189,7 +196,9 @@
     box-shadow: var(--shadow-soft);
 
     &:hover {
-      background: var(--brown);
+      background: var(--brown-dark);
+      color: var(--beige-light);
+      box-shadow: var(--shadow-soft);
     }
   }
 }
@@ -206,7 +215,9 @@
     box-shadow: var(--shadow-soft);
 
     &:hover {
-      background: var(--deep-umber);
+      background: var(--terracotta);
+      color: var(--beige-light);
+      box-shadow: var(--shadow-soft);
     }
   }
 }
@@ -227,12 +238,12 @@
     }
 
     &:hover {
-      background: var(--terracotta);
-      border-color: var(--terracotta);
-      color: var(--beige-light);
+      background: var(--beige-bg);
+      border-color: var(--brown-light);
+      color: var(--terracotta);
 
       .p-button-icon {
-        color: var(--beige-light);
+        color: var(--terracotta);
       }
     }
   }
@@ -250,6 +261,7 @@
     &:hover {
       background: var(--beige-card);
       border-color: var(--brown-light);
+      color: inherit;
 
       .p-button-icon {
         color: var(--brown-light);
