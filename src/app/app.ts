@@ -16,17 +16,20 @@ import { Location } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-  title = 'bible-planner';
+  title = 'bible-agenda';
 
   utils = inject(Utils);
   auth = inject(AuthService);
   private readonly location = inject(Location);
 
-  async ngOnInit() {
+  async ngOnInit(): Promise<void> {
     if (Capacitor.getPlatform() === 'android') {
       await App.addListener('backButton', ({ canGoBack }: { canGoBack: boolean }) => {
         if (canGoBack) {
           globalThis.history.back();
+          return;
+        } else {
+          App.exitApp();
           return;
         }
 

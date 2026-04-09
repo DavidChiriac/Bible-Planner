@@ -28,6 +28,7 @@ export class Reader {
   loading = signal(true);
   error = signal(false);
   fontSize = signal(1.05);
+  planMode = signal(false);
 
   // Translation picker dialog state
   showTranslationPicker = signal(false);
@@ -62,14 +63,31 @@ export class Reader {
   });
 
   isRead = computed(() => this.utils.isChapterRead(this.chapterLabel()));
-  prevChapter = computed(() => this.bibleText.getAdjacentChapter(this.chapterLabel(), 'prev'));
-  nextChapter = computed(() => this.bibleText.getAdjacentChapter(this.chapterLabel(), 'next'));
+
+  prevChapter = computed(() => {
+    if (this.planMode()) {
+      const chapters = this.utils.planChaptersOrdered();
+      const idx = chapters.indexOf(this.chapterLabel());
+      return idx > 0 ? chapters[idx - 1] : null;
+    }
+    return this.bibleText.getAdjacentChapter(this.chapterLabel(), 'prev');
+  });
+
+  nextChapter = computed(() => {
+    if (this.planMode()) {
+      const chapters = this.utils.planChaptersOrdered();
+      const idx = chapters.indexOf(this.chapterLabel());
+      return idx >= 0 && idx < chapters.length - 1 ? chapters[idx + 1] : null;
+    }
+    return this.bibleText.getAdjacentChapter(this.chapterLabel(), 'next');
+  });
 
   constructor() {
     this.route.queryParams
       .pipe(takeUntilDestroyed())
       .subscribe((params) => {
         const ch = params['chapter'];
+        this.planMode.set(params['source'] === 'plan');
         if (ch) {
           this.chapterLabel.set(ch);
           if (this.utils.selectedTranslation()) {
@@ -144,7 +162,9 @@ export class Reader {
   }
 
   navigateTo(label: string) {
-    this.router.navigate(['/reader'], { queryParams: { chapter: label }, replaceUrl: true });
+    const queryParams: Record<string, string> = { chapter: label };
+    if (this.planMode()) queryParams['source'] = 'plan';
+    this.router.navigate(['/reader'], { queryParams, replaceUrl: true });
     globalThis.scrollTo({ top: 0 });
   }
 

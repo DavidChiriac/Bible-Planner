@@ -57,7 +57,7 @@ export class Day {
   weekLabel: string = '';
 
   note: string = '';
-  noteChapters: string[] = [];
+  noteChapter: string | null = null;
   noteTags: NoteTag[] = [];
   tagOptions = NOTE_TAGS;
 
@@ -101,7 +101,7 @@ export class Day {
 
         if (this.chapter) {
           this.chapters = [this.chapter];
-          this.noteChapters = [this.chapter];
+          this.noteChapter = this.chapter;
           this.dayLabel = this.chapter;
           this.weekLabel = '';
           await this.fetchNotes().then(() => this.loading.set(false));
@@ -115,7 +115,7 @@ export class Day {
         this.weekLabel = `Săptămâna ${week.week} · ${week.label}`;
 
         if (this.chapters.length === 1) {
-          this.noteChapters = [this.chapters[0]];
+          this.noteChapter = this.chapters[0];
         }
 
         await this.fetchNotes().then(() => this.loading.set(false));
@@ -128,7 +128,7 @@ export class Day {
 
   async saveNote() {
     this.loading.set(true);
-    await this.notesService.saveNote(this.noteChapters, this.note, this.noteTags);
+    await this.notesService.saveNote([this.noteChapter!], this.note, this.noteTags);
 
     await this.fetchNotes();
 
@@ -233,7 +233,7 @@ export class Day {
   }
 
   openReader(chapter: string) {
-    this.router.navigate(['/reader'], { queryParams: { chapter } });
+    this.router.navigate(['/reader'], { queryParams: { chapter, source: 'plan' } });
   }
 
   private resolvePlan(planName: string): IPlan[] {

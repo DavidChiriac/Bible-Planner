@@ -230,7 +230,7 @@ export class Plans {
   }
 
   readChapter(chapter: string) {
-    this.router.navigate(['/reader'], { queryParams: { chapter } });
+    this.router.navigate(['/reader'], { queryParams: { chapter, source: 'plan' } });
   }
 
   readFirstUnread(chapters: string[]) {

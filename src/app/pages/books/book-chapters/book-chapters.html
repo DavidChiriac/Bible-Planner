@@ -30,9 +30,9 @@
         </div>
         <div class="hero-actions">
             @if (utils.isEntireDayRead(book()?.chapters ?? [])) {
-                <p-button [label]="i18n.t('books.markAllUnread')" icon="pi pi-times" class="mark-as-unread" [styleClass]="'w-full'" (onClick)="utils.markAllAsUnread(book()?.chapters ?? [])"></p-button>
+                <p-button [label]="i18n.t('books.markAllUnread')" icon="pi pi-times" class="mark-as-unread w-full" (onClick)="utils.markAllAsUnread(book()?.chapters ?? [])"></p-button>
             } @else {
-                <p-button [label]="i18n.t('books.markAllRead')" icon="pi pi-check" class="mark-as-read" [styleClass]="'w-full'" (onClick)="utils.markAllAsRead(book()?.chapters ?? [])"></p-button>
+                <p-button [label]="i18n.t('books.markAllRead')" icon="pi pi-check" class="mark-as-read w-full" (onClick)="utils.markAllAsRead(book()?.chapters ?? [])"></p-button>
             }
         </div>
     </div>

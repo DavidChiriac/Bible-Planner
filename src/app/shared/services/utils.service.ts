@@ -16,6 +16,7 @@ import { IPlan } from '../models/plan.model';
 import { BibleTextService } from './bible-text.service';
 
 const TOTAL_BIBLE_VERSES = 31102;
+const VERSE_MAP = new Map(ChapterWithVerses.flatMap(b => b.chapters.map(c => [c.chapter, c.verses] as const)));
 
 @Injectable({
   providedIn: 'root',
@@ -55,6 +56,11 @@ export class Utils {
     return this.startDate();
   });
 
+  planChaptersOrdered = computed<string[]>(() => {
+    const weeks = this.getActivePlan();
+    return weeks.flatMap(w => w.days.flatMap(d => d.chapters));
+  });
+
   planChaptersCount = computed(() => {
     const plan = this.selectedPlan();
     const readChapters = this.readSet();
@@ -69,8 +75,20 @@ export class Utils {
     }
 
     const allChapters = new Set(weeks.flatMap(w => w.days.flatMap(d => d.chapters)));
+
+    if (plan === TABS.PERSONALIZAT) {
+      let readVerses = 0;
+      let totalVerses = 0;
+      for (const ch of allChapters) {
+        const v = VERSE_MAP.get(ch) ?? 0;
+        totalVerses += v;
+        if (readChapters.has(ch)) readVerses += v;
+      }
+      return { read: readVerses, total: totalVerses, isVerses: true };
+    }
+
     const read = [...allChapters].filter(ch => readChapters.has(ch)).length;
-    return { read, total: allChapters.size };
+    return { read, total: allChapters.size, isVerses: false };
   });
 
   constructor() {
@@ -256,8 +274,15 @@ export class Utils {
         this.customPlan().flatMap(week => week.days.flatMap(day => day.chapters))
       );
       if (planChapters.size === 0) return 0;
-      const readInPlan = [...planChapters].filter(ch => readChapters.has(ch)).length;
-      return Number.parseFloat((readInPlan / planChapters.size * 100).toFixed(2));
+      let readVerses = 0;
+      let totalVerses = 0;
+      for (const ch of planChapters) {
+        const v = VERSE_MAP.get(ch) ?? 0;
+        totalVerses += v;
+        if (readChapters.has(ch)) readVerses += v;
+      }
+      if (totalVerses === 0) return 0;
+      return Number.parseFloat((readVerses / totalVerses * 100).toFixed(2));
     }
 
     const totalVerses = ChapterWithVerses.flatMap((book) => book.chapters).filter((chapter) => readChapters.has(chapter.chapter)).reduce((sum, chapter) => sum + chapter.verses, 0);
@@ -268,7 +293,7 @@ export class Utils {
     const pct = this.readPercentage();
     const status = this.hasCompletedPlan()
       ? 'Ai completat planul!'
-      : `${pct}% completat`;
+      : 'completat';
 
     // Calculate days ahead/behind
     const startMs = this.activeStartDate()?.getTime() ?? Date.now();

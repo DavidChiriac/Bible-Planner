@@ -17,9 +17,10 @@ const RO = {
     readAction: 'Citește',
     notes: 'Notițe',
     chapters: 'Capitole',
+    verses: 'Versete',
   },
   login: {
-    title: 'Bine ai venit la Bible Planner!',
+    title: 'Bine ai venit la Bible Agenda!',
     google: 'Conectează-te cu Google',
   },
   nav: {
@@ -131,7 +132,7 @@ const RO = {
   day: {
     swipeHint: 'glisează',
     addNote: 'Adaugă notă',
-    chooseChapters: 'Alege capitolele',
+    chooseChapters: 'Alege capitolul',
     writeNote: 'Scrie notița ta aici...',
     saveNote: 'Salvează notița',
   },
@@ -189,9 +190,10 @@ const EN: typeof RO = {
     readAction: 'Read',
     notes: 'Notes',
     chapters: 'Chapters',
+    verses: 'Verses',
   },
   login: {
-    title: 'Welcome to Bible Planner!',
+    title: 'Welcome to Bible Agenda!',
     google: 'Sign in with Google',
   },
   nav: {
@@ -303,7 +305,7 @@ const EN: typeof RO = {
   day: {
     swipeHint: 'swipe',
     addNote: 'Add note',
-    chooseChapters: 'Choose chapters',
+    chooseChapters: 'Choose chapter',
     writeNote: 'Write your note here...',
     saveNote: 'Save note',
   },

@@ -15,7 +15,7 @@
             <div class="filter-row">
                 <p-multiselect [options]="booksOptions()" optionLabel="label" optionValue="value" appendTo="body" [showClear]="true" (onClear)="selectedBooks.set([])" [panelStyleClass]="'multiselect-panel'" [placeholder]="i18n.t('notes.books')" class="w-full" [(ngModel)]="selectedBooks"></p-multiselect>
                 <p-multiselect [options]="chapters()" appendTo="body" [showClear]="true" (onClear)="selectedChapters.set([])" [disabled]="selectedBooks().length === 0" [panelStyleClass]="'multiselect-panel'" [placeholder]="i18n.t('notes.chapters')" class="w-full" [(ngModel)]="selectedChapters"></p-multiselect>
-                <p-multiselect [options]="tagOptions" optionLabel="label" optionValue="value" appendTo="body" [filter]="false" [pt]="$any({ hiddenInput: { inputmode: 'none' } })" [showClear]="true" (onClear)="selectedTags.set([])" [panelStyleClass]="'multiselect-panel'" [placeholder]="i18n.t('notes.tags')" class="w-full" [(ngModel)]="selectedTags"></p-multiselect>
+                <p-multiselect [options]="tagOptions" optionLabel="label" optionValue="value" appendTo="body" [filter]="false" [showClear]="true" (onClear)="selectedTags.set([])" [panelStyleClass]="'multiselect-panel'" [placeholder]="i18n.t('notes.tags')" class="w-full" [(ngModel)]="selectedTags"></p-multiselect>
                 <p-select [options]="sortOptions()" appendTo="body" [showClear]="sort() !== sortOptions()[0].value" (onClear)="sort.set(sortOptions()[0].value)" [placeholder]="sortOptions()[0].label" class="notes-sort w-full" [panelStyleClass]="'dropdown-panel'" optionLabel="label" optionValue="value" [(ngModel)]="sort"></p-select>
             </div>
         }
@@ -87,7 +87,7 @@
 
         <div class="flex flex-column gap-2">
             <label for="tags">{{ i18n.t('notes.tags') }}</label>
-            <p-multiselect id="tags" appendTo="body" [options]="tagOptions" optionLabel="label" optionValue="value" [filter]="false" [pt]="$any({ hiddenInput: { inputmode: 'none' } })" [showClear]="true" (onClear)="draftSelectedTags.set([])" [panelStyleClass]="'multiselect-panel'" [placeholder]="i18n.t('notes.selectTags')" [(ngModel)]="draftSelectedTags"></p-multiselect>
+            <p-multiselect id="tags" appendTo="body" [options]="tagOptions" optionLabel="label" optionValue="value" [filter]="false" [showClear]="true" (onClear)="draftSelectedTags.set([])" [panelStyleClass]="'multiselect-panel'" [placeholder]="i18n.t('notes.selectTags')" [(ngModel)]="draftSelectedTags"></p-multiselect>
         </div>
 
         <div class="flex flex-column gap-2">
@@ -128,7 +128,6 @@
                 optionValue="value"
                 appendTo="body"
                 [filter]="false"
-                [pt]="$any({ hiddenInput: { inputmode: 'none' } })"
                 [placeholder]="i18n.t('common.addTags')"
                 [panelStyleClass]="'multiselect-panel'"
                 [(ngModel)]="newNoteTags">

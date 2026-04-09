@@ -1,6 +1,6 @@
 {
-  "name": "bible-planner",
-  "version": "2.5.1",
+  "name": "bible-agenda",
+  "version": "3.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -8,10 +8,7 @@
     "build": "npm run build:mobile && npm run postbuild:pages",
     "watch": "ng build --watch --configuration development",
     "test": "jest",
-    "build:pages": "ng build --configuration production --base-href \"/Bible-Planner/\"",
-    "postbuild:pages": "node -e \"require('fs').copyFileSync('dist/bible-planner/browser/index.csr.html','dist/bible-planner/browser/index.html')\"",
-    "deploy": "npm run build:pages && npm run postbuild:pages && gh-pages -d dist/bible-planner/browser",
-    "serve:ssr:bible-planner": "node dist/bible-planner/server/server.mjs",
+    "postbuild:pages": "node -e \"require('fs').copyFileSync('dist/bible-agenda/browser/index.csr.html','dist/bible-agenda/browser/index.html')\"",
     "capacitor:sync": "npx cap sync android",
     "capacitor": "npm run build && npm run capacitor:sync && npx cap run android",
     "commit": "git cz",
@@ -19,7 +16,12 @@
     "release:minor": "standard-version --commit-all --release-as minor",
     "release:major": "standard-version --commit-all --release-as major",
     "ship": "npm run commit && npm run release && node scripts/create-release-branch.js && git push --follow-tags origin HEAD",
-    "prepare": "husky"
+    "prepare": "husky",
+
+
+    "build:pages": "ng build --configuration production --base-href \"/Bible-Planner/\"",
+    "deploy": "npm run build:pages && npm run postbuild:pages && gh-pages -d dist/bible-planner/browser",
+    "serve:ssr:bible-planner": "node dist/bible-planner/server/server.mjs"
   },
   "config": {
     "commitizen": {
@@ -49,7 +51,6 @@
     "@capacitor/haptics": "^8.0.1",
     "@capacitor/share": "^8.0.1",
     "@capacitor/status-bar": "^8.0.1",
-    "@capawesome/capacitor-android-edge-to-edge-support": "^8.0.5",
     "@primeuix/themes": "^2.0.3",
     "docx": "^9.6.1",
     "express": "^5.1.0",

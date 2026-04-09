@@ -60,21 +60,22 @@
 
         <div class="add-note-card">
             <div class="note-form-row">
-                <p-multiSelect
+                <p-select
                     [options]="chapters"
                     appendTo="body"
                     [placeholder]="i18n.t('day.chooseChapters')"
-                    panelStyleClass="multiselect-panel"
-                    [styleClass]="'w-full'"
-                    [(ngModel)]="noteChapters"></p-multiSelect>
+                    panelStyleClass="dropdown-panel"
+                    class="w-full"
+                    [(ngModel)]="noteChapter"></p-select>
                 <p-multiSelect
                     [options]="tagOptions"
                     optionLabel="label"
                     optionValue="value"
                     appendTo="body"
+                    [filter]="false"
                     [placeholder]="i18n.t('common.addTags')"
                     panelStyleClass="multiselect-panel"
-                    [styleClass]="'w-full'"
+                    class="w-full"
                     [(ngModel)]="noteTags"></p-multiSelect>
             </div>
 
@@ -83,9 +84,8 @@
             <p-button
                 [label]="i18n.t('day.saveNote')"
                 icon="pi pi-save"
-                class="save-note"
-                [styleClass]="'w-full'"
-                [disabled]="!note || !noteChapters || !noteChapters.length"
+                class="save-note w-full"
+                [disabled]="!note || !noteChapter"
                 (onClick)="saveNote()"></p-button>
         </div>
 

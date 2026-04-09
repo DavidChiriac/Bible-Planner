@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "bible-planner": {
+    "bible-agenda": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/bible-planner",
+            "outputPath": "dist/bible-agenda",
             "index": {
               "input": "src/index.html",
               "output": "index.html"
@@ -79,10 +79,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "bible-planner:build:production"
+              "buildTarget": "bible-agenda:build:production"
             },
             "development": {
-              "buildTarget": "bible-planner:build:development"
+              "buildTarget": "bible-agenda:build:development"
             }
           },
           "defaultConfiguration": "development"

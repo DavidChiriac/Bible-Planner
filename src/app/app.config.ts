@@ -34,6 +34,10 @@ export const appConfig: ApplicationConfig = {
           darkModeSelector: true,
         },
       },
+      pt: {
+        select: { hiddenInput: { inputmode: 'none' } } as any,
+        multiselect: { hiddenInput: { inputmode: 'none' } } as any,
+      },
     }),
 
     provideNgxWebstorage(
