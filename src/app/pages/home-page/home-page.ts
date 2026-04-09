@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProgressBar } from 'primeng/progressbar';
@@ -14,7 +14,4 @@ import { I18nService } from '../../shared/services/i18n.service';
 export class HomePage {
   utils = inject(Utils);
   i18n = inject(I18nService);
-
-  chaptersRead = computed(() => this.utils.readSet().size);
-  totalChapters = 1189;
 }

@@ -55,6 +55,24 @@ export class Utils {
     return this.startDate();
   });
 
+  planChaptersCount = computed(() => {
+    const plan = this.selectedPlan();
+    const readChapters = this.readSet();
+    let weeks: IPlan[];
+
+    if (plan === TABS.PERSONALIZAT) {
+      weeks = this.customPlan();
+    } else if (plan === TABS.INORDINE) {
+      weeks = INORDINE as IPlan[];
+    } else {
+      weeks = CRONOLOGIC as IPlan[];
+    }
+
+    const allChapters = new Set(weeks.flatMap(w => w.days.flatMap(d => d.chapters)));
+    const read = [...allChapters].filter(ch => readChapters.has(ch)).length;
+    return { read, total: allChapters.size };
+  });
+
   constructor() {
     if (!isPlatformBrowser(this.platformId)) return;
 

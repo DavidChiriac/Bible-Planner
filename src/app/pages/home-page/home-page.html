@@ -15,7 +15,7 @@
         <span class="progress-pct">{{ utils.readPercentage() }}%</span>
       </div>
       <p-progress-bar [value]="utils.readPercentage()" [showValue]="false"></p-progress-bar>
-      <p class="progress-detail">{{ chaptersRead() }} / {{ totalChapters }} {{ i18n.t('common.chapters') }}</p>
+      <p class="progress-detail">{{ utils.planChaptersCount().read }} / {{ utils.planChaptersCount().total }} {{ i18n.t('common.chapters') }}</p>
     </div>
 
     <!-- Quick links grid -->
