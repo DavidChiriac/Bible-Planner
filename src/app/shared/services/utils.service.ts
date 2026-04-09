@@ -61,36 +61,6 @@ export class Utils {
     return weeks.flatMap(w => w.days.flatMap(d => d.chapters));
   });
 
-  planChaptersCount = computed(() => {
-    const plan = this.selectedPlan();
-    const readChapters = this.readSet();
-    let weeks: IPlan[];
-
-    if (plan === TABS.PERSONALIZAT) {
-      weeks = this.customPlan();
-    } else if (plan === TABS.INORDINE) {
-      weeks = INORDINE as IPlan[];
-    } else {
-      weeks = CRONOLOGIC as IPlan[];
-    }
-
-    const allChapters = new Set(weeks.flatMap(w => w.days.flatMap(d => d.chapters)));
-
-    if (plan === TABS.PERSONALIZAT) {
-      let readVerses = 0;
-      let totalVerses = 0;
-      for (const ch of allChapters) {
-        const v = VERSE_MAP.get(ch) ?? 0;
-        totalVerses += v;
-        if (readChapters.has(ch)) readVerses += v;
-      }
-      return { read: readVerses, total: totalVerses, isVerses: true };
-    }
-
-    const read = [...allChapters].filter(ch => readChapters.has(ch)).length;
-    return { read, total: allChapters.size, isVerses: false };
-  });
-
   constructor() {
     if (!isPlatformBrowser(this.platformId)) return;
 
