@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/davidchiriac/Bible-Planner/compare/v2.4.0...v2.5.0) (2026-04-09)
+
+
+### Features
+
+* **component:** move plans to separate component and create homepage ([f7f7c24](https://github.com/davidchiriac/Bible-Planner/commit/f7f7c248ef26a7d318bf0b00c0d3e487221c5717))
+
 ## [2.4.0](https://github.com/davidchiriac/Bible-Planner/compare/v2.3.1...v2.4.0) (2026-04-09)
 
 
