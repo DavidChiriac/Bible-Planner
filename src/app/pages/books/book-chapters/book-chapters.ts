@@ -73,7 +73,7 @@ export class BookChapters {
   }
 
   navigateToBook(title: string) {
-    this.router.navigate([`/books/${slugify(title)}`]);
+    this.router.navigate([`/books/${slugify(title)}`], { replaceUrl: true });
   }
 
   viewChapterNotes(chapter: string) {
