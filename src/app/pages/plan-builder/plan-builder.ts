@@ -71,7 +71,7 @@ export class PlanBuilder {
       }))
     );
 
-    this.days = signal(existing?.days ?? 30);
+    this.days = signal(existing?.days ?? 0);
     this.places = signal(existing?.places ?? 1);
     this.planStartDate = signal(
       existing?.startDate ? this.utils.startDateAsDate(existing.startDate) : new Date()
@@ -182,7 +182,7 @@ export class PlanBuilder {
   });
 
   canGenerate = computed(() =>
-    this.selectedBooks().length > 0 && this.days() > 0 && this.places() > 0
+    this.selectedBooks().length > 0 && (this.days() > 0 || this.planTargetDate() !== null) && this.places() > 0
   );
 
   showPreview = signal(false);
@@ -248,7 +248,7 @@ export class PlanBuilder {
     this.utils.customPlanConfig.set(config);
     this.utils.selectedPlan.set(TABS.PERSONALIZAT);
     await this.firebase.setSelectedPlan(TABS.PERSONALIZAT);
-    this.router.navigate(['/']);
+    this.router.navigate(['/plans']);
   }
 
   goBack() {

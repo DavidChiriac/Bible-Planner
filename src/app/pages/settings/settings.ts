@@ -6,15 +6,12 @@ import { I18nService } from '../../shared/services/i18n.service';
 import { Lang } from '../../shared/i18n/translations';
 import { TABS } from '../plans/plans';
 import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { FloatLabelModule } from 'primeng/floatlabel';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
-import { DatePickerModule } from 'primeng/datepicker';
 import { NgClass } from '@angular/common';
 @Component({
   selector: 'app-settings',
-  imports: [ButtonModule, InputTextModule, FloatLabelModule, FormsModule, DialogModule, DatePickerModule, NgClass],
+  imports: [ButtonModule, FormsModule, DialogModule, NgClass],
   templateUrl: './settings.html',
   styleUrl: './settings.scss',
 })
@@ -30,27 +27,6 @@ export class Settings {
 
   resetConfirmationVisible = false;
   deletePlanVisible = false;
-
-  setStartDate(date: Date | null) {
-    if (!date) return;
-
-    const iso =
-      `${date.getFullYear()}-` +
-      `${String(date.getMonth() + 1).padStart(2, '0')}-` +
-      `${String(date.getDate()).padStart(2, '0')}`;
-      
-    this.firebase.setStartDate(iso);
-
-    this.utils.startDate.set(this.utils.startDateAsDate(iso));
-  }
-
-  setMonths(months: number) {
-    if (!months) {
-      return;
-    }
-    this.firebase.setMonths(months);
-    this.utils.months.set(months);
-  }
 
   resetProgress() {
     this.resetConfirmationVisible = true;

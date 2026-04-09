@@ -30,6 +30,40 @@
                 }
             <i class="pi flex align-items-center pi-angle-double-right"></i>
         </div>
+
+        @if (utils.selectedPlan() !== 'Personalizat') {
+        <div class="plan-info" [ngClass]="{'plan-info-mobile': utils.isMobile()}">
+            <div class="plan-info-fields">
+                <div class="plan-info-field">
+                    <label for="plan-start-date">{{ i18n.t('home.startShort') }}</label>
+                    <p-datepicker id="plan-start-date" [(ngModel)]="utils.startDate" dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" (ngModelChange)="setStartDate($event)"></p-datepicker>
+                </div>
+                <div class="plan-info-field">
+                    <label for="plan-months">{{ i18n.t('home.monthsShort') }}</label>
+                    <input id="plan-months" type="number" min="1" pInputText [ngModel]="utils.months()" (ngModelChange)="setMonths($event)" autocomplete="off" />
+                </div>
+                @if (targetDate(); as target) {
+                    <div class="plan-info-field plan-info-target">
+                        <i class="pi pi-flag"></i>
+                        <span>{{ target.toLocaleDateString(i18n.lang() === 'ro' ? 'ro-RO' : 'en-GB') }}</span>
+                    </div>
+                }
+            </div>
+        </div>
+        }
+
+        @if (pastDue() || utils.hasCompletedPlan()) {
+            <div class="plan-status-banner" [ngClass]="{'completed': utils.hasCompletedPlan(), 'past-due': pastDue()}">
+                @if (pastDue()) {
+                    <i class="pi pi-exclamation-triangle"></i>
+                    <span>{{ i18n.t('home.pastDueMessage') }}</span>
+                    <span class="banner-separator">·</span>
+                }
+                <a class="restart-plan-link" (click)="restartConfirmVisible.set(true)" onkeydown="">
+                    <i class="pi pi-refresh"></i> {{ i18n.t('home.restartPlan') }}
+                </a>
+            </div>
+        }
     </div>
 
     <div [ngClass]="utils.isMobile() ? 'card-mobile' : 'card'">
@@ -146,3 +180,12 @@
         </p-button>
     </div>
 </div>
+
+<p-dialog [header]="i18n.t('settings.resetDialogHeader')" [modal]="true" [(visible)]="restartConfirmVisible" [style]="{ width: '25rem' }">
+    <span class="p-text-secondary block mb-2">{{ i18n.t('home.restartConfirm') }}</span>
+    <span class="p-text-secondary block mb-8 font-italic">{{ i18n.t('settings.resetDialogNote') }}</span>
+    <div class="flex justify-content-end gap-2">
+        <p-button [label]="i18n.t('common.confirm')" class="confirm-reset-progress" (onClick)="confirmRestart()"></p-button>
+        <p-button [label]="i18n.t('common.cancel')" class="cancel-reset-progress" (onClick)="restartConfirmVisible.set(false)"></p-button>
+    </div>
+</p-dialog>

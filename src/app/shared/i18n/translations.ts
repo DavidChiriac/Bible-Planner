@@ -54,6 +54,12 @@ const RO = {
     notStarted: 'Neînceput',
     continueReading: 'Continuă citirea',
     scrollTop: 'Sus',
+    targetDate: 'Data estimată de finalizare',
+    pastDueMessage: 'Data țintă a fost depășită',
+    restartPlan: 'Ia-o de la capăt',
+    restartConfirm: 'Ești sigur că vrei să resetezi progresul și să o iei de la capăt?',
+    startShort: 'Început:',
+    monthsShort: 'Luni:',
   },
   tabs: {
     cronologic: 'Cronologic',
@@ -62,7 +68,7 @@ const RO = {
   },
   settings: {
     startDate: 'Data de început:',
-    months: 'Numărul de luni:',
+    months: 'Câte luni pentru a citi Biblia:',
     colorTheme: 'Temă de culori:',
     language: 'Limbă:',
     resetProgress: 'Resetează Progresul',
@@ -227,6 +233,12 @@ const EN: typeof RO = {
     notStarted: 'Not started',
     continueReading: 'Continue reading',
     scrollTop: 'Top',
+    targetDate: 'Estimated completion date',
+    pastDueMessage: 'The target date has passed',
+    restartPlan: 'Start over',
+    restartConfirm: 'Are you sure you want to reset your progress and start over?',
+    startShort: 'Start:',
+    monthsShort: 'Months:',
   },
   tabs: {
     cronologic: 'Chronological',
@@ -235,7 +247,7 @@ const EN: typeof RO = {
   },
   settings: {
     startDate: 'Start date:',
-    months: 'Number of months:',
+    months: 'Months to read the Bible:',
     colorTheme: 'Color theme:',
     language: 'Language:',
     resetProgress: 'Reset Progress',

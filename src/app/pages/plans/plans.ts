@@ -13,6 +13,9 @@ import { Router, RouterLink } from '@angular/router';
 import { ProgressBar } from 'primeng/progressbar';
 import { TooltipModule } from 'primeng/tooltip';
 import { I18nService } from '../../shared/services/i18n.service';
+import { DatePickerModule } from 'primeng/datepicker';
+import { InputTextModule } from 'primeng/inputtext';
+import { DialogModule } from 'primeng/dialog';
 
 export enum TABS {
   CRONOLOGIC = 'Cronologic',
@@ -32,7 +35,10 @@ export enum TABS {
     TagModule,
     ProgressBar,
     RouterLink,
-    TooltipModule
+    TooltipModule,
+    DatePickerModule,
+    InputTextModule,
+    DialogModule,
   ],
   templateUrl: './plans.html',
   styleUrl: './plans.scss',
@@ -44,6 +50,29 @@ export class Plans {
   private readonly router = inject(Router);
 
   tabs = [TABS.CRONOLOGIC, TABS.INORDINE, TABS.PERSONALIZAT];
+
+  targetDate = computed(() => {
+    const start = this.utils.activeStartDate();
+    const months = this.utils.months();
+    if (!start || !months) return null;
+    const target = new Date(start);
+    target.setMonth(target.getMonth() + months);
+    return target;
+  });
+
+  pastDue = computed(() => {
+    let target: Date | null = null;
+    if (this.utils.selectedPlan() === TABS.PERSONALIZAT) {
+      const td = this.utils.customPlanConfig()?.targetDate;
+      if (td) target = new Date(td);
+    } else {
+      target = this.targetDate();
+    }
+    if (!target) return false;
+    return new Date() > target && !this.utils.hasCompletedPlan();
+  });
+
+  restartConfirmVisible = signal(false);
 
   weeks = computed(() => {
     const plan = this.utils.selectedPlan();
@@ -69,14 +98,27 @@ export class Plans {
     const start = this.utils.activeStartDate() ?? new Date();
 
     const diffInMs = today.getTime() - start.getTime();
-    const diffInDays =
+    const elapsedDays =
       Math.floor(diffInMs / (1000 * 60 * 60 * 24)) + 1;
 
-    const expectedPerDay = this.utils.selectedPlan() === TABS.PERSONALIZAT
-      ? (this.utils.customPlanConfig()?.places ?? 1)
-      : (12 / this.utils.months()!);
+    if (this.utils.selectedPlan() === TABS.PERSONALIZAT) {
+      const expectedPerDay = this.utils.customPlanConfig()?.places ?? 1;
+      const totalDays = this.weeks().reduce((sum, w) => sum + w.days.length, 0);
+      const diff = Math.round(this.numbersOfDaysRead() - elapsedDays * expectedPerDay);
+      return Math.max(-totalDays, Math.min(totalDays, diff));
+    }
 
-    return Math.round(this.numbersOfDaysRead() - diffInDays * expectedPerDay);
+    // For Cronologic/În Ordine: use actual calendar days in the plan
+    const totalReadingDays = this.weeks().reduce((sum, w) => sum + w.days.length, 0);
+    const target = this.targetDate();
+    const totalCalendarDays = target
+      ? Math.ceil((target.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
+      : totalReadingDays;
+    if (totalCalendarDays <= 0) return 0;
+
+    const expectedDays = elapsedDays * (totalReadingDays / totalCalendarDays);
+    const diff = Math.round(this.numbersOfDaysRead() - expectedDays);
+    return Math.max(-totalReadingDays, Math.min(totalReadingDays, diff));
   });
 
   openWeeks = signal<number[]>([]);
@@ -240,5 +282,39 @@ export class Plans {
 
   goToChapterNotes(chapter: string) {
     this.router.navigate(['/day'], { queryParams: { chapter } });
+  }
+
+  setStartDate(date: Date | null) {
+    if (!date) return;
+    const iso =
+      `${date.getFullYear()}-` +
+      `${String(date.getMonth() + 1).padStart(2, '0')}-` +
+      `${String(date.getDate()).padStart(2, '0')}`;
+    this.firebase.setStartDate(iso);
+    this.utils.startDate.set(this.utils.startDateAsDate(iso));
+  }
+
+  setMonths(months: number) {
+    if (!months) return;
+    this.firebase.setMonths(months);
+    this.utils.months.set(months);
+  }
+
+  confirmRestart() {
+    this.restartConfirmVisible.set(false);
+    const isCustom = this.utils.selectedPlan() === TABS.PERSONALIZAT;
+    this.firebase.resetProgress()
+      .then(async () => {
+        this.utils.readSet.set(new Set());
+        this.utils.favouriteWeeks.set([]);
+        this.utils.startDate.set(null);
+        this.utils.months.set(null);
+        if (isCustom) {
+          this.utils.customPlanConfig.set(null);
+          await this.firebase.deleteCustomPlanConfig();
+          this.router.navigate(['/plan-builder']);
+        }
+      })
+      .catch(err => alert('Error: ' + err.message));
   }
 }
