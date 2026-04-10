@@ -1,8 +1,8 @@
 import { inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CanActivateFn, Router } from '@angular/router';
-import { Auth, user } from '@angular/fire/auth';
-import { map, take } from 'rxjs';
+import { Auth } from '@angular/fire/auth';
+import { from, map } from 'rxjs';
 
 export const authGuard: CanActivateFn = () => {
   const platformId = inject(PLATFORM_ID);
@@ -11,8 +11,7 @@ export const authGuard: CanActivateFn = () => {
 
   if (!isPlatformBrowser(platformId)) return true;
 
-  return user(auth).pipe(
-    take(1),
-    map(u => (u ? true : router.createUrlTree(['/login'])))
+  return from(auth.authStateReady()).pipe(
+    map(() => (auth.currentUser ? true : router.createUrlTree(['/login'])))
   );
 };

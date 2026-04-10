@@ -23,35 +23,6 @@
     </div>
 
     <div class="day-content" [ngClass]="utils.isMobile() ? 'w-11' : 'w-8'">
-        <!-- Chapters grid -->
-        <div class="section-header">
-            <i class="pi pi-book"></i>
-            <h2>{{ i18n.t('common.chapters') }}</h2>
-        </div>
-
-        <div class="chapters-grid">
-            @for (ch of chapters; track $index) {
-                <div
-                    class="chapter-card"
-                    [ngClass]="{'chapter-read': utils.isEntireDayRead([ch])}">
-                    <div class="chapter-top">
-                        @if (utils.isEntireDayRead([ch])) {
-                            <i class="pi pi-check-circle chapter-check"></i>
-                        }
-                    </div>
-                    <span class="chapter-name">{{ ch }}</span>
-                    <div class="chapter-actions">
-                        <button class="chapter-action-btn mark-btn" [pTooltip]="utils.isEntireDayRead([ch]) ? i18n.t('common.unread') : i18n.t('common.read')" tooltipPosition="top" (click)="utils.setEntireDayRead([ch])">
-                            <i class="pi" [ngClass]="utils.isEntireDayRead([ch]) ? 'pi-times' : 'pi-check'"></i>
-                        </button>
-                        <button class="chapter-action-btn read-btn" [pTooltip]="i18n.t('common.readAction')" tooltipPosition="top" (click)="openReader(ch)">
-                            <i class="pi pi-book"></i>
-                        </button>
-                    </div>
-                </div>
-            }
-        </div>
-
         <!-- Add note card -->
         <div class="section-header">
             <i class="pi pi-pencil"></i>

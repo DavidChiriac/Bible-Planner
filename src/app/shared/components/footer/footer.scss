@@ -10,4 +10,5 @@ footer {
     background: var(--brown-dark);
     color: var(--beige-light);
     text-align: center;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
 }

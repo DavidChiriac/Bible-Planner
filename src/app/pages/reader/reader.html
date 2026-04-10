@@ -1,9 +1,44 @@
 <div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
     <!-- Top bar -->
-    <div class="top-bar" [ngClass]="utils.isMobile() ? 'w-11 mx-auto' : 'px-3'">
-        <p-button icon="pi pi-arrow-left" class="go-back" (onClick)="goBack()"></p-button>
-        @if (utils.selectedTranslation()) {
-        <div class="top-bar-controls">
+    <div class="top-bar" [ngClass]="[utils.isMobile() ? 'w-11 mx-auto' : 'px-3', refStack().length > 0 ? 'top-bar-stacked' : '']">
+        <div class="top-bar-row">
+            <div class="top-bar-left">
+                <p-button icon="pi pi-arrow-left" class="go-back" (onClick)="goBack()"></p-button>
+                @if (refStack().length > 0) {
+                    <button class="back-to-ref" (click)="goBackRef()">
+                        <i class="pi pi-arrow-left"></i>
+                        <span>{{ refStack()[refStack().length - 1] }}</span>
+                    </button>
+                    @if (refStack().length > 1) {
+                        <button class="back-to-ref back-to-original" (click)="goToOriginalRef()">
+                            <i class="pi pi-home"></i>
+                            <span>{{ refStack()[0] }}</span>
+                        </button>
+                    }
+                }
+            </div>
+            @if (utils.selectedTranslation() && refStack().length === 0) {
+                <div class="top-bar-controls">
+                    <button class="translation-trigger" (click)="openTranslationPicker()">
+                        <i class="pi pi-globe"></i>
+                        <span>{{ currentTranslationLabel() }}</span>
+                        <i class="pi pi-chevron-down trigger-chevron"></i>
+                    </button>
+                    <div class="font-controls">
+                        <button class="font-btn" (click)="decreaseFontSize()">
+                            <i class="pi pi-minus"></i>
+                        </button>
+                        <span class="font-size-indicator">{{ (fontSize() * 100) | number:'1.0-0' }}%</span>
+                        <button class="font-btn" (click)="increaseFontSize()">
+                            <i class="pi pi-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+        @if (utils.selectedTranslation() && refStack().length > 0) {
+        <div class="top-bar-row top-bar-row-end">
+            <div class="top-bar-controls">
             <button class="translation-trigger" (click)="openTranslationPicker()">
                 <i class="pi pi-globe"></i>
                 <span>{{ currentTranslationLabel() }}</span>
@@ -17,6 +52,7 @@
                 <button class="font-btn" (click)="increaseFontSize()">
                     <i class="pi pi-plus"></i>
                 </button>
+            </div>
             </div>
         </div>
         }
@@ -123,14 +159,36 @@
             <h1 class="chapter-title">{{ chapterLabel() }}</h1>
 
             <!-- Verses -->
-            <div class="verses" [style.font-size.rem]="fontSize()">
+            <div class="verses" [style.font-size.rem]="fontSize()" (click)="onVersesClick($event)" (keydown)="0">
                 @for (verse of chapter()?.verses ?? []; track verse.verse) {
-                    <p class="my-1">
-                        <sup class="verse-num">{{ verse.verse }}</sup>{{ verse.text }}
-                    </p>
-                    {{ ' ' }}
+                    <span class="verse" [attr.data-verse]="verse.verse"><sup class="verse-num">{{ verse.verse }}</sup><span [innerHTML]="verse.text"></span>@if (verse.comment) {<button class="ref-toggle" (click)="toggleRef(verse.verse)"><i class="pi" [ngClass]="openRefs().has(verse.verse) ? 'pi-chevron-up' : 'pi-bookmark'"></i></button>}</span>
+                    @if (verse.comment && openRefs().has(verse.verse)) {
+                        <div class="verse-comment" [innerHTML]="verse.comment"></div>
+                    }
                 }
             </div>
+
+            <!-- Reference preview dialog -->
+            @if (refPopup(); as popup) {
+                <div class="ref-popup-backdrop" (click)="closeRefPopup()" (keydown.escape)="closeRefPopup()"></div>
+                <div class="ref-popup" (keydown.escape)="closeRefPopup()">
+                    <div class="ref-popup-header">
+                        <span class="ref-popup-title">{{ popup.label }}{{ popup.verseNr ? ':' + popup.verseNr : '' }}</span>
+                        <button class="ref-popup-close" (click)="closeRefPopup()">
+                            <i class="pi pi-times"></i>
+                        </button>
+                    </div>
+                    @if (popup.loading) {
+                        <div class="ref-popup-loading"><i class="pi pi-spin pi-spinner"></i></div>
+                    } @else {
+                        <div class="ref-popup-content">{{ popup.verseText }}</div>
+                    }
+                    <button class="ref-popup-go" (click)="goToRef()">
+                        <i class="pi pi-arrow-right"></i>
+                        <span>{{ popup.label }}{{ popup.verseNr ? ':' + popup.verseNr : '' }}</span>
+                    </button>
+                </div>
+            }
 
             <!-- Actions -->
             <div class="reader-actions">

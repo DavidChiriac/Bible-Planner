@@ -1,5 +1,5 @@
 import { ApplicationConfig, inject, provideAppInitializer, provideZonelessChangeDetection } from '@angular/core';
-import { provideRouter, withHashLocation } from '@angular/router';
+import { provideRouter, withHashLocation, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 
 import { provideFirebaseApp, initializeApp, getApp } from '@angular/fire/app';
@@ -18,7 +18,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZonelessChangeDetection(),
     provideAppInitializer(() => { inject(ThemeService); }),
-    provideRouter(routes, ...(environment.production ? [withHashLocation()] : [])),
+    provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'enabled' }), ...(environment.production ? [withHashLocation()] : [])),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideDatabase(() => getDatabase(getApp())),
     provideAuth(() => getAuth(getApp())),

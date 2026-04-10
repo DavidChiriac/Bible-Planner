@@ -1,10 +1,11 @@
-import { Injectable, signal } from '@angular/core';
+﻿import { Injectable, signal } from '@angular/core';
 import BOOKS from '../../../assets/jsons/biblia_cornilescu_carti_capitole.json';
 import BIBLE from '../../../assets/jsons/cornilescu.json';
 
 export interface BibleVerse {
   verse: number;
   text: string;
+  comment?: string;
 }
 
 export interface BibleChapter {
@@ -23,6 +24,7 @@ export interface BibleTranslation {
 export const TRANSLATIONS: BibleTranslation[] = [
   // Romanian Română
   { id: 'local-cornilescu', name: 'Cornilescu 1924', language: 'Română', isLocal: true },
+  { id: 'RCCV', name: 'Cornilescu Revizuită', language: 'Română' },
   { id: 'VDCL', name: 'Traducere Literală Cornilescu 1931', language: 'Română' },
   { id: 'NTR', name: 'Noua Traducere Românească, 2016', language: 'Română' },
 
@@ -236,6 +238,22 @@ BOOKS.forEach((book, index) => {
   BOOK_NUMBER_MAP[book.title] = index + 1;
 });
 
+export function getBookNameByNumber(bookNr: number): string | null {
+  return BOOKS[bookNr - 1]?.title ?? null;
+}
+
+/** Map book number → bible-api.com 3-letter book ID (for RCCV) */
+const BIBLE_API_BOOK_IDS: string[] = [
+  '', // 0 unused
+  'GEN','EXO','LEV','NUM','DEU','JOS','JDG','RUT','1SA','2SA',
+  '1KI','2KI','1CH','2CH','EZR','NEH','EST','JOB','PSA','PRO',
+  'ECC','SNG','ISA','JER','LAM','EZK','DAN','HOS','JOL','AMO',
+  'OBA','JON','MIC','NAM','HAB','ZEP','HAG','ZEC','MAL',
+  'MAT','MRK','LUK','JHN','ACT','ROM','1CO','2CO','GAL','EPH',
+  'PHP','COL','1TH','2TH','1TI','2TI','TIT','PHM','HEB','JAS',
+  '1PE','2PE','1JN','2JN','3JN','JUD','REV',
+];
+
 /** Pre-index verses by "bookNr:chapter" for O(1) lookup */
 const VERSE_INDEX = new Map<string, { verse: number; text: string }[]>();
 for (const v of (BIBLE as any).verses) {
@@ -245,17 +263,31 @@ for (const v of (BIBLE as any).verses) {
     arr = [];
     VERSE_INDEX.set(key, arr);
   }
-  arr.push({ verse: v.verse, text: v.text });
+  arr.push({ verse: v.verse, text: decodeUnicodeEscapes(v.text) });
 }
 
-/** Strip HTML tags and Strong's numbers from API verse text */
-function stripHtml(html: string): string {
-  return html.replaceAll(/<S>\d+<\/S>/gi, '').replaceAll(/<[^>]*>/g, '').replaceAll(/\[[^\]]*\]/g, '').trim();
+function decodeUnicodeEscapes(str: string): string {
+  return str.replaceAll(/\\u([0-9a-fA-F]{4})/g, (_, hex) => String.fromCodePoint(Number.parseInt(hex, 16)));
+}
+
+/** Strip Strong's numbers and brackets, keep <br>, <i>, <em>, <sup> */
+function cleanVerseHtml(html: string): string {
+  return html
+    .replaceAll(/<S>\d+<\/S>/gi, '')
+    .replaceAll(/<sup>\[(\d+)\]<\/sup>/gi, '<sup>$1</sup>')
+    .replaceAll(/\[[^\]]*\]/g, '')
+    .trim();
+}
+
+/** Strip all HTML to plain text (for local data) */
+export function stripHtml(html: string): string {
+  return html.replaceAll(/<S>\d+<\/S>/gi, '').replaceAll(/<[^>]*>/g, '').replaceAll(/\[[^\]]*\]/g, '').replaceAll(/[\u2460-\u24FF\u2776-\u2793\uFF10-\uFF19\u{1F150}-\u{1F19A}]/gu, '').trim();
 }
 
 @Injectable({ providedIn: 'root' })
 export class BibleTextService {
   private readonly apiCache = new Map<string, BibleChapter>();
+  private readonly crossRefCache = new Map<string, Map<number, string>>();
 
   selectedTranslation = signal<string | null>(null);
 
@@ -277,7 +309,20 @@ export class BibleTextService {
     if (!bookNr) return null;
 
     if (tid === 'local-cornilescu') {
-      return this.getLocalChapter(bookName, chapterNumber, bookNr);
+      const cacheKey = `local-cornilescu:${bookNr}:${chapterNumber}`;
+      if (this.apiCache.has(cacheKey)) return this.apiCache.get(cacheKey)!;
+      const chapter = this.getLocalChapter(bookName, chapterNumber, bookNr);
+      if (chapter) {
+        await this.addCrossReferences(chapter, bookNr);
+        this.apiCache.set(cacheKey, chapter);
+      }
+      return chapter;
+    }
+
+    if (tid === 'RCCV') {
+      const chapter = await this.getBibleApiChapter(bookName, chapterNumber, bookNr);
+      if (chapter) await this.addCrossReferences(chapter, bookNr);
+      return chapter;
     }
 
     return this.getApiChapter(bookName, chapterNumber, bookNr, tid);
@@ -305,15 +350,74 @@ export class BibleTextService {
       const res = await fetch(`https://bolls.life/get-chapter/${translationId}/${bookNr}/${chapterNumber}/`);
       if (!res.ok) return null;
 
-      const data: { verse: number; text: string }[] = await res.json();
+      const data: { verse: number; text: string; comment?: string }[] = await res.json();
       const verses: BibleVerse[] = data.map(v => ({
         verse: v.verse,
-        text: stripHtml(v.text),
+        text: cleanVerseHtml(v.text),
+        ...(v.comment ? { comment: v.comment } : {}),
       }));
 
       const chapter: BibleChapter = { bookName, chapterNumber, verses };
       this.apiCache.set(cacheKey, chapter);
       return chapter;
+    } catch {
+      return null;
+    }
+  }
+
+  private async getBibleApiChapter(bookName: string, chapterNumber: number, bookNr: number): Promise<BibleChapter | null> {
+    const cacheKey = `RCCV:${bookNr}:${chapterNumber}`;
+    if (this.apiCache.has(cacheKey)) {
+      return this.apiCache.get(cacheKey)!;
+    }
+
+    const bookId = BIBLE_API_BOOK_IDS[bookNr];
+    if (!bookId) return null;
+
+    try {
+      const res = await fetch(`https://bible-api.com/data/rccv/${bookId}/${chapterNumber}`);
+      if (!res.ok) return null;
+
+      const data: { verses: { verse: number; text: string }[] } = await res.json();
+      const verses: BibleVerse[] = data.verses.map(v => ({
+        verse: v.verse,
+        text: v.text.trim(),
+      }));
+
+      const chapter: BibleChapter = { bookName, chapterNumber, verses };
+      this.apiCache.set(cacheKey, chapter);
+      return chapter;
+    } catch {
+      return null;
+    }
+  }
+
+  private async addCrossReferences(chapter: BibleChapter, bookNr: number): Promise<void> {
+    const refs = await this.fetchCrossReferences(bookNr, chapter.chapterNumber);
+    if (!refs) return;
+    for (const verse of chapter.verses) {
+      const comment = refs.get(verse.verse);
+      if (comment) verse.comment = comment;
+    }
+  }
+
+  private async fetchCrossReferences(bookNr: number, chapterNr: number): Promise<Map<number, string> | null> {
+    const cacheKey = `${bookNr}:${chapterNr}`;
+    if (this.crossRefCache.has(cacheKey)) {
+      return this.crossRefCache.get(cacheKey)!;
+    }
+
+    try {
+      const res = await fetch(`https://bolls.life/get-chapter/VDCL/${bookNr}/${chapterNr}/`);
+      if (!res.ok) return null;
+
+      const data: { verse: number; comment?: string }[] = await res.json();
+      const refs = new Map<number, string>();
+      for (const v of data) {
+        if (v.comment) refs.set(v.verse, v.comment.replaceAll(/[\u2460-\u24FF\u2776-\u2793\u{1F150}-\u{1F19A}]/gu, ''));
+      }
+      this.crossRefCache.set(cacheKey, refs);
+      return refs;
     } catch {
       return null;
     }
