@@ -102,7 +102,7 @@ export class PlanBuilder {
     const start = this.planStartDate();
     if (start && days > 0) {
       const target = new Date(start);
-      target.setDate(target.getDate() + days);
+      target.setDate(target.getDate() + days - 1);
       this.planTargetDate.set(target);
     }
   }
@@ -110,8 +110,8 @@ export class PlanBuilder {
   private recalcDaysFromTarget() {
     const start = this.planStartDate();
     const target = this.planTargetDate();
-    if (start && target && target > start) {
-      const diffDays = Math.round((target.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+    if (start && target && target >= start) {
+      const diffDays = Math.round((target.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
       if (diffDays > 0) {
         this.days.set(diffDays);
       }

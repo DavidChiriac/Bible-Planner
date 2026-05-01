@@ -4,14 +4,19 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DecimalPipe, NgClass } from '@angular/common';
 import { Button } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
+import { Dialog } from 'primeng/dialog';
+import { MultiSelect } from 'primeng/multiselect';
+import { QuillModule } from 'ngx-quill';
 import { Utils } from '../../shared/services/utils.service';
 import { BibleTextService, BibleChapter, TRANSLATIONS, TRANSLATION_LANGUAGES, getBookNameByNumber, stripHtml } from '../../shared/services/bible-text.service';
 import { FirebaseService } from '../../shared/services/firebase.service';
+import { NotesService } from '../notes/notes.service';
+import { NOTE_TAGS, NoteTag } from '../../shared/models/note.models';
 import { I18nService } from '../../shared/services/i18n.service';
 
 @Component({
   selector: 'app-reader',
-  imports: [NgClass, Button, DecimalPipe, FormsModule],
+  imports: [NgClass, Button, DecimalPipe, FormsModule, Dialog, MultiSelect, QuillModule],
   templateUrl: './reader.html',
   styleUrl: './reader.scss',
 })
@@ -21,6 +26,7 @@ export class Reader implements AfterViewChecked {
   private readonly el = inject(ElementRef);
   readonly bibleText = inject(BibleTextService);
   private readonly firebase = inject(FirebaseService);
+  private readonly notesService = inject(NotesService);
   utils = inject(Utils);
   i18n = inject(I18nService);
 
@@ -41,6 +47,16 @@ export class Reader implements AfterViewChecked {
   // Reference navigation stack
   refPopup = signal<{ label: string; verseNr: number | null; verseText: string | null; loading: boolean } | null>(null);
   refStack = signal<string[]>([]);
+
+  // Verse focus (temporary bookmark while reading)
+  focusedVerse = signal<number | null>(null);
+
+  // Add note dialog
+  addNoteVisible = signal(false);
+  newNoteText = signal('');
+  newNoteTags = signal<NoteTag[]>([]);
+  noteTagOptions = NOTE_TAGS;
+  noteSaving = signal(false);
 
   private pendingScrollVerse: number | null = null;
 
@@ -179,12 +195,30 @@ export class Reader implements AfterViewChecked {
     const queryParams: Record<string, string> = { chapter: label };
     if (this.planMode()) queryParams['source'] = 'plan';
     this.openRefs.set(new Set());
+    this.focusedVerse.set(null);
     this.router.navigate(['/reader'], { queryParams, replaceUrl: true });
     globalThis.scrollTo({ top: 0 });
   }
 
   goToNotes() {
     this.router.navigate(['/day'], { queryParams: { chapter: this.chapterLabel() } });
+  }
+
+  openAddNote() {
+    this.newNoteText.set('');
+    this.newNoteTags.set([]);
+    this.addNoteVisible.set(true);
+  }
+
+  async confirmAddNote() {
+    const text = this.newNoteText();
+    if (!text) return;
+    this.noteSaving.set(true);
+    await this.notesService.saveNote([this.chapterLabel()], text, this.newNoteTags());
+    this.noteSaving.set(false);
+    this.addNoteVisible.set(false);
+    this.newNoteText.set('');
+    this.newNoteTags.set([]);
   }
 
   increaseFontSize() {
@@ -239,6 +273,14 @@ export class Reader implements AfterViewChecked {
       if (!verse?.comment) return;
       this.toggleRef(verseNum);
       event.stopPropagation();
+      return;
+    }
+
+    // Handle verse click → toggle verse focus (temporary reading position marker)
+    const verseSpan = (target.closest('.verse') as HTMLElement | null);
+    if (verseSpan?.dataset['verse']) {
+      const verseNum = Number(verseSpan.dataset['verse']);
+      this.focusedVerse.update(v => v === verseNum ? null : verseNum);
     }
   }
 

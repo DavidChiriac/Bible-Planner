@@ -101,8 +101,8 @@ const RO = {
     noTranslationsFound: 'Nicio traducere găsită',
     markedRead: 'Marcat ca citit',
     markRead: 'Marchează ca citit',
-    prevChapter: 'Capitolul anterior',
-    nextChapter: 'Capitolul următor',
+    addNote: 'Adaugă notiță',
+    addNoteDialogHeader: 'Adaugă notiță',
   },
   notes: {
     search: 'Caută în notițe...',
@@ -280,8 +280,8 @@ const EN: typeof RO = {
     noTranslationsFound: 'No translations found',
     markedRead: 'Marked as read',
     markRead: 'Mark as read',
-    prevChapter: 'Previous chapter',
-    nextChapter: 'Next chapter',
+    addNote: 'Add note',
+    addNoteDialogHeader: 'Add note',
   },
   notes: {
     search: 'Search notes...',

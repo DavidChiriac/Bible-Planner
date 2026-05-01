@@ -24,7 +24,7 @@ export interface BibleTranslation {
 export const TRANSLATIONS: BibleTranslation[] = [
   // Romanian Română
   { id: 'local-cornilescu', name: 'Cornilescu 1924', language: 'Română', isLocal: true },
-  { id: 'RCCV', name: 'Cornilescu Revizuită', language: 'Română' },
+  { id: 'VDCR', name: 'Cornilescu Revizuită', language: 'Română' },
   { id: 'VDCL', name: 'Traducere Literală Cornilescu 1931', language: 'Română' },
   { id: 'NTR', name: 'Noua Traducere Românească, 2016', language: 'Română' },
 
@@ -242,7 +242,7 @@ export function getBookNameByNumber(bookNr: number): string | null {
   return BOOKS[bookNr - 1]?.title ?? null;
 }
 
-/** Map book number → bible-api.com 3-letter book ID (for RCCV) */
+/** Map book number → bible-api.com 3-letter book ID (for VDCR) */
 const BIBLE_API_BOOK_IDS: string[] = [
   '', // 0 unused
   'GEN','EXO','LEV','NUM','DEU','JOS','JDG','RUT','1SA','2SA',
@@ -319,7 +319,7 @@ export class BibleTextService {
       return chapter;
     }
 
-    if (tid === 'RCCV') {
+    if (tid === 'VDCR') {
       const chapter = await this.getBibleApiChapter(bookName, chapterNumber, bookNr);
       if (chapter) await this.addCrossReferences(chapter, bookNr);
       return chapter;
@@ -366,7 +366,7 @@ export class BibleTextService {
   }
 
   private async getBibleApiChapter(bookName: string, chapterNumber: number, bookNr: number): Promise<BibleChapter | null> {
-    const cacheKey = `RCCV:${bookNr}:${chapterNumber}`;
+    const cacheKey = `VDCR:${bookNr}:${chapterNumber}`;
     if (this.apiCache.has(cacheKey)) {
       return this.apiCache.get(cacheKey)!;
     }

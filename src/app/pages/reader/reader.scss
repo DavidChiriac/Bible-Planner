@@ -661,6 +661,15 @@
   transition: background 0.5s ease;
 }
 
+.verse-focused {
+  background: rgba(193, 108, 72, 0.18);
+  border-left: 3px solid var(--terracotta);
+  border-radius: 4px;
+  padding-left: 6px;
+  margin-left: -9px;
+  cursor: pointer;
+}
+
 // Reference preview dialog
 .ref-popup-backdrop {
   position: fixed;
@@ -836,8 +845,29 @@
 // Actions row
 .reader-actions {
   display: flex;
+  flex-wrap: nowrap;
   gap: 0.75rem;
   margin: 2rem 0 1.5rem;
+
+  .mark-read-btn {
+    flex: 6 1 0;
+  }
+
+  .notes-btn {
+    flex: 1 1 0;
+  }
+
+  &.reader-actions--mobile {
+    flex-wrap: wrap;
+
+    .mark-read-btn {
+      flex: 1 1 100%;
+    }
+
+    .notes-btn {
+      flex: 1 1 0;
+    }
+  }
 }
 
 // Mark as read
@@ -856,26 +886,19 @@
   font-weight: 700;
   font-family: inherit;
   cursor: pointer;
-  transition: all 0.3s ease;
 
   .mark-read-icon {
     display: flex;
     align-items: center;
     font-size: 1.2rem;
-    transition: transform 0.3s ease;
   }
 
-  &:hover {
-    background: var(--terracotta);
-    color: #fff;
-
-    .mark-read-icon {
-      transform: scale(1.15);
-    }
-  }
-
-  &:active {
-    transform: scale(0.97);
+  &:hover, &:focus, &:active {
+    background: transparent;
+    color: var(--terracotta);
+    border-color: var(--terracotta);
+    transform: none;
+    outline: none;
   }
 
   &.is-read {
@@ -887,13 +910,12 @@
       transform: scale(1.1);
     }
 
-    &:hover {
-      background: transparent;
-      color: var(--muted-sage);
-
-      .mark-read-icon {
-        transform: scale(1);
-      }
+    &:hover, &:focus, &:active {
+      background: var(--muted-sage);
+      border-color: var(--muted-sage);
+      color: #fff;
+      transform: none;
+      outline: none;
     }
   }
 }
@@ -929,6 +951,32 @@
   &:active {
     transform: scale(0.97);
   }
+
+  &.notes-btn--add {
+    background: var(--muted-sage);
+    border-color: var(--muted-sage);
+    color: #fff;
+
+    &:hover {
+      background: var(--muted-sage);
+      border-color: var(--muted-sage);
+      color: #fff;
+      filter: brightness(1.1);
+    }
+  }
+}
+
+.reader-add-note-chapter {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--terracotta);
+
+  .pi {
+    font-size: 0.85rem;
+  }
 }
 
 // Chapter navigation
@@ -953,6 +1001,8 @@
   font-family: inherit;
   transition: all 0.25s ease;
   max-width: 50%;
+  min-width: 0;
+  overflow: hidden;
 
   .pi {
     font-size: 0.9rem;
@@ -965,6 +1015,7 @@
     flex-direction: column;
     gap: 1px;
     min-width: 0;
+    overflow: hidden;
   }
 
   .nav-btn-hint {
@@ -973,15 +1024,18 @@
     color: var(--brown-light);
     text-transform: uppercase;
     letter-spacing: 0.03em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .nav-btn-label {
     font-size: 0.85rem;
     font-weight: 700;
     color: var(--deep-umber);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
 
   &:hover {
@@ -1001,6 +1055,12 @@
 }
 
 .nav-prev {
+  text-align: left;
+
+  .nav-btn-text {
+    align-items: flex-start;
+  }
+
   &:hover .pi {
     transform: translateX(-3px);
   }

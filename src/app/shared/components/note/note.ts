@@ -9,6 +9,7 @@ import { QuillModule } from 'ngx-quill';
 import { NotesService } from '../../../pages/notes/notes.service';
 import { MultiSelect } from 'primeng/multiselect';
 import { I18nService } from '../../services/i18n.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-note',
@@ -18,6 +19,7 @@ import { I18nService } from '../../services/i18n.service';
 })
 export class Note {
   private readonly notesService = inject(NotesService);
+  private readonly router = inject(Router);
   utils = inject(Utils);
   i18n = inject(I18nService);
   note = input.required<NoteItem>();
@@ -80,5 +82,9 @@ export class Note {
 
   getTagIcon(tag: NoteTag): string {
     return NOTE_TAGS.find(t => t.value === tag)?.icon ?? 'pi pi-tag';
+  }
+
+  openInReader() {
+    this.router.navigate(['/reader'], { queryParams: { chapter: this.note().chapterLabel } });
   }
 }

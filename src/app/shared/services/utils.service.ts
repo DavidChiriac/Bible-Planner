@@ -272,9 +272,19 @@ export class Utils {
 
     const plan = this.getActivePlan();
     const totalReadingDays = plan.reduce((sum, w) => sum + w.days.length, 0);
-    const months = this.months() ?? 12;
-    const targetDate = new Date(startMs);
-    targetDate.setMonth(targetDate.getMonth() + months);
+    
+    let targetDate: Date;
+    // For custom plan, use the target date from config
+    const customTargetDate = this.customPlanConfig()?.targetDate;
+    if (this.selectedPlan() === TABS.PERSONALIZAT && customTargetDate) {
+      targetDate = new Date(customTargetDate);
+    } else {
+      // For other plans, calculate from months
+      const months = this.months() ?? 12;
+      targetDate = new Date(startMs);
+      targetDate.setMonth(targetDate.getMonth() + months);
+    }
+    
     const totalCalendarDays = Math.ceil((targetDate.getTime() - startMs) / (1000 * 60 * 60 * 24));
     const expectedDays = totalCalendarDays > 0
       ? (diffDays * totalReadingDays) / totalCalendarDays

@@ -15,7 +15,6 @@ import { NoteItem, NOTE_TAGS, NoteTag } from '../../../shared/models/note.models
 import { Note } from '../../../shared/components/note/note';
 import { Select } from 'primeng/select';
 import { NotesService } from '../../notes/notes.service';
-import { Tooltip } from 'primeng/tooltip';
 import { I18nService } from '../../../shared/services/i18n.service';
 
 @Component({
@@ -27,8 +26,7 @@ import { I18nService } from '../../../shared/services/i18n.service';
     QuillModule,
     MultiSelect,
     Note,
-    Select,
-    Tooltip
+    Select
   ],
   templateUrl: './day.html',
   styleUrl: './day.scss',

@@ -52,6 +52,13 @@ export class Plans {
   tabs = [TABS.CRONOLOGIC, TABS.INORDINE, TABS.PERSONALIZAT];
 
   targetDate = computed(() => {
+    // For custom plan, use the target date from config
+    if (this.utils.selectedPlan() === TABS.PERSONALIZAT) {
+      const td = this.utils.customPlanConfig()?.targetDate;
+      if (td) return new Date(td);
+    }
+    
+    // For chronological plans, calculate from months
     const start = this.utils.activeStartDate();
     const months = this.utils.months();
     if (!start || !months) return null;

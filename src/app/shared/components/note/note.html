@@ -4,7 +4,8 @@
             <div class="flex gap-2 align-items-center">
                 <h3 class="m-0">{{ note().chapterLabel }}</h3>
             </div>
-            <div class="flex gap-1">
+            <div class="flex gap-1 align-items-center">
+                <i class="pi pi-book icon-action-btn icon-action-btn--read" (click)="openInReader()" onkeydown="" [title]="i18n.t('common.readAction')"></i>
                 <i class="pi pi-trash icon-action-btn icon-action-btn--danger" (click)="deleteNote()" onkeydown=""></i>
                 <i class="pi pi-pencil icon-action-btn" (click)="editNote()" onkeydown=""></i>
             </div>
