@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/davidchiriac/Bible-Planner/compare/v3.0.2...v3.1.0) (2026-05-01)
+
+
+### Features
+
+* bugfixes and improvements ([1843e5c](https://github.com/davidchiriac/Bible-Planner/commit/1843e5cb688336f5ab99de8ae66f239aa40fa072))
+
 ### [3.0.2](https://github.com/davidchiriac/Bible-Planner/compare/v3.0.1...v3.0.2) (2026-04-10)
 
 
