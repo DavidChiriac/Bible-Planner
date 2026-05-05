@@ -1,70 +1,80 @@
 <div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
-    <div [ngClass]="utils.isMobile() ? 'plan-selector-mobile' : 'plan-selector'">
-        @for (tab of tabs; track tab) {
-        <p-button (onClick)="changeTab(tab)" class="plan-selector-button"
-            [ngClass]="{'selected': utils.selectedPlan() === tab}">{{ i18n.tabLabel(tab) }}</p-button>
-        }
-    </div>
     @if (utils.selectedPlan() === 'Personalizat' && utils.customPlanConfig()) {
-      <div class="text-center mb-2">
-        <a class="edit-plan-link" routerLink="/plan-builder">
-          <i class="pi pi-pencil"></i> {{ i18n.t('home.editPlan') }}
-        </a>
-      </div>
-    }
-    <div class="details m-auto mb-4" [ngClass]="utils.isMobile() ? 'w-11' : 'w-6'">
-        <div class="w-full">
-            <h4 class="text-center m-0 mb-1">{{ i18n.t('home.readingProgress') }} - {{ utils.readPercentage() }}%</h4>
-            <p-progress-bar [value]="utils.readPercentage()" [showValue]="false"></p-progress-bar>
-        </div>
-        <div class="flex justify-content-center w-100 py-2" [ngClass]="utils.isMobile() ? 'gap-2 status-mobile' : 'gap-4 status'">
-            <i class="pi flex align-items-center pi-angle-double-left"></i>
-            @if (utils.hasCompletedPlan()) {
-            <span>{{ i18n.t('home.congratulations') }}</span>
-            } @else if (currentStatus() > 0) {
-            <span>{{ i18n.t('home.daysAhead', { count: currentStatus() }) }}</span>
-            } @else if (currentStatus() < 0) {
-                <span>{{ i18n.t('home.daysBehind', { count: currentStatus() * -1 }) }}</span>
-                } @else {
-                <span>{{ i18n.t('home.onTrack') }}</span>
-                }
-            <i class="pi flex align-items-center pi-angle-double-right"></i>
+      <div class="plan-hero" [ngClass]="utils.isMobile() ? 'w-11 mx-auto' : 'w-6 mx-auto'">
+
+        <div class="plan-hero-top">
+          <a class="edit-plan-link" routerLink="/plan-builder">
+            <i class="pi pi-pencil"></i> {{ i18n.t('home.editPlan') }}
+          </a>
+          <button class="history-btn" (click)="showHistory()">
+            <i class="pi pi-history"></i> Istoric
+          </button>
         </div>
 
-        @if (utils.selectedPlan() !== 'Personalizat') {
-        <div class="plan-info" [ngClass]="{'plan-info-mobile': utils.isMobile()}">
-            <div class="plan-info-fields">
-                <div class="plan-info-field">
-                    <label for="plan-start-date">{{ i18n.t('home.startShort') }}</label>
-                    <p-datepicker id="plan-start-date" [(ngModel)]="utils.startDate" dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" (ngModelChange)="setStartDate($event)"></p-datepicker>
-                </div>
-                <div class="plan-info-field">
-                    <label for="plan-months">{{ i18n.t('home.monthsShort') }}</label>
-                    <input id="plan-months" type="number" min="1" pInputText [ngModel]="utils.months()" (ngModelChange)="setMonths($event)" autocomplete="off" />
-                </div>
-                @if (targetDate(); as target) {
-                    <div class="plan-info-field plan-info-target">
-                        <i class="pi pi-flag"></i>
-                        <span>{{ target.toLocaleDateString(i18n.lang() === 'ro' ? 'ro-RO' : 'en-GB') }}</span>
-                    </div>
-                }
-            </div>
+        <div class="plan-progress-block">
+          <div class="plan-progress-header">
+            <span class="plan-progress-label">{{ i18n.t('home.readingProgress') }}</span>
+            <span class="plan-progress-pct">{{ utils.readPercentage() }}%</span>
+          </div>
+          <div class="plan-progress-bar-wrap">
+            <div class="plan-progress-bar-fill" [style.width.%]="utils.readPercentage()"></div>
+          </div>
+
+          <div class="plan-status-row">
+            @if (utils.hasCompletedPlan()) {
+              <span class="plan-status-badge plan-status-badge--done">
+                <i class="pi pi-check-circle"></i> {{ i18n.t('home.congratulations') }}
+              </span>
+            } @else if (currentStatus() > 0) {
+              <span class="plan-status-badge plan-status-badge--ahead">
+                <i class="pi pi-arrow-up"></i> {{ i18n.t('home.daysAhead', { count: currentStatus() }) }}
+              </span>
+            } @else if (currentStatus() < 0) {
+              <span class="plan-status-badge plan-status-badge--behind">
+                <i class="pi pi-arrow-down"></i> {{ i18n.t('home.daysBehind', { count: currentStatus() * -1 }) }}
+              </span>
+            } @else {
+              <span class="plan-status-badge plan-status-badge--ontrack">
+                <i class="pi pi-check"></i> {{ i18n.t('home.onTrack') }}
+              </span>
+            }
+
+            @if (targetDate(); as td) {
+              <span class="plan-target-date">
+                <i class="pi pi-flag"></i> {{ td.toLocaleDateString(i18n.lang() === 'ro' ? 'ro-RO' : 'en-GB') }}
+              </span>
+            }
+          </div>
         </div>
-        }
 
         @if (pastDue() || utils.hasCompletedPlan()) {
-            <div class="plan-status-banner" [ngClass]="{'completed': utils.hasCompletedPlan(), 'past-due': pastDue()}">
-                @if (pastDue()) {
-                    <i class="pi pi-exclamation-triangle"></i>
-                    <span>{{ i18n.t('home.pastDueMessage') }}</span>
-                    <span class="banner-separator">·</span>
-                }
-                <a class="restart-plan-link" (click)="restartConfirmVisible.set(true)" onkeydown="">
-                    <i class="pi pi-refresh"></i> {{ i18n.t('home.restartPlan') }}
+          <div class="plan-status-banner" [ngClass]="{'completed': utils.hasCompletedPlan(), 'past-due': pastDue()}">
+            @if (utils.hasCompletedPlan()) {
+              <i class="pi pi-trophy"></i>
+              <span>Felicitări!</span>
+              @if (!isAlreadySaved()) {
+                <span class="banner-separator">·</span>
+                <a class="restart-plan-link" (click)="completeConfirmVisible.set(true)" onkeydown="">
+                  <i class="pi pi-save"></i> Salvează completarea
                 </a>
-            </div>
+              }
+              <span class="banner-separator">·</span>
+              <a class="restart-plan-link restart-plan-link--subtle" (click)="restartConfirmVisible.set(true)" onkeydown="">
+                <i class="pi pi-refresh"></i> Resetează
+              </a>
+            } @else if (pastDue()) {
+              <i class="pi pi-exclamation-triangle"></i>
+              <span>{{ i18n.t('home.pastDueMessage') }}</span>
+              <span class="banner-separator">·</span>
+              <a class="restart-plan-link" (click)="restartConfirmVisible.set(true)" onkeydown="">
+                <i class="pi pi-refresh"></i> {{ i18n.t('home.restartPlan') }}
+              </a>
+            }
+          </div>
         }
-    </div>
+
+      </div>
+    }
 
     <div [ngClass]="utils.isMobile() ? 'card-mobile' : 'card'">
         <p-accordion [multiple]="true" [ngClass]="{'mobile': utils.isMobile()}" animationDuration="0">
@@ -188,4 +198,47 @@
         <p-button [label]="i18n.t('common.confirm')" class="confirm-reset-progress" (onClick)="confirmRestart()"></p-button>
         <p-button [label]="i18n.t('common.cancel')" class="cancel-reset-progress" (onClick)="restartConfirmVisible.set(false)"></p-button>
     </div>
+</p-dialog>
+
+<p-dialog header="Salvează completarea planului" [modal]="true" [(visible)]="completeConfirmVisible" [style]="{ width: '26rem' }">
+    <p class="p-text-secondary block mb-2">Progresul tău va fi salvat în istoric.</p>
+    <span class="p-text-secondary block mb-8 font-italic">{{ i18n.t('settings.resetDialogNote') }}</span>
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Salvează" icon="pi pi-save" [loading]="savingCompletion()" class="confirm-reset-progress" (onClick)="confirmComplete()"></p-button>
+        <p-button [label]="i18n.t('common.cancel')" class="cancel-reset-progress" (onClick)="completeConfirmVisible.set(false)"></p-button>
+    </div>
+</p-dialog>
+
+<p-dialog header="Istoricul planurilor" [modal]="true" [(visible)]="historyVisible" [style]="{ width: utils.isMobile() ? '92%' : '36rem' }">
+    @if (historyLoading()) {
+        <div class="history-loading">
+            <i class="pi pi-spin pi-spinner"></i>
+        </div>
+    } @else if (history().length === 0) {
+        <p class="history-empty">Niciun plan anterior găsit.</p>
+    } @else {
+        <div class="history-list">
+            @for (entry of history(); track entry.id) {
+                <div class="history-entry">
+                    <div class="history-entry-meta">
+                        <span><i class="pi pi-calendar"></i> {{ entry.startDate }} — {{ entry.endDate }}</span>
+                        <span><i class="pi pi-book"></i> {{ entry.chaptersRead }} / {{ entry.totalChapters }} cap.</span>
+                    </div>
+                    @if (entry.books && entry.books.length > 0) {
+                        <button class="history-books-toggle" (click)="toggleHistoryBooks(entry.id)">
+                            <i class="pi" [ngClass]="expandedHistoryId() === entry.id ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+                            Cărți incluse ({{ entry.books.length }})
+                        </button>
+                        @if (expandedHistoryId() === entry.id) {
+                            <div class="history-books-list">
+                                @for (book of entry.books; track book) {
+                                    <span class="history-book-chip">{{ book }}</span>
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            }
+        </div>
+    }
 </p-dialog>

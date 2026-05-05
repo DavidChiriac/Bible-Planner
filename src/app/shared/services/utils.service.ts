@@ -7,15 +7,12 @@ import { authState } from '@angular/fire/auth';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import ChapterWithVerses from '../../../assets/jsons/biblia_ro_capitole_cu_versete_complete.json';
-import CRONOLOGIC from '../../../assets/jsons/plan_biblie_cronologic_cornilescu_pe_zile.json';
-import INORDINE from '../../../assets/jsons/plan_biblie_in_ordine_pe_saptamani.json';
 import { HapticsService } from './haptics.service';
 import { WidgetService } from './widget.service';
 import { CustomPlanConfig, PlanGeneratorService } from './plan-generator.service';
 import { IPlan } from '../models/plan.model';
 import { BibleTextService } from './bible-text.service';
 
-const TOTAL_BIBLE_VERSES = 31102;
 const VERSE_MAP = new Map(ChapterWithVerses.flatMap(b => b.chapters.map(c => [c.chapter, c.verses] as const)));
 
 @Injectable({
@@ -110,10 +107,11 @@ export class Utils {
         this.firebase.setMonths(12);
       }
 
-      if (plan !== undefined && plan !== null) {
+      if (plan !== undefined && plan !== null && (Object.values(TABS) as string[]).includes(plan as string)) {
         this.selectedPlan.set(plan);
       } else {
-        this.firebase.setSelectedPlan(TABS.INORDINE);
+        this.selectedPlan.set(TABS.PERSONALIZAT);
+        this.firebase.setSelectedPlan(TABS.PERSONALIZAT);
       }
 
       if (favouriteWeeks !== undefined && favouriteWeeks !== null) {
@@ -238,25 +236,19 @@ export class Utils {
 
   readPercentage() {
     const readChapters = this.readSet();
-
-    if (this.selectedPlan() === TABS.PERSONALIZAT) {
-      const planChapters = new Set(
-        this.customPlan().flatMap(week => week.days.flatMap(day => day.chapters))
-      );
-      if (planChapters.size === 0) return 0;
-      let readVerses = 0;
-      let totalVerses = 0;
-      for (const ch of planChapters) {
-        const v = VERSE_MAP.get(ch) ?? 0;
-        totalVerses += v;
-        if (readChapters.has(ch)) readVerses += v;
-      }
-      if (totalVerses === 0) return 0;
-      return Number.parseFloat((readVerses / totalVerses * 100).toFixed(2));
+    const planChapters = new Set(
+      this.customPlan().flatMap(week => week.days.flatMap(day => day.chapters))
+    );
+    if (planChapters.size === 0) return 0;
+    let readVerses = 0;
+    let totalVerses = 0;
+    for (const ch of planChapters) {
+      const v = VERSE_MAP.get(ch) ?? 0;
+      totalVerses += v;
+      if (readChapters.has(ch)) readVerses += v;
     }
-
-    const totalVerses = ChapterWithVerses.flatMap((book) => book.chapters).filter((chapter) => readChapters.has(chapter.chapter)).reduce((sum, chapter) => sum + chapter.verses, 0);
-    return Number.parseFloat((totalVerses / TOTAL_BIBLE_VERSES * 100).toFixed(2));
+    if (totalVerses === 0) return 0;
+    return Number.parseFloat((readVerses / totalVerses * 100).toFixed(2));
   }
 
   private updateWidget() {
@@ -274,12 +266,10 @@ export class Utils {
     const totalReadingDays = plan.reduce((sum, w) => sum + w.days.length, 0);
     
     let targetDate: Date;
-    // For custom plan, use the target date from config
     const customTargetDate = this.customPlanConfig()?.targetDate;
-    if (this.selectedPlan() === TABS.PERSONALIZAT && customTargetDate) {
+    if (customTargetDate) {
       targetDate = new Date(customTargetDate);
     } else {
-      // For other plans, calculate from months
       const months = this.months() ?? 12;
       targetDate = new Date(startMs);
       targetDate.setMonth(targetDate.getMonth() + months);
@@ -328,9 +318,6 @@ export class Utils {
   }
 
   private getActivePlan(): IPlan[] {
-    const selected = this.selectedPlan();
-    if (selected === TABS.CRONOLOGIC) return CRONOLOGIC;
-    if (selected === TABS.PERSONALIZAT) return this.customPlan();
-    return INORDINE;
+    return this.customPlan();
   }
 }

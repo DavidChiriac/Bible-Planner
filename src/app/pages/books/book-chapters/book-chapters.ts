@@ -53,6 +53,14 @@ export class BookChapters {
 
   totalCount = computed(() => this.book()?.chapters?.length ?? 0);
 
+  planBookChapters = computed(() => {
+    const planSet = new Set(this.utils.planChaptersOrdered());
+    return (this.book()?.chapters ?? []).filter(ch => planSet.has(ch));
+  });
+
+  isChapterInPlan = (chapter: string) =>
+    this.planBookChapters().includes(chapter);
+
   progress = computed(() => {
     const total = this.totalCount();
     if (total === 0) return 0;

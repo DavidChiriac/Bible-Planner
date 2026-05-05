@@ -9,8 +9,8 @@
             <span class="stat-label">{{ i18n.t('books.inProgress') }}</span>
         </div>
         <div class="stat-card">
-            <span class="stat-value">66</span>
-            <span class="stat-label">{{ i18n.t('books.total') }}</span>
+            <span class="stat-value">{{ planBooksCount() }}</span>
+            <span class="stat-label">În plan</span>
         </div>
     </div>
 
@@ -20,7 +20,7 @@
             @for (book of oldTestament(); track book.title) {
                 <div
                     class="book-cell"
-                    [ngClass]="getProgressClass(book)"
+                    [ngClass]="[getProgressClass(book), isBookInPlan(book.title) ? 'in-plan' : '']"
                     [pTooltip]="i18n.bookTitle(book.title) + ' (' + book.read + '/' + book.total + ')'"
                     tooltipPosition="top"
                     (click)="navigateToBook(book.title)"
@@ -38,7 +38,7 @@
             @for (book of newTestament(); track book.title) {
                 <div
                     class="book-cell"
-                    [ngClass]="getProgressClass(book)"
+                    [ngClass]="[getProgressClass(book), isBookInPlan(book.title) ? 'in-plan' : '']"
                     [pTooltip]="i18n.bookTitle(book.title) + ' (' + book.read + '/' + book.total + ')'"
                     tooltipPosition="top"
                     (click)="navigateToBook(book.title)"

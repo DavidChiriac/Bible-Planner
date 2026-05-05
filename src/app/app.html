@@ -1,4 +1,12 @@
-@if (utils.loading()) {
+@if (!isOnline()) {
+  <div class="offline-overlay">
+    <div class="offline-content">
+      <i class="pi pi-wifi"></i>
+      <h2>Fără conexiune la internet</h2>
+      <p>Verifică conexiunea la internet și încearcă din nou.</p>
+    </div>
+  </div>
+} @else if (utils.loading()) {
   <div class="loading-screen" [class.mobile]="utils.isMobile()">
     <img src="/assets/images/Bible Planner.png" alt="Bible Agenda"/>
     <div class="loading-skeleton">

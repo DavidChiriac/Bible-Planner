@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, PLATFORM_ID } from '@angular/core';
 import { Utils } from './shared/services/utils.service';
 import { RouterOutlet } from '@angular/router';
 import { Navbar } from './shared/components/navbar/navbar';
@@ -6,7 +6,7 @@ import { Footer } from './shared/components/footer/footer';
 import { AuthService } from './shared/services/auth.service';
 import { Capacitor } from '@capacitor/core';
 import { App } from '@capacitor/app';
-import { Location } from '@angular/common';
+import { Location, isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -21,8 +21,17 @@ export class AppComponent implements OnInit {
   utils = inject(Utils);
   auth = inject(AuthService);
   private readonly location = inject(Location);
+  private readonly platformId = inject(PLATFORM_ID);
+
+  isOnline = signal(true);
 
   async ngOnInit(): Promise<void> {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isOnline.set(navigator.onLine);
+      globalThis.addEventListener('online', () => this.isOnline.set(true));
+      globalThis.addEventListener('offline', () => this.isOnline.set(false));
+    }
+
     if (Capacitor.getPlatform() === 'android') {
       await App.addListener('backButton', ({ canGoBack }: { canGoBack: boolean }) => {
         if (canGoBack) {

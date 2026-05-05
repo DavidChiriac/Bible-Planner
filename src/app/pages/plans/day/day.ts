@@ -3,9 +3,6 @@ import { Utils } from '../../../shared/services/utils.service';
 import { NgClass } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TABS } from '../plans';
-import CRONOLOGIC from '../../../../assets/jsons/plan_biblie_cronologic_cornilescu_pe_zile.json';
-import INORDINE from '../../../../assets/jsons/plan_biblie_in_ordine_pe_saptamani.json';
 import { IPlan } from '../../../shared/models/plan.model';
 import { Button } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
@@ -234,9 +231,7 @@ export class Day {
     this.router.navigate(['/reader'], { queryParams: { chapter, source: 'plan' } });
   }
 
-  private resolvePlan(planName: string): IPlan[] {
-    if (planName === TABS.CRONOLOGIC) return CRONOLOGIC;
-    if (planName === TABS.PERSONALIZAT) return this.utils.customPlan();
-    return INORDINE;
+  private resolvePlan(_planName: string): IPlan[] {
+    return this.utils.customPlan();
   }
 }

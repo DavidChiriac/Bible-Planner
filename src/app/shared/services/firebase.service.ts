@@ -3,6 +3,7 @@ import { Auth, signOut, user, getAuth } from '@angular/fire/auth';
 import { Database } from '@angular/fire/database';
 import {
   child,
+  get,
   ref,
   remove,
   runTransaction,
@@ -31,6 +32,19 @@ type BookNode = {
 export type NotesCursor = {
   offset: number;
 };
+
+export interface PlanHistoryEntry {
+  id: string;
+  planName: string;
+  startDate: string;
+  endDate: string;
+  chaptersRead: number;
+  totalChapters: number;
+  completionPercentage: number;
+  books?: string[];
+  days?: number;
+  places?: number;
+}
 
 @Injectable({ providedIn: 'root' })
 export class FirebaseService {
@@ -429,5 +443,40 @@ export class FirebaseService {
     const u = this.auth.currentUser;
     if (!u) return;
     await set(ref(this.db, `users/${u.uid}/widgetData`), data);
+  }
+
+  // --------------------- PLAN HISTORY ----------------
+
+  async savePlanHistory(entry: Omit<PlanHistoryEntry, 'id'>): Promise<void> {
+    const u = this.auth.currentUser;
+    if (!u) throw new Error('Not logged in');
+
+    // DB-level duplicate guard: reject if same startDate already exists
+    const historyRef = ref(this.db, `users/${u.uid}/planHistory`);
+    const snapshot = await get(historyRef);
+    if (snapshot.exists()) {
+      const existing = Object.values(snapshot.val() as Record<string, PlanHistoryEntry>);
+      if (existing.some(e => e.startDate === entry.startDate)) {
+        throw new Error('Plan already saved');
+      }
+    }
+
+    const id = String(Date.now());
+    await set(ref(this.db, `users/${u.uid}/planHistory/${id}`), { ...entry, id });
+  }
+
+  getPlanHistory$(): Observable<PlanHistoryEntry[]> {
+    return this.user$.pipe(
+      switchMap(u => {
+        if (!u) return of([]);
+        return objectVal<Record<string, PlanHistoryEntry> | null>(
+          ref(this.db, `users/${u.uid}/planHistory`)
+        );
+      }),
+      map(data => {
+        if (!data) return [];
+        return Object.values(data).sort((a, b) => Number(b.id) - Number(a.id));
+      })
+    );
   }
 }

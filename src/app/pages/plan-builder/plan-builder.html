@@ -67,7 +67,7 @@
 
       <div class="config-row mt-3">
         <label for="plan-days">{{ i18n.t('planBuilder.numDays') }}</label>
-        <input id="plan-days" type="number" min="1" [max]="totalChapters()"
+        <input id="plan-days" type="number" min="1"
           pInputText [ngModel]="days()" (ngModelChange)="onDaysChange($event)"
           autocomplete="off" class="days-input" />
       </div>

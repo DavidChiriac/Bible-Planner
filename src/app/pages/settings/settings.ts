@@ -4,7 +4,7 @@ import { Utils } from '../../shared/services/utils.service';
 import { ThemeService } from '../../shared/services/theme.service';
 import { I18nService } from '../../shared/services/i18n.service';
 import { Lang } from '../../shared/i18n/translations';
-import { TABS } from '../plans/plans';
+import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
@@ -20,6 +20,7 @@ export class Settings {
   theme = inject(ThemeService);
   i18n = inject(I18nService);
   private readonly firebase = inject(FirebaseService);
+  private readonly router = inject(Router);
 
   setLanguage(lang: Lang) {
     this.i18n.setLang(lang);
@@ -52,10 +53,7 @@ export class Settings {
     this.firebase.deleteCustomPlanConfig()
       .then(() => {
         this.utils.customPlanConfig.set(null);
-        if (this.utils.selectedPlan() === TABS.PERSONALIZAT) {
-          this.utils.selectedPlan.set(TABS.CRONOLOGIC);
-          this.firebase.setSelectedPlan(TABS.CRONOLOGIC);
-        }
+        this.router.navigate(['/plan-builder']);
       })
       .catch(err => alert('Error deleting custom plan: ' + err.message));
   }

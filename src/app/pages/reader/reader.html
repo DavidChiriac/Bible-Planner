@@ -161,7 +161,7 @@
             <!-- Verses -->
             <div class="verses" [style.font-size.rem]="fontSize()" (click)="onVersesClick($event)" (keydown)="0">
                 @for (verse of chapter()?.verses ?? []; track verse.verse) {
-                    <span class="verse" [attr.data-verse]="verse.verse" [class.verse-focused]="focusedVerse() === verse.verse"><sup class="verse-num">{{ verse.verse }}</sup><span [innerHTML]="verse.text"></span>@if (verse.comment) {<button class="ref-toggle" (click)="toggleRef(verse.verse)"><i class="pi" [ngClass]="openRefs().has(verse.verse) ? 'pi-chevron-up' : 'pi-bookmark'"></i></button>}</span>
+                    <span class="verse" [attr.data-verse]="verse.verse" [class.verse-focused]="selectedVerses().has(verse.verse)"><sup class="verse-num">{{ verse.verse }}</sup><span [innerHTML]="verse.text"></span>@if (verse.comment) {<button class="ref-toggle" (click)="toggleRef(verse.verse)"><i class="pi" [ngClass]="openRefs().has(verse.verse) ? 'pi-chevron-up' : 'pi-bookmark'"></i></button>}</span>
                     @if (verse.comment && openRefs().has(verse.verse)) {
                         <div class="verse-comment" [innerHTML]="verse.comment"></div>
                     }
@@ -190,14 +190,33 @@
                 </div>
             }
 
+            <!-- Verse selection action bar -->
+            @if (selectedVerses().size > 0) {
+                <div class="verse-selection-bar">
+                    <span class="verse-selection-label">
+                        <i class="pi pi-check-circle"></i>
+                        vers. {{ selectedVersesArray().join(', ') }}
+                    </span>
+                    <button class="verse-sel-note-btn" (click)="openAddNoteFromSelection()">
+                        <i class="pi pi-plus"></i>
+                        <span>Adaugă notă</span>
+                    </button>
+                    <button class="verse-sel-clear-btn" (click)="clearVerseSelection()">
+                        <i class="pi pi-times"></i>
+                    </button>
+                </div>
+            }
+
             <!-- Actions -->
             <div class="reader-actions" [class.reader-actions--mobile]="utils.isMobile()">
+                @if (isInPlan()) {
                 <button class="mark-read-btn" [ngClass]="{'is-read': isRead()}" (click)="toggleRead()">
                     <span class="mark-read-icon">
                         <i [class]="isRead() ? 'pi pi-check-circle' : 'pi pi-circle'"></i>
                     </span>
                     <span class="mark-read-label">{{ isRead() ? i18n.t('reader.markedRead') : i18n.t('reader.markRead') }}</span>
                 </button>
+                }
                 <button class="notes-btn notes-btn--add" (click)="openAddNote()">
                     <i class="pi pi-plus"></i>
                     <span>{{ i18n.t('reader.addNote') }}</span>

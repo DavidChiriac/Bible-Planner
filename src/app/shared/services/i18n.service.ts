@@ -39,15 +39,6 @@ export class I18nService {
     );
   }
 
-  tabLabel(tab: TABS): string {
-    const map: Record<TABS, string> = {
-      [TABS.CRONOLOGIC]: this.t('tabs.cronologic'),
-      [TABS.INORDINE]: this.t('tabs.inOrdine'),
-      [TABS.PERSONALIZAT]: this.t('tabs.personalizat'),
-    };
-    return map[tab] ?? tab;
-  }
-
   tagLabel(value: string): string {
     const map: Record<string, string> = {
       'rugăciune': this.t('tags.rugaciune'),

@@ -48,8 +48,9 @@ export class Reader implements AfterViewChecked {
   refPopup = signal<{ label: string; verseNr: number | null; verseText: string | null; loading: boolean } | null>(null);
   refStack = signal<string[]>([]);
 
-  // Verse focus (temporary bookmark while reading)
-  focusedVerse = signal<number | null>(null);
+  // Verse multi-selection
+  selectedVerses = signal<Set<number>>(new Set());
+  selectedVersesArray = computed(() => Array.from(this.selectedVerses()).sort((a, b) => a - b));
 
   // Add note dialog
   addNoteVisible = signal(false);
@@ -87,6 +88,8 @@ export class Reader implements AfterViewChecked {
   });
 
   isRead = computed(() => this.utils.isChapterRead(this.chapterLabel()));
+
+  isInPlan = computed(() => this.utils.planChaptersOrdered().includes(this.chapterLabel()));
 
   prevChapter = computed(() => {
     if (this.planMode()) {
@@ -195,7 +198,7 @@ export class Reader implements AfterViewChecked {
     const queryParams: Record<string, string> = { chapter: label };
     if (this.planMode()) queryParams['source'] = 'plan';
     this.openRefs.set(new Set());
-    this.focusedVerse.set(null);
+    this.selectedVerses.set(new Set());
     this.router.navigate(['/reader'], { queryParams, replaceUrl: true });
     globalThis.scrollTo({ top: 0 });
   }
@@ -204,8 +207,39 @@ export class Reader implements AfterViewChecked {
     this.router.navigate(['/day'], { queryParams: { chapter: this.chapterLabel() } });
   }
 
+  clearVerseSelection() {
+    this.selectedVerses.set(new Set());
+  }
+
   openAddNote() {
     this.newNoteText.set('');
+    this.newNoteTags.set([]);
+    this.addNoteVisible.set(true);
+  }
+
+  private versesToRangeStr(verses: number[]): string {
+    if (verses.length === 0) return '';
+    const sorted = [...verses].sort((a, b) => a - b);
+    const parts: string[] = [];
+    let start = sorted[0];
+    let end = sorted[0];
+
+    for (let i = 1; i < sorted.length; i++) {
+      if (sorted[i] === end + 1) {
+        end = sorted[i];
+      } else {
+        parts.push(start === end ? `${start}` : `${start}-${end}`);
+        start = sorted[i];
+        end = sorted[i];
+      }
+    }
+    parts.push(start === end ? `${start}` : `${start}-${end}`);
+    return parts.join(', ');
+  }
+
+  openAddNoteFromSelection() {
+    const verses = this.selectedVersesArray();
+    this.newNoteText.set(verses.length > 0 ? `<p><strong>vers. ${this.versesToRangeStr(verses)}</strong></p>` : '');
     this.newNoteTags.set([]);
     this.addNoteVisible.set(true);
   }
@@ -219,6 +253,7 @@ export class Reader implements AfterViewChecked {
     this.addNoteVisible.set(false);
     this.newNoteText.set('');
     this.newNoteTags.set([]);
+    this.selectedVerses.set(new Set());
   }
 
   increaseFontSize() {
@@ -276,11 +311,16 @@ export class Reader implements AfterViewChecked {
       return;
     }
 
-    // Handle verse click → toggle verse focus (temporary reading position marker)
+    // Handle verse click → toggle verse selection (multi-select)
     const verseSpan = (target.closest('.verse') as HTMLElement | null);
     if (verseSpan?.dataset['verse']) {
       const verseNum = Number(verseSpan.dataset['verse']);
-      this.focusedVerse.update(v => v === verseNum ? null : verseNum);
+      this.selectedVerses.update(set => {
+        const next = new Set(set);
+        if (next.has(verseNum)) next.delete(verseNum);
+        else next.add(verseNum);
+        return next;
+      });
     }
   }
 

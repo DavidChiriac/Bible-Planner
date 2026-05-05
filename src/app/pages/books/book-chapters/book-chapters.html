@@ -21,6 +21,7 @@
                 <span class="hero-subtitle">{{ totalCount() }} {{ i18n.t('common.chapters').toLowerCase() }}</span>
             </div>
         </div>
+        @if (planBookChapters().length > 0) {
         <div class="hero-progress">
             <div class="flex justify-content-between align-items-center mb-1">
                 <span class="read-summary">{{ i18n.t('books.readCount', { read: readCount(), total: totalCount() }) }}</span>
@@ -28,11 +29,14 @@
             </div>
             <p-progress-bar [value]="progress()" [showValue]="false"></p-progress-bar>
         </div>
+        }
         <div class="hero-actions">
-            @if (utils.isEntireDayRead(book()?.chapters ?? [])) {
-                <p-button [label]="i18n.t('books.markAllUnread')" icon="pi pi-times" class="mark-as-unread w-full" (onClick)="utils.markAllAsUnread(book()?.chapters ?? [])"></p-button>
-            } @else {
-                <p-button [label]="i18n.t('books.markAllRead')" icon="pi pi-check" class="mark-as-read w-full" (onClick)="utils.markAllAsRead(book()?.chapters ?? [])"></p-button>
+            @if (planBookChapters().length > 0) {
+                @if (utils.isEntireDayRead(planBookChapters())) {
+                    <p-button [label]="i18n.t('books.markAllUnread')" icon="pi pi-times" class="mark-as-unread w-full" (onClick)="utils.markAllAsUnread(planBookChapters())"></p-button>
+                } @else {
+                    <p-button [label]="i18n.t('books.markAllRead')" icon="pi pi-check" class="mark-as-read w-full" (onClick)="utils.markAllAsRead(planBookChapters())"></p-button>
+                }
             }
         </div>
     </div>
@@ -49,9 +53,11 @@
                     }
                 </div>
                 <div class="chapter-actions">
+                    @if (isChapterInPlan(chapter)) {
                     <button class="chapter-action-btn mark-btn" [pTooltip]="utils.isChapterRead(chapter) ? i18n.t('common.unread') : i18n.t('common.read')" tooltipPosition="top" (click)="utils.toggleChapterRead(chapter)">
                         <i class="pi" [ngClass]="utils.isChapterRead(chapter) ? 'pi-times' : 'pi-check'"></i>
                     </button>
+                    }
                     <button class="chapter-action-btn read-btn" [pTooltip]="i18n.t('common.readAction')" tooltipPosition="top" (click)="readChapter(chapter)">
                         <i class="pi pi-book"></i>
                     </button>

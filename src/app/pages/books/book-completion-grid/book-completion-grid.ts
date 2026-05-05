@@ -64,6 +64,17 @@ export class BookCompletionGrid {
   completedBooks = computed(() => this.booksProgress().filter(b => b.percentage === 100).length);
   inProgressBooks = computed(() => this.booksProgress().filter(b => b.percentage > 0 && b.percentage < 100).length);
 
+  planBooksSet = computed(() => {
+    const planChapters = new Set(this.utils.planChaptersOrdered());
+    return new Set(BOOKS.filter(b => b.chapters.some(ch => planChapters.has(ch))).map(b => b.title));
+  });
+
+  planBooksCount = computed(() => this.planBooksSet().size);
+
+  isBookInPlan(title: string): boolean {
+    return this.planBooksSet().has(title);
+  }
+
   getProgressClass(book: BookProgress): string {
     if (book.percentage === 100) return 'complete';
     if (book.percentage >= 75) return 'high';
