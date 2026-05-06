@@ -127,7 +127,7 @@ export class Plans {
 
     const diffInMs = today.getTime() - startNorm.getTime();
     const elapsedDays =
-      Math.floor(diffInMs / (1000 * 60 * 60 * 24)) + 1;
+      Math.round(diffInMs / (1000 * 60 * 60 * 24)) + 1;
 
     const expectedPerDay = this.utils.customPlanConfig()?.places ?? 1;
     const totalDays = this.weeks().reduce((sum, w) => sum + w.days.length, 0);

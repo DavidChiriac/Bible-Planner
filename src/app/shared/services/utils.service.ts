@@ -246,7 +246,7 @@ export class Utils {
     const todayNorm = new Date();
     todayNorm.setHours(0, 0, 0, 0);
     const diffMs = todayNorm.getTime() - startNorm.getTime();
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
+    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24)) + 1;
 
     const plan = this.getActivePlan();
     const totalReadingDays = plan.reduce((sum, w) => sum + w.days.length, 0);
