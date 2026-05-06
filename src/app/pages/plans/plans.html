@@ -1,5 +1,5 @@
 <div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
-    @if (utils.selectedPlan() === 'Personalizat' && utils.customPlanConfig()) {
+    @if (utils.customPlanConfig()) {
       <div class="plan-hero" [ngClass]="utils.isMobile() ? 'w-11 mx-auto' : 'w-6 mx-auto'">
 
         <div class="plan-hero-top">

@@ -13,10 +13,6 @@ import { I18nService } from '../../shared/services/i18n.service';
 import { DialogModule } from 'primeng/dialog';
 import { take } from 'rxjs';
 
-export enum TABS {
-  PERSONALIZAT = 'Personalizat',
-}
-
 @Component({
   selector: 'app-plans',
   imports: [
@@ -143,26 +139,8 @@ export class Plans {
   private readonly lastNavigatedWeek = signal(0);
 
   bookmarkedWeeksForPlan = computed(() => {
-    const plan = this.utils.selectedPlan();
-
-    const weeks = this.utils
-      .favouriteWeeks()
-      .filter((f) => f.plan === plan)
-      .map((f) => f.week);
-
-    return [...new Set(weeks)].sort((a, b) => a - b);
+    return [...this.utils.favouriteWeeks()].sort((a, b) => a - b);
   });
-
-  changeTab(tab: TABS) {
-    if (tab === TABS.PERSONALIZAT && !this.utils.customPlanConfig()) {
-      this.router.navigate(['/plan-builder']);
-      return;
-    }
-    this.openWeeks.set([]);
-    this.utils.selectedPlan.set(tab);
-    this.lastNavigatedWeek.set(0);
-    this.firebase.setSelectedPlan(tab);
-  }
 
   addWeekToOpen(week: number) {
     if (!this.openWeeks().includes(week)) {
@@ -171,7 +149,7 @@ export class Plans {
   }
 
   goToDay(dayIndex: number , tab: {week: number}) {
-    this.router.navigate(['/day'], { queryParams: { day: dayIndex, week: tab.week, plan: this.utils.selectedPlan() } });
+    this.router.navigate(['/day'], { queryParams: { day: dayIndex, week: tab.week } });
   }
 
   private afterRender(fn: () => void) {
@@ -236,47 +214,15 @@ export class Plans {
   }
 
   async removeBookmark(tab: { week: number }) {
-    const current = this.utils.favouriteWeeks();
-
-    const updated = current.filter(
-      (fav) =>
-        !(
-          fav.plan === this.utils.selectedPlan() &&
-          fav.week === tab.week
-        )
-    );
-
-    this.utils.favouriteWeeks.set(updated);
-
-    await this.firebase.deleteFavouriteWeek(
-      this.utils.selectedPlan()!,
-      tab.week
-    );
+    this.utils.favouriteWeeks.update(weeks => weeks.filter(w => w !== tab.week));
+    await this.firebase.deleteFavouriteWeek(tab.week);
   }
 
   async addBookmark(tab: { week: number }) {
-    const current = this.utils.favouriteWeeks();
-
-    if (
-      !current.some(
-        (fav) =>
-          fav.plan === this.utils.selectedPlan() &&
-          fav.week === tab.week
-      )
-    ) {
-      this.utils.favouriteWeeks.set([
-        ...current,
-        {
-          plan: this.utils.selectedPlan()!,
-          week: tab.week,
-        },
-      ]);
+    if (!this.utils.favouriteWeeks().includes(tab.week)) {
+      this.utils.favouriteWeeks.update(weeks => [...weeks, tab.week]);
     }
-
-    await this.firebase.addFavouriteWeek(
-      this.utils.selectedPlan()!,
-      tab.week
-    );
+    await this.firebase.addFavouriteWeek(tab.week);
   }
 
   async toggleDay(event: Event, chapters: string[]) {

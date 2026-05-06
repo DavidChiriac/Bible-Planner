@@ -1,7 +1,6 @@
 import { computed, DestroyRef, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { FirebaseService } from './firebase.service';
 import { combineLatest, distinctUntilChanged, EMPTY, from, switchMap } from 'rxjs';
-import { TABS } from '../../pages/plans/plans';
 import { isPlatformBrowser } from '@angular/common';
 import { authState } from '@angular/fire/auth';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -23,8 +22,7 @@ export class Utils {
   loading = signal(true);
   startDate = signal<Date | null>(null);
   months = signal<number | null>(null);
-  selectedPlan = signal<TABS | undefined>(undefined);
-  favouriteWeeks = signal<{plan: TABS, week: number}[]>([]);
+  favouriteWeeks = signal<number[]>([]);
   customPlanConfig = signal<CustomPlanConfig | null>(null);
   selectedTranslation = signal<string | null>(null);
 
@@ -46,11 +44,8 @@ export class Utils {
   });
 
   activeStartDate = computed<Date | null>(() => {
-    if (this.selectedPlan() === TABS.PERSONALIZAT) {
-      const sd = this.customPlanConfig()?.startDate;
-      return sd ? this.startDateAsDate(sd) : this.startDate();
-    }
-    return this.startDate();
+    const sd = this.customPlanConfig()?.startDate;
+    return sd ? this.startDateAsDate(sd) : this.startDate();
   });
 
   planChaptersOrdered = computed<string[]>(() => {
@@ -80,7 +75,6 @@ export class Utils {
               chapters: this.firebase.getChapters(),
               startDate: this.firebase.getStartDate(),
               months: this.firebase.getMonths(),
-              plan: this.firebase.getPlan(),
               favouriteWeeks: this.firebase.getFavouriteWeeks$(),
               customPlanConfig: this.firebase.getCustomPlanConfig$(),
               selectedTranslation: this.firebase.getSelectedTranslation$(),
@@ -89,7 +83,7 @@ export class Utils {
         );
       })
     )
-    .subscribe(({ chapters, startDate, months, plan, favouriteWeeks, customPlanConfig, selectedTranslation }) => {
+    .subscribe(({ chapters, startDate, months, favouriteWeeks, customPlanConfig, selectedTranslation }) => {
       // update UI state
       this.readSet.set(new Set(chapters ?? []));
 
@@ -107,18 +101,7 @@ export class Utils {
         this.firebase.setMonths(12);
       }
 
-      if (plan !== undefined && plan !== null && (Object.values(TABS) as string[]).includes(plan as string)) {
-        this.selectedPlan.set(plan);
-      } else {
-        this.selectedPlan.set(TABS.PERSONALIZAT);
-        this.firebase.setSelectedPlan(TABS.PERSONALIZAT);
-      }
-
-      if (favouriteWeeks !== undefined && favouriteWeeks !== null) {
-        this.favouriteWeeks.set(favouriteWeeks);
-      } else {
-        this.favouriteWeeks.set([]);
-      }
+      this.favouriteWeeks.set(favouriteWeeks ?? []);
 
       this.customPlanConfig.set(customPlanConfig ?? null);
 
@@ -212,13 +195,12 @@ export class Utils {
   reset() {
     this.readSet.set(new Set());
     this.months.set(null);
-    this.selectedPlan.set(undefined);
     this.selectedTranslation.set(null);
     this.loading.set(false);
   }
 
   isWeekBookmarked(week: { week: number }) {
-    return this.favouriteWeeks().some(fav => fav.plan === this.selectedPlan() && fav.week === week.week);
+    return this.favouriteWeeks().includes(week.week);
   }
 
   toggleChapterRead(chapter: string) {

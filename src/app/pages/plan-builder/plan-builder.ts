@@ -11,7 +11,6 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { BIBLE_BOOKS, FirebaseService } from '../../shared/services/firebase.service';
 import { getVerseCount, OT_END_INDEX, PlanGeneratorService, EXCLUSION_CATEGORIES, ExclusionCategory } from '../../shared/services/plan-generator.service';
 import { Utils } from '../../shared/services/utils.service';
-import { TABS } from '../plans/plans';
 import { I18nService } from '../../shared/services/i18n.service';
 
 interface BookOption {
@@ -270,8 +269,6 @@ export class PlanBuilder {
     };
     await this.firebase.setCustomPlanConfig(config);
     this.utils.customPlanConfig.set(config);
-    this.utils.selectedPlan.set(TABS.PERSONALIZAT);
-    await this.firebase.setSelectedPlan(TABS.PERSONALIZAT);
     this.router.navigate(['/plans']);
   }
 

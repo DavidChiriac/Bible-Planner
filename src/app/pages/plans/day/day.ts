@@ -44,7 +44,6 @@ export class Day {
   dayIndex = 0;
   weekIndex = 0;
   plan: IPlan[] | undefined;
-  planName: string = '';
   chapter: string | null = null;
 
   chapters: string[] = [];
@@ -90,8 +89,7 @@ export class Day {
       .subscribe(async (params) => {
         this.dayIndex = params['day'];
         this.weekIndex = params['week'];
-        this.plan = this.resolvePlan(params['plan']);
-        this.planName = params['plan'];
+        this.plan = this.resolvePlan();
         this.chapter = params['chapter'] ?? null;
 
         if (this.chapter) {
@@ -211,7 +209,7 @@ export class Day {
       const nextDay = Number(this.dayIndex) + 1;
       if (nextDay < week.days.length) {
         this.router.navigate(['/day'], {
-          queryParams: { day: nextDay, week: this.weekIndex, plan: this.planName },
+          queryParams: { day: nextDay, week: this.weekIndex },
           replaceUrl: true,
         });
       }
@@ -220,7 +218,7 @@ export class Day {
       const prevDay = Number(this.dayIndex) - 1;
       if (prevDay >= 0) {
         this.router.navigate(['/day'], {
-          queryParams: { day: prevDay, week: this.weekIndex, plan: this.planName },
+          queryParams: { day: prevDay, week: this.weekIndex },
           replaceUrl: true,
         });
       }
@@ -231,7 +229,7 @@ export class Day {
     this.router.navigate(['/reader'], { queryParams: { chapter, source: 'plan' } });
   }
 
-  private resolvePlan(_planName: string): IPlan[] {
+  private resolvePlan(): IPlan[] {
     return this.utils.customPlan();
   }
 }

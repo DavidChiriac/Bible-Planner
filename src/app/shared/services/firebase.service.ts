@@ -12,7 +12,6 @@ import {
 } from 'firebase/database';
 import { Observable, switchMap, of, map } from 'rxjs';
 import { object, objectVal } from 'rxfire/database';
-import { TABS } from '../../pages/plans/plans';
 import Chapters from '../../../assets/jsons/biblia_cornilescu_carti_capitole.json';
 import { migrateChaptersSameRefIfNeeded } from './migration';
 
@@ -320,26 +319,12 @@ export class FirebaseService {
     return 'progress reset';
   }
 
-  async setSelectedPlan(plan: string = ''): Promise<string> {
-    const u = this.auth.currentUser;
-    if (!u) throw new Error('Not logged in');
-
-    const selectedPlanRef = ref(this.db, `users/${u.uid}/selectedPlan`);
-
-    await runTransaction(selectedPlanRef, () => {
-      return plan;
-    });
-
-    return 'selected plan updated';
+  async setSelectedPlan(_plan: string = ''): Promise<string> {
+    return 'noop';
   }
 
-  getPlan(): Observable<TABS | null> {
-    return this.user$.pipe(
-      switchMap(u => {
-        if (!u) return of(null);
-        return objectVal<TABS>(ref(this.db, `users/${u.uid}/selectedPlan`));
-      })
-    );
+  getPlan(): Observable<null> {
+    return of(null);
   }
 
   async ensureChaptersMigrated(): Promise<void> {
@@ -371,43 +356,47 @@ export class FirebaseService {
 
   // --------------------- FAVOURITE WEEKS ----------------
 
-  async addFavouriteWeek(plan: TABS, week: number): Promise<void> {
+  async addFavouriteWeek(week: number): Promise<void> {
     const u = this.auth.currentUser;
     if (!u) throw new Error('Not logged in');
 
     const favsRef = ref(this.db, `users/${u.uid}/favouriteWeeks`);
 
     await runTransaction(favsRef, (current) => {
-      const arr = Array.isArray(current) ? current : [];
-      if (arr.some(f => f.plan === plan && f.week === week)) return arr;
-      return [...arr, { plan, week }];
+      const arr: number[] = Array.isArray(current) ? current.map((f: any) => typeof f === 'object' ? f.week : f) : [];
+      if (arr.includes(week)) return arr;
+      return [...arr, week];
     });
   }
 
-  async deleteFavouriteWeek(plan: TABS, week: number): Promise<string> {
+  async deleteFavouriteWeek(week: number): Promise<string> {
     const u = this.auth.currentUser;
     if (!u) throw new Error('Not logged in');
 
     const favsRef = ref(this.db, `users/${u.uid}/favouriteWeeks`);
 
     const res = await runTransaction(favsRef, (current) => {
-      const existing: { plan: TABS; week: number }[] = Array.isArray(current) ? current : [];
-      const filtered = existing.filter(f => !(f.plan === plan && f.week === week));
-      return filtered.length ? filtered : []; // or return null if you want to delete the node entirely
+      const arr: number[] = Array.isArray(current) ? current.map((f: any) => typeof f === 'object' ? f.week : f) : [];
+      const filtered = arr.filter(w => w !== week);
+      return filtered.length ? filtered : null;
     });
 
     return res.committed ? 'week removed from favourites' : 'no change';
   }
 
-  getFavouriteWeeks$() {
+  getFavouriteWeeks$(): Observable<number[]> {
     return this.user$.pipe(
       switchMap(u => {
         if (!u) return of([]);
-        return objectVal<{ plan: TABS; week: number }[] | null>(
+        return objectVal<any[] | null>(
           ref(this.db, `users/${u.uid}/favouriteWeeks`)
         );
       }),
-      map(v => Object.values(v ?? []))
+      map(v => {
+        if (!v) return [];
+        // migrate old shape { plan, week } to plain number
+        return Object.values(v).map((f: any) => typeof f === 'object' ? f.week : f) as number[];
+      })
     );
   }
 

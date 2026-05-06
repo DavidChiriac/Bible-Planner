@@ -62,11 +62,6 @@ const RO = {
     startShort: 'Început:',
     monthsShort: 'Luni:',
   },
-  tabs: {
-    cronologic: 'Cronologic',
-    inOrdine: 'În ordine',
-    personalizat: 'Personalizat',
-  },
   settings: {
     startDate: 'Data de început:',
     months: 'Câte luni pentru a citi Biblia:',
@@ -242,11 +237,6 @@ const EN: typeof RO = {
     restartConfirm: 'Are you sure you want to reset your progress and start over?',
     startShort: 'Start:',
     monthsShort: 'Months:',
-  },
-  tabs: {
-    cronologic: 'Chronological',
-    inOrdine: 'In Order',
-    personalizat: 'Custom',
   },
   settings: {
     startDate: 'Start date:',
