@@ -140,10 +140,36 @@ export class Plans {
     const elapsedDays =
       Math.round(diffInMs / (1000 * 60 * 60 * 24)) + 1;
 
-    const expectedPerDay = this.utils.customPlanConfig()?.places ?? 1;
-    const totalDays = this.weeks().reduce((sum, w) => sum + w.days.length, 0);
-    const diff = Math.round(this.numbersOfDaysRead() - elapsedDays * expectedPerDay);
-    return Math.max(-totalDays, Math.min(totalDays, diff));
+    const places = this.utils.customPlanConfig()?.places ?? 1;
+    const totalSlots = this.weeks().reduce((sum, w) => sum + w.days.length, 0);
+    const rawDiff = Math.round(this.numbersOfDaysRead() - elapsedDays * places);
+    const clampedDiff = Math.max(-totalSlots, Math.min(totalSlots, rawDiff));
+
+    const absDiff = Math.abs(clampedDiff);
+    const fullDays = Math.floor(absDiff / places);
+    const remainder = absDiff % places;
+
+    let sign: 1 | -1 | 0;
+    if (clampedDiff > 0) sign = 1;
+    else if (clampedDiff < 0) sign = -1;
+    else sign = 0;
+
+    return {
+      sign,
+      days: fullDays,
+      numerator: remainder,
+      denominator: places,
+    };
+  });
+
+  statusLabel = computed(() => {
+    const s = this.currentStatus();
+    if (s.sign === 0) return '';
+    let label = `${s.days}`;
+    if (s.numerator > 0) {
+      label += ` + (${s.numerator}/${s.denominator})`;
+    }
+    return label;
   });
 
   openWeeks = signal<number[]>([]);

@@ -57,14 +57,12 @@ button,
 .container {
     min-height: calc(100dvh - 82px - 20px);
     width: 100%;
-    overflow: auto;
 }
 
 .container-mobile {
     min-height: calc(100dvh - 99px);
     width: 100%;
     margin: auto;
-    overflow: auto;
 }
 
 :root,

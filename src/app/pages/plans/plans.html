@@ -25,13 +25,13 @@
               <span class="plan-status-badge plan-status-badge--done">
                 <i class="pi pi-check-circle"></i> {{ i18n.t('home.congratulations') }}
               </span>
-            } @else if (currentStatus() > 0) {
+            } @else if (currentStatus().sign > 0) {
               <span class="plan-status-badge plan-status-badge--ahead">
-                <i class="pi pi-arrow-up"></i> {{ i18n.t('home.daysAhead', { count: currentStatus() }) }}
+                <i class="pi pi-arrow-up"></i> {{ i18n.t('home.daysAhead', { count: statusLabel() }) }}
               </span>
-            } @else if (currentStatus() < 0) {
+            } @else if (currentStatus().sign < 0) {
               <span class="plan-status-badge plan-status-badge--behind">
-                <i class="pi pi-arrow-down"></i> {{ i18n.t('home.daysBehind', { count: currentStatus() * -1 }) }}
+                <i class="pi pi-arrow-down"></i> {{ i18n.t('home.daysBehind', { count: statusLabel() }) }}
               </span>
             } @else {
               <span class="plan-status-badge plan-status-badge--ontrack">

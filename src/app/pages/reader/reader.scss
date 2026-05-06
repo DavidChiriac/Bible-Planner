@@ -1,6 +1,20 @@
+:host {
+  display: block;
+}
+
 // Top bar
 .top-bar {
   padding: 0.75rem 0;
+  position: sticky;
+  top: 50px;
+  z-index: 100;
+  background: var(--beige-bg);
+  border-bottom: 1px solid var(--toasted-almond);
+  box-shadow: 0 2px 8px rgba(74, 59, 42, 0.08);
+
+  &.mobile {
+    top: 60px;
+  }
 }
 
 // Verse selection action bar
@@ -600,7 +614,6 @@
 .chapter-title {
   font-size: 1.75rem;
   color: var(--deep-umber);
-  margin: 0 0 1.25rem;
   padding-bottom: 0.75rem;
   border-bottom: 2px solid var(--toasted-almond);
 }
@@ -917,8 +930,14 @@
   display: flex;
   justify-content: space-between;
   align-items: stretch;
-  padding-bottom: 2rem;
   gap: 0.75rem;
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  background: var(--beige-bg);
+  border-top: 1px solid var(--toasted-almond);
+  box-shadow: 0 -2px 8px rgba(74, 59, 42, 0.08);
+  padding-block: 0.75rem;
 }
 
 .nav-btn {

@@ -1,6 +1,6 @@
 <div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
     <!-- Top bar -->
-    <div class="top-bar" [ngClass]="[utils.isMobile() ? 'w-11 mx-auto' : 'px-3', refStack().length > 0 ? 'top-bar-stacked' : '']">
+    <div class="top-bar" [ngClass]="[utils.isMobile() ? 'mobile px-1' : 'px-3', refStack().length > 0 ? 'top-bar-stacked' : '']">
         <div class="top-bar-row">
             <div class="top-bar-left">
                 <p-button icon="pi pi-arrow-left" class="go-back" (onClick)="goBack()"></p-button>
@@ -226,29 +226,29 @@
                     <span>{{ i18n.t('common.notes') }}</span>
                 </button>
             </div>
-
-            <!-- Navigation -->
-            <div class="chapter-nav">
-                @if (prevChapter(); as prev) {
-                    <button class="nav-btn nav-prev" (click)="navigateTo(prev)">
-                        <i class="pi pi-arrow-left"></i>
-                        <div class="nav-btn-text">
-                            <span class="nav-btn-label">{{ prev }}</span>
-                        </div>
-                    </button>
-                } @else {
-                    <span></span>
-                }
-                @if (nextChapter(); as next) {
-                    <button class="nav-btn nav-next" (click)="navigateTo(next)">
-                        <div class="nav-btn-text">
-                            <span class="nav-btn-label">{{ next }}</span>
-                        </div>
-                        <i class="pi pi-arrow-right"></i>
-                    </button>
-                }
-            </div>
         </div>
+    }
+</div>
+
+<!-- Navigation -->
+<div class="chapter-nav" [ngClass]="utils.isMobile() ? 'px-1' : 'px-3'">
+    @if (prevChapter(); as prev) {
+        <button class="nav-btn nav-prev" (click)="navigateTo(prev)">
+            <i class="pi pi-arrow-left"></i>
+            <div class="nav-btn-text">
+                <span class="nav-btn-label">{{ prev }}</span>
+            </div>
+        </button>
+    } @else {
+        <span></span>
+    }
+    @if (nextChapter(); as next) {
+        <button class="nav-btn nav-next" (click)="navigateTo(next)">
+            <div class="nav-btn-text">
+                <span class="nav-btn-label">{{ next }}</span>
+            </div>
+            <i class="pi pi-arrow-right"></i>
+        </button>
     }
 </div>
 

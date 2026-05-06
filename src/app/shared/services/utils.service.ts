@@ -277,13 +277,19 @@ export class Utils {
 
     const rawDiff = Math.round(daysRead - expectedDays);
     const diff = Math.max(-totalReadingDays, Math.min(totalReadingDays, rawDiff));
+    const places = this.customPlanConfig()?.places ?? 1;
+    const absDiff = Math.abs(diff);
+    const fullDays = Math.floor(absDiff / places);
+    const remainder = absDiff % places;
+    const dayLabel = remainder > 0 ? `${fullDays} + (${remainder}/${places})` : `${fullDays}`;
+
     let step: string;
     let stepType: string;
     if (diff > 0) {
-      step = `\u25B2 ${diff} zile înainte`;
+      step = `\u25B2 ${dayLabel} zile înainte`;
       stepType = 'ahead';
     } else if (diff < 0) {
-      step = `\u25BC ${Math.abs(diff)} zile în urmă`;
+      step = `\u25BC ${dayLabel} zile în urmă`;
       stepType = 'behind';
     } else {
       step = '\u2713 La zi';
