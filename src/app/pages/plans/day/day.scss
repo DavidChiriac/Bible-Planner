@@ -145,14 +145,7 @@
   border-radius: 14px;
   background: var(--beige-card);
   border: 1.5px solid transparent;
-  transition: all 0.25s ease;
   position: relative;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 14px rgba(74, 59, 42, 0.14);
-    border-color: var(--brown-light);
-  }
 
   &:active {
     transform: scale(0.97);
@@ -212,16 +205,11 @@
   background: var(--beige-bg);
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.2s ease;
   color: var(--brown-dark);
   font-size: 0;
 
   .pi {
     font-size: 1.05rem;
-  }
-
-  &:active {
-    transform: scale(0.9);
   }
 }
 

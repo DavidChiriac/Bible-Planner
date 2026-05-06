@@ -33,11 +33,6 @@
     border-radius: 12px;
     padding: 0.5rem;
     cursor: pointer;
-    transition: border-color 0.2s ease, transform 0.15s ease;
-
-    &:hover {
-        transform: scale(1.06);
-    }
 
     &.active {
         border-color: var(--terracotta);
@@ -98,12 +93,6 @@
     padding: 0.6rem 1.1rem;
     cursor: pointer;
     box-shadow: var(--shadow-soft);
-    transition: border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-
-    &:hover {
-        transform: scale(1.05);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-    }
 
     &.active {
         border-color: var(--terracotta);
@@ -130,14 +119,4 @@
     border-radius: 12px;
     font-weight: 600;
     padding: 0.6rem 1.25rem;
-    transition: all 0.2s ease;
-
-    &:hover {
-        background: var(--terracotta);
-        color: #fff;
-    }
-
-    &:active {
-        transform: scale(0.96);
-    }
 }

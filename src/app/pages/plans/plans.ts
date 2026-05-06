@@ -50,6 +50,17 @@ export class Plans {
       }
     });
 
+    // Expand favourite weeks on init (once only)
+    effect(() => {
+      if (this.utils.loading()) return;
+      if (this.openWeeksInitialized) return;
+      const bookmarked = this.bookmarkedWeeksForPlan();
+      untracked(() => {
+        this.openWeeks.set(bookmarked);
+        this.openWeeksInitialized = true;
+      });
+    }, { allowSignalWrites: true });
+
     // Keep history in sync for duplicate-save detection
     this.firebase.getPlanHistory$().subscribe(entries => {
       this.history.set(entries);
@@ -137,6 +148,7 @@ export class Plans {
 
   openWeeks = signal<number[]>([]);
   private readonly lastNavigatedWeek = signal(0);
+  private openWeeksInitialized = false;
 
   bookmarkedWeeksForPlan = computed(() => {
     return [...this.utils.favouriteWeeks()].sort((a, b) => a - b);

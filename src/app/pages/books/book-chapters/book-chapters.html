@@ -46,12 +46,7 @@
             <div
                 class="chapter-card"
                 [ngClass]="{'chapter-read': utils.isChapterRead(chapter)}">
-                <div class="chapter-top">
-                    <span class="chapter-number">{{ $index + 1 }}</span>
-                    @if (utils.isChapterRead(chapter)) {
-                        <i class="pi pi-check-circle chapter-check"></i>
-                    }
-                </div>
+                <span class="chapter-number">{{ $index + 1 }}</span>
                 <div class="chapter-actions">
                     @if (isChapterInPlan(chapter)) {
                     <button class="chapter-action-btn mark-btn" [pTooltip]="utils.isChapterRead(chapter) ? i18n.t('common.unread') : i18n.t('common.read')" tooltipPosition="top" (click)="utils.toggleChapterRead(chapter)">

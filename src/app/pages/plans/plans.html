@@ -77,11 +77,12 @@
     }
 
     <div [ngClass]="utils.isMobile() ? 'card-mobile' : 'card'">
-        <p-accordion [multiple]="true" [ngClass]="{'mobile': utils.isMobile()}" animationDuration="0">
+        <p-accordion [multiple]="true" [ngClass]="{'mobile': utils.isMobile()}" animationDuration="0"
+            [value]="openWeeks()" (valueChange)="openWeeks.set($any($event))">
             @for (tab of weeks(); track tab.week) {
                 <div class="week-anchor" [attr.id]="'week-' + tab.week">
                     <p-accordion-panel [value]="tab.week">
-                        <p-accordion-header (click)="addWeekToOpen(tab.week)" onkeydown="">
+                        <p-accordion-header onkeydown="">
                             <div class="w-full flex justify-content-between pr-2 cursor-pointer gap-2 align-items-center">
                                 <div class="flex gap-2 align-items-center">
                                     @if (utils.isWeekBookmarked(tab)) {

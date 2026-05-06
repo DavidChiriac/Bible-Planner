@@ -1,5 +1,17 @@
 .p-button {
   border: none !important;
+
+  &:hover,
+  &:active,
+  &:focus,
+  &:focus-visible {
+    background: inherit !important;
+    color: inherit !important;
+    border-color: inherit !important;
+    box-shadow: none !important;
+    outline: none !important;
+    transform: none !important;
+  }
 }
 
 .plan-selector-button {
@@ -11,12 +23,6 @@
 
     .p-button-label {
       color: var(--brown);
-    }
-
-    &:hover {
-      background: inherit;
-      color: inherit;
-      box-shadow: none;
     }
   }
 
@@ -47,28 +53,12 @@
   border-radius: 10px !important;
   width: 100%;
 
-  :host:not(.mobile) &:hover {
-    background-color: var(--muted-sage) !important;
-
-    .p-button-label {
-      color: var(--brown-dark) !important;
-    }
-  }
-
   &.p-button-success {
     border-radius: 10px !important;
     background-color: var(--muted-sage) !important;
 
     .p-button-label {
       color: var(--beige-light) !important;
-    }
-
-    :host:not(.mobile) &:hover {
-      background-color: var(--beige-light) !important;
-
-      .p-button-label {
-        color: var(--brown-dark) !important;
-      }
     }
   }
 
@@ -89,10 +79,9 @@
     cursor: pointer;
     box-shadow: var(--shadow-soft);
 
-    &:hover {
-      background: var(--muted-sage);
-      color: var(--beige-light);
-      box-shadow: var(--shadow-soft);
+    &:hover, &:active, &:focus, &:focus-visible {
+      background: var(--muted-sage) !important;
+      color: var(--beige-light) !important;
     }
   }
 }
@@ -128,13 +117,12 @@
   box-shadow: var(--shadow-soft);
   cursor: pointer;
 
-  .p-button-icon {
-    color: white;
+  &:hover, &:active, &:focus, &:focus-visible {
+    background-color: var(--terracotta) !important;
   }
 
-  &:hover {
-    background-color: var(--terracotta) !important;
-    box-shadow: var(--shadow-soft);
+  .p-button-icon {
+    color: white;
   }
 }
 
@@ -146,12 +134,6 @@
 
   .p-button-label {
     color: var(--beige-light);
-  }
-  
-  &:hover {
-    background: var(--brown-dark);
-    color: inherit;
-    box-shadow: none;
   }
 }
 
@@ -177,11 +159,6 @@
   i {
     font-size: 1.2rem;
   }
-
-  &:hover {
-    color: var(--brown);
-    background: transparent;
-  }
 }
 
 .mark-as-unread, .cancel-reset-progress, .reset-progress, .filters-btn, .search-btn {
@@ -195,10 +172,9 @@
     cursor: pointer;
     box-shadow: var(--shadow-soft);
 
-    &:hover {
-      background: var(--brown-dark);
-      color: var(--beige-light);
-      box-shadow: var(--shadow-soft);
+    &:hover, &:active, &:focus, &:focus-visible {
+      background: var(--brown-dark) !important;
+      color: var(--beige-light) !important;
     }
   }
 }
@@ -214,10 +190,9 @@
     cursor: pointer;
     box-shadow: var(--shadow-soft);
 
-    &:hover {
-      background: var(--terracotta);
-      color: var(--beige-light);
-      box-shadow: var(--shadow-soft);
+    &:hover, &:active, &:focus, &:focus-visible {
+      background: var(--terracotta) !important;
+      color: var(--beige-light) !important;
     }
   }
 }
@@ -230,21 +205,10 @@
     border-radius: 14px;
     padding: 14px;
     cursor: pointer;
-    transition: all 0.2s ease;
 
     .p-button-icon {
       color: var(--terracotta);
       font-size: 1rem;
-    }
-
-    &:hover {
-      background: var(--beige-bg);
-      border-color: var(--brown-light);
-      color: var(--terracotta);
-
-      .p-button-icon {
-        color: var(--terracotta);
-      }
     }
   }
 
@@ -256,16 +220,6 @@
 
     .p-button-icon {
       color: var(--brown-light);
-    }
-
-    &:hover {
-      background: var(--beige-card);
-      border-color: var(--brown-light);
-      color: inherit;
-
-      .p-button-icon {
-        color: var(--brown-light);
-      }
     }
   }
 }

@@ -63,16 +63,10 @@
   cursor: pointer;
   border: 1px solid var(--brown-light);
   background: var(--beige-bg);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
 
   &.in-plan {
     border-color: var(--terracotta);
     box-shadow: 0 0 0 1.5px rgba(164, 100, 71, 0.35);
-  }
-
-  &:hover {
-    transform: scale(1.08);
-    box-shadow: 0 2px 8px rgba(74, 59, 42, 0.2);
   }
 
   &.complete {
