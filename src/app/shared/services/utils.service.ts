@@ -258,8 +258,12 @@ export class Utils {
       : 'completat';
 
     // Calculate days ahead/behind
-    const startMs = this.activeStartDate()?.getTime() ?? Date.now();
-    const diffMs = Date.now() - startMs;
+    const startDate = this.activeStartDate() ?? new Date();
+    const startNorm = new Date(startDate);
+    startNorm.setHours(0, 0, 0, 0);
+    const todayNorm = new Date();
+    todayNorm.setHours(0, 0, 0, 0);
+    const diffMs = todayNorm.getTime() - startNorm.getTime();
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
 
     const plan = this.getActivePlan();
@@ -271,11 +275,11 @@ export class Utils {
       targetDate = new Date(customTargetDate);
     } else {
       const months = this.months() ?? 12;
-      targetDate = new Date(startMs);
+      targetDate = new Date(startNorm);
       targetDate.setMonth(targetDate.getMonth() + months);
     }
     
-    const totalCalendarDays = Math.ceil((targetDate.getTime() - startMs) / (1000 * 60 * 60 * 24));
+    const totalCalendarDays = Math.ceil((targetDate.getTime() - startNorm.getTime()) / (1000 * 60 * 60 * 24));
     const expectedDays = totalCalendarDays > 0
       ? (diffDays * totalReadingDays) / totalCalendarDays
       : diffDays;

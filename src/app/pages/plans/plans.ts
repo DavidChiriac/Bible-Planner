@@ -102,6 +102,12 @@ export class Plans {
     this.expandedHistoryId.update(current => current === id ? null : id);
   }
 
+  daysToComplete(entry: PlanHistoryEntry): number {
+    const start = new Date(entry.startDate);
+    const end = new Date(entry.endDate);
+    return Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+  }
+
   weeks = computed(() => this.utils.customPlan());
 
   numbersOfDaysRead = computed(() => {
@@ -118,9 +124,12 @@ export class Plans {
 
   currentStatus = computed(() => {
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
     const start = this.utils.activeStartDate() ?? new Date();
+    const startNorm = new Date(start);
+    startNorm.setHours(0, 0, 0, 0);
 
-    const diffInMs = today.getTime() - start.getTime();
+    const diffInMs = today.getTime() - startNorm.getTime();
     const elapsedDays =
       Math.floor(diffInMs / (1000 * 60 * 60 * 24)) + 1;
 

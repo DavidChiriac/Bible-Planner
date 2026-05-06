@@ -18,6 +18,7 @@ const RO = {
     notes: 'Notițe',
     chapters: 'Capitole',
     verses: 'Versete',
+    days: 'zile',
   },
   login: {
     title: 'Bine ai venit la Bible Agenda!',
@@ -171,6 +172,7 @@ const RO = {
     excludeLand: 'Împărțirea țării (Iosua)',
     excludeTabernacle: 'Construcția cortului / templului',
     excludeProphecies: 'Profeții împotriva neamurilor',
+    excludeServiceAndArmy: 'Slujire la templu și armată (1 Cronici 23-27)',
   },
   tags: {
     rugaciune: 'Rugăciune',
@@ -197,6 +199,7 @@ const EN: typeof RO = {
     notes: 'Notes',
     chapters: 'Chapters',
     verses: 'Verses',
+    days: 'days',
   },
   login: {
     title: 'Welcome to Bible Agenda!',
@@ -350,6 +353,7 @@ const EN: typeof RO = {
     excludeLand: 'Land distribution (Joshua)',
     excludeTabernacle: 'Tabernacle / Temple construction',
     excludeProphecies: 'Prophecies against nations',
+    excludeServiceAndArmy: 'Temple service & army divisions (1 Chronicles 23-27)',
   },
   tags: {
     rugaciune: 'Prayer',

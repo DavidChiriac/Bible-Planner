@@ -84,10 +84,6 @@ export class BookChapters {
     this.router.navigate([`/books/${slugify(title)}`], { replaceUrl: true });
   }
 
-  viewChapterNotes(chapter: string) {
-    this.router.navigate(['/day'], { queryParams: { chapter } });
-  }
-
   readChapter(chapter: string) {
     this.router.navigate(['/reader'], { queryParams: { chapter } });
   }

@@ -222,6 +222,7 @@
                 <div class="history-entry">
                     <div class="history-entry-meta">
                         <span><i class="pi pi-calendar"></i> {{ entry.startDate }} — {{ entry.endDate }}</span>
+                        <span><i class="pi pi-clock"></i> {{ daysToComplete(entry) }} {{ i18n.t('common.days') }}</span>
                         <span><i class="pi pi-book"></i> {{ entry.chaptersRead }} / {{ entry.totalChapters }} cap.</span>
                     </div>
                     @if (entry.books && entry.books.length > 0) {

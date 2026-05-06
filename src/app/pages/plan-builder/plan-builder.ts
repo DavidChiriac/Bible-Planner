@@ -47,6 +47,7 @@ export class PlanBuilder {
   excludeLand: ReturnType<typeof signal<boolean>>;
   excludeTabernacle: ReturnType<typeof signal<boolean>>;
   excludeProphecies: ReturnType<typeof signal<boolean>>;
+  excludeServiceAndArmy: ReturnType<typeof signal<boolean>>;
 
   constructor() {
     const existing = this.utils.customPlanConfig();
@@ -85,6 +86,7 @@ export class PlanBuilder {
     this.excludeLand = signal(excludeSet.has('land'));
     this.excludeTabernacle = signal(excludeSet.has('tabernacle'));
     this.excludeProphecies = signal(excludeSet.has('prophecies'));
+    this.excludeServiceAndArmy = signal(excludeSet.has('serviceAndArmy'));
   }
 
   onStartDateChange(date: Date | null) {
@@ -123,13 +125,40 @@ export class PlanBuilder {
   allNtSelected = computed(() => this.ntBooks().every(b => b.selected));
   someNtSelected = computed(() => this.ntBooks().some(b => b.selected) && !this.allNtSelected());
 
+  selectedBooks = computed(() => [
+    ...this.otBooks().filter(b => b.selected),
+    ...this.ntBooks().filter(b => b.selected),
+  ]);
+
+  /** Categories that have at least one chapter in the currently selected books */
+  visibleExclusionCategories = computed<Set<ExclusionCategory>>(() => {
+    const selectedChapters = new Set(
+      this.selectedBooks().flatMap(b => {
+        const book = BIBLE_BOOKS.find(bb => bb.title === b.title);
+        return book ? book.chapters : [];
+      })
+    );
+    const visible = new Set<ExclusionCategory>();
+    for (const cat of Object.keys(EXCLUSION_CATEGORIES) as ExclusionCategory[]) {
+      for (const ch of EXCLUSION_CATEGORIES[cat]) {
+        if (selectedChapters.has(ch)) {
+          visible.add(cat);
+          break;
+        }
+      }
+    }
+    return visible;
+  });
+
   activeExclusions = computed<string[]>(() => {
+    const visible = this.visibleExclusionCategories();
     const cats: string[] = [];
-    if (this.excludeGenealogies()) cats.push('genealogies');
-    if (this.excludeLaw()) cats.push('law');
-    if (this.excludeLand()) cats.push('land');
-    if (this.excludeTabernacle()) cats.push('tabernacle');
-    if (this.excludeProphecies()) cats.push('prophecies');
+    if (this.excludeGenealogies() && visible.has('genealogies')) cats.push('genealogies');
+    if (this.excludeLaw() && visible.has('law')) cats.push('law');
+    if (this.excludeLand() && visible.has('land')) cats.push('land');
+    if (this.excludeTabernacle() && visible.has('tabernacle')) cats.push('tabernacle');
+    if (this.excludeProphecies() && visible.has('prophecies')) cats.push('prophecies');
+    if (this.excludeServiceAndArmy() && visible.has('serviceAndArmy')) cats.push('serviceAndArmy');
     return cats;
   });
 
@@ -143,11 +172,6 @@ export class PlanBuilder {
     }
     return excluded;
   });
-
-  selectedBooks = computed(() => [
-    ...this.otBooks().filter(b => b.selected),
-    ...this.ntBooks().filter(b => b.selected),
-  ]);
 
   totalChapters = computed(() => {
     const excluded = this.excludedChapterSet();

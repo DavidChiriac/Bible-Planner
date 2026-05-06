@@ -14,7 +14,7 @@ export interface CustomPlanConfig {
   excludeCategories?: string[];
 }
 
-export type ExclusionCategory = 'genealogies' | 'law' | 'land' | 'tabernacle' | 'prophecies';
+export type ExclusionCategory = 'genealogies' | 'law' | 'land' | 'tabernacle' | 'prophecies' | 'serviceAndArmy';
 
 export const EXCLUSION_CATEGORIES: Record<ExclusionCategory, Set<string>> = {
   genealogies: new Set([
@@ -49,6 +49,11 @@ export const EXCLUSION_CATEGORIES: Record<ExclusionCategory, Set<string>> = {
     'Ieremia 46', 'Ieremia 47', 'Ieremia 48', 'Ieremia 49', 'Ieremia 50', 'Ieremia 51',
     'Ezechiel 25', 'Ezechiel 26', 'Ezechiel 27', 'Ezechiel 28',
     'Ezechiel 29', 'Ezechiel 30', 'Ezechiel 31', 'Ezechiel 32',
+  ]),
+  serviceAndArmy: new Set([
+    '1 Cronici 23', '1 Cronici 24', '1 Cronici 25', '1 Cronici 26', '1 Cronici 27',
+    'Numeri 31',
+    '2 Cronici 31',
   ]),
 };
 
