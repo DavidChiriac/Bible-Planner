@@ -1,6 +1,9 @@
-jest.mock('@angular/fire/auth', () => ({
-  authState: jest.fn(() => ({ subscribe: jest.fn() })),
-}));
+jest.mock('@angular/fire/auth', () => {
+  const { EMPTY } = require('rxjs');
+  return {
+    authState: jest.fn().mockReturnValue(EMPTY),
+  };
+});
 jest.mock('@angular/fire/database', () => ({}));
 jest.mock('@angular/fire/app', () => ({}));
 jest.mock('@capacitor/core', () => ({

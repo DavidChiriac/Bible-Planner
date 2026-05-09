@@ -13,7 +13,6 @@ import {
 import { Observable, switchMap, of, map } from 'rxjs';
 import { object, objectVal } from 'rxfire/database';
 import Chapters from '../../../assets/jsons/biblia_cornilescu_carti_capitole.json';
-import { migrateChaptersSameRefIfNeeded } from './migration';
 
 type BookDef = { title: string; chapters: string[] };
 
@@ -25,7 +24,7 @@ export const CHAPTER_COUNT: Record<string, number> = Object.fromEntries(
 
 type BookNode = {
   __all?: boolean;
-  [chapter: string]: any;
+  [chapter: string]: boolean | undefined;
 };
 
 export type NotesCursor = {
@@ -327,13 +326,6 @@ export class FirebaseService {
     return of(null);
   }
 
-  async ensureChaptersMigrated(): Promise<void> {
-    const u = this.auth.currentUser;
-    if (!u) return;
-
-    await migrateChaptersSameRefIfNeeded(this.db, u.uid);
-  }
-
   // --------------------- SELECTED TRANSLATION ----------------
 
   getSelectedTranslation$(): Observable<string | null> {
@@ -363,7 +355,7 @@ export class FirebaseService {
     const favsRef = ref(this.db, `users/${u.uid}/favouriteWeeks`);
 
     await runTransaction(favsRef, (current) => {
-      const arr: number[] = Array.isArray(current) ? current.map((f: any) => typeof f === 'object' ? f.week : f) : [];
+      const arr: number[] = Array.isArray(current) ? current.map((f: number | { week: number }) => typeof f === 'object' ? f.week : f) : [];
       if (arr.includes(week)) return arr;
       return [...arr, week];
     });
@@ -376,7 +368,7 @@ export class FirebaseService {
     const favsRef = ref(this.db, `users/${u.uid}/favouriteWeeks`);
 
     const res = await runTransaction(favsRef, (current) => {
-      const arr: number[] = Array.isArray(current) ? current.map((f: any) => typeof f === 'object' ? f.week : f) : [];
+      const arr: number[] = Array.isArray(current) ? current.map((f: number | { week: number }) => typeof f === 'object' ? f.week : f) : [];
       const filtered = arr.filter(w => w !== week);
       return filtered.length ? filtered : null;
     });
@@ -388,14 +380,14 @@ export class FirebaseService {
     return this.user$.pipe(
       switchMap(u => {
         if (!u) return of([]);
-        return objectVal<any[] | null>(
+        return objectVal<(number | { week: number })[] | null>(
           ref(this.db, `users/${u.uid}/favouriteWeeks`)
         );
       }),
       map(v => {
         if (!v) return [];
         // migrate old shape { plan, week } to plain number
-        return Object.values(v).map((f: any) => typeof f === 'object' ? f.week : f) as number[];
+        return Object.values(v).map((f: number | { week: number }) => typeof f === 'object' ? f.week : f) as number[];
       })
     );
   }

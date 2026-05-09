@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal, untracked } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, signal, untracked } from '@angular/core';
 import { Utils } from '../../shared/services/utils.service';
 import { FirebaseService, PlanHistoryEntry } from '../../shared/services/firebase.service';
 import { AccordionModule } from 'primeng/accordion';
@@ -12,6 +12,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { I18nService } from '../../shared/services/i18n.service';
 import { DialogModule } from 'primeng/dialog';
 import { take } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-plans',
@@ -35,6 +36,7 @@ export class Plans {
   i18n = inject(I18nService);
   private readonly firebase = inject(FirebaseService);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   private localDateStr(date: Date): string {
     const y = date.getFullYear();
@@ -46,7 +48,7 @@ export class Plans {
   constructor() {
     effect(() => {
       if (!this.utils.loading() && !this.utils.customPlanConfig()) {
-        untracked(() => this.router.navigate(['/plan-builder']));
+        untracked(() => this.router.navigate(['/plan-builder'], { replaceUrl: true }));
       }
     });
 
@@ -62,7 +64,9 @@ export class Plans {
     }, { allowSignalWrites: true });
 
     // Keep history in sync for duplicate-save detection
-    this.firebase.getPlanHistory$().subscribe(entries => {
+    this.firebase.getPlanHistory$().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(entries => {
       this.history.set(entries);
     });
   }
@@ -175,6 +179,10 @@ export class Plans {
   openWeeks = signal<number[]>([]);
   private readonly lastNavigatedWeek = signal(0);
   private openWeeksInitialized = false;
+
+  onWeeksChange(event: unknown) {
+    this.openWeeks.set(event as number[]);
+  }
 
   bookmarkedWeeksForPlan = computed(() => {
     return [...this.utils.favouriteWeeks()].sort((a, b) => a - b);

@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
 
   isOnline = signal(true);
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.isOnline.set(navigator.onLine);
       globalThis.addEventListener('online', () => this.isOnline.set(true));
@@ -33,16 +33,12 @@ export class AppComponent implements OnInit {
     }
 
     if (Capacitor.getPlatform() === 'android') {
-      await App.addListener('backButton', ({ canGoBack }: { canGoBack: boolean }) => {
+      void App.addListener('backButton', ({ canGoBack }: { canGoBack: boolean }) => {
         if (canGoBack) {
           globalThis.history.back();
-          return;
         } else {
           App.exitApp();
-          return;
         }
-
-        this.location.back();
       });
     }
   }

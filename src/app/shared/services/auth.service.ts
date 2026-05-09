@@ -1,4 +1,5 @@
-import { inject, Injectable } from '@angular/core';
+import { DestroyRef, inject, Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { authState } from '@angular/fire/auth';
@@ -9,22 +10,26 @@ import {
   GoogleAuthProvider,
   signInWithCredential,
   signInWithPopup,
+  User,
 } from 'firebase/auth';
 
 import { FirebaseService } from './firebase.service';
 import { Utils } from './utils.service';
 
-type AuthResult = { success: boolean; error?: string; user?: any };
+type AuthResult = { success: boolean; error?: string; user?: User };
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly firebase = inject(FirebaseService);
   private readonly router = inject(Router);
   private readonly utils = inject(Utils);
+  private readonly destroyRef = inject(DestroyRef);
   private readonly isLoggedIn$ = new BehaviorSubject(false);
 
   constructor() {
-    authState(this.firebase.getAuth()).subscribe(user => {
+    authState(this.firebase.getAuth()).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(user => {
       this.isLoggedIn$.next(!!user);
     });
   }
@@ -61,8 +66,8 @@ export class AuthService {
       const userCredential = await signInWithCredential(auth, cred);
 
       return { success: true, user: userCredential.user };
-    } catch (error: any) {
-      return { success: false, error: error?.message || 'Native Google login failed' };
+    } catch (error: unknown) {
+      return { success: false, error: error instanceof Error ? error.message : 'Native Google login failed' };
     }
   }
 
@@ -77,8 +82,8 @@ export class AuthService {
       const userCredential = await signInWithPopup(auth, provider);
 
       return { success: true, user: userCredential.user };
-    } catch (error: any) {
-      return { success: false, error: error?.message || 'Web Google login failed' };
+    } catch (error: unknown) {
+      return { success: false, error: error instanceof Error ? error.message : 'Web Google login failed' };
     }
   }
 
@@ -100,8 +105,8 @@ export class AuthService {
       this.isLoggedIn$.next(false);
       await this.router.navigate(['/login']);
 
-    } catch (error: any) {
-      console.error('Logout failed:', error);
+    } catch {
+      // Logout failure is non-critical; user can retry
     }
   }
 

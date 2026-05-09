@@ -12,6 +12,7 @@ jest.mock('@capacitor/haptics', () => ({
     notification: jest.fn().mockResolvedValue(undefined),
   },
   ImpactStyle: { Light: 'LIGHT', Medium: 'MEDIUM', Heavy: 'HEAVY' },
+  NotificationType: { Success: 'SUCCESS', Warning: 'WARNING', Error: 'ERROR' },
 }));
 
 describe('HapticsService', () => {
@@ -57,7 +58,7 @@ describe('HapticsService', () => {
 
     it('success calls Haptics.notification', async () => {
       await service.success();
-      expect(Haptics.notification).toHaveBeenCalledWith({ type: 'SUCCESS' as any });
+      expect(Haptics.notification).toHaveBeenCalledWith({ type: 'SUCCESS' });
     });
 
     it('light delegates to impact with Light', async () => {

@@ -1,6 +1,6 @@
 import { computed, DestroyRef, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { FirebaseService } from './firebase.service';
-import { combineLatest, distinctUntilChanged, EMPTY, from, switchMap } from 'rxjs';
+import { combineLatest, distinctUntilChanged, EMPTY, switchMap } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { authState } from '@angular/fire/auth';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -68,19 +68,14 @@ export class Utils {
 
         this.loading.set(true);
 
-        // migrate then start DB listeners
-        return from(this.firebase.ensureChaptersMigrated()).pipe(
-          switchMap(() =>
-            combineLatest({
-              chapters: this.firebase.getChapters(),
-              startDate: this.firebase.getStartDate(),
-              months: this.firebase.getMonths(),
-              favouriteWeeks: this.firebase.getFavouriteWeeks$(),
-              customPlanConfig: this.firebase.getCustomPlanConfig$(),
-              selectedTranslation: this.firebase.getSelectedTranslation$(),
-            })
-          ),
-        );
+        return combineLatest({
+          chapters: this.firebase.getChapters(),
+          startDate: this.firebase.getStartDate(),
+          months: this.firebase.getMonths(),
+          favouriteWeeks: this.firebase.getFavouriteWeeks$(),
+          customPlanConfig: this.firebase.getCustomPlanConfig$(),
+          selectedTranslation: this.firebase.getSelectedTranslation$(),
+        });
       })
     )
     .subscribe(({ chapters, startDate, months, favouriteWeeks, customPlanConfig, selectedTranslation }) => {
@@ -234,9 +229,21 @@ export class Utils {
   }
 
   private updateWidget() {
+    if (!this.customPlanConfig()) {
+      this.widget.updateWidget(0, '', '', 'ontrack', 'Configurează un plan');
+      this.firebase.saveWidgetData({
+        progress: '0',
+        status: '',
+        step: '',
+        stepType: 'ontrack',
+        todayReading: 'Configurează un plan',
+      });
+      return;
+    }
+
     const pct = this.readPercentage();
     const status = this.hasCompletedPlan()
-      ? 'Ai completat planul!'
+      ? 'Felicitări! Ai completat planul!'
       : 'completat';
 
     // Calculate days ahead/behind
@@ -277,24 +284,7 @@ export class Utils {
 
     const rawDiff = Math.round(daysRead - expectedDays);
     const diff = Math.max(-totalReadingDays, Math.min(totalReadingDays, rawDiff));
-    const places = this.customPlanConfig()?.places ?? 1;
-    const absDiff = Math.abs(diff);
-    const fullDays = Math.floor(absDiff / places);
-    const remainder = absDiff % places;
-    const dayLabel = remainder > 0 ? `${fullDays} + (${remainder}/${places})` : `${fullDays}`;
-
-    let step: string;
-    let stepType: string;
-    if (diff > 0) {
-      step = `\u25B2 ${dayLabel} zile înainte`;
-      stepType = 'ahead';
-    } else if (diff < 0) {
-      step = `\u25BC ${dayLabel} zile în urmă`;
-      stepType = 'behind';
-    } else {
-      step = '\u2713 La zi';
-      stepType = 'ontrack';
-    }
+    const { step, stepType } = this.resolveStep(diff);
 
     const todayReading = 'Apasă pentru a continua citirea';
     this.widget.updateWidget(pct, status, step, stepType, todayReading);
@@ -307,6 +297,20 @@ export class Utils {
       stepType,
       todayReading,
     });
+  }
+
+  private resolveStep(diff: number): { step: string; stepType: string } {
+    if (this.hasCompletedPlan()) return { step: '', stepType: 'ontrack' };
+
+    const places = this.customPlanConfig()?.places ?? 1;
+    const absDiff = Math.abs(diff);
+    const fullDays = Math.floor(absDiff / places);
+    const remainder = absDiff % places;
+    const dayLabel = remainder > 0 ? `${fullDays} + (${remainder}/${places})` : `${fullDays}`;
+
+    if (diff > 0) return { step: `\u25B2 ${dayLabel} zile înainte`, stepType: 'ahead' };
+    if (diff < 0) return { step: `\u25BC ${dayLabel} zile în urmă`, stepType: 'behind' };
+    return { step: '\u2713 La zi', stepType: 'ontrack' };
   }
 
   private getActivePlan(): IPlan[] {

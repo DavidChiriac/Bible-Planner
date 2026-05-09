@@ -254,9 +254,11 @@ const BIBLE_API_BOOK_IDS: string[] = [
   '1PE','2PE','1JN','2JN','3JN','JUD','REV',
 ];
 
+const BIBLE_DATA = BIBLE as { verses: { book: number; chapter: number; verse: number; text: string }[] };
+
 /** Pre-index verses by "bookNr:chapter" for O(1) lookup */
 const VERSE_INDEX = new Map<string, { verse: number; text: string }[]>();
-for (const v of (BIBLE as any).verses) {
+for (const v of BIBLE_DATA.verses) {
   const key = `${v.book}:${v.chapter}`;
   let arr = VERSE_INDEX.get(key);
   if (!arr) {

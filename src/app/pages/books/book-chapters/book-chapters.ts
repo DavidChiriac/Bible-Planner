@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import BOOKS from '../../../../assets/jsons/biblia_cornilescu_carti_capitole.json';
 import { CheckboxModule } from 'primeng/checkbox';
 import { Utils } from '../../../shared/services/utils.service';
@@ -68,7 +69,9 @@ export class BookChapters {
   });
 
   constructor() {
-    this.route.params.subscribe(params => {
+    this.route.params.pipe(
+      takeUntilDestroyed()
+    ).subscribe(params => {
       const id = params['id'];
       if (id) {
         this.id.set(id);

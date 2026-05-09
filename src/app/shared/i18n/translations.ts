@@ -44,8 +44,8 @@ const RO = {
   home: {
     readingProgress: 'Progresul tău de citire',
     congratulations: 'Felicitări! Ai completat planul de citire! 🎉',
-    daysAhead: 'Ești cu {count} zile citite înainte!',
-    daysBehind: 'Ești cu {count} zile de citit în urmă!',
+    daysAhead: 'Ești cu {count} zile înainte!',
+    daysBehind: 'Ești cu {count} zile în urmă!',
     onTrack: 'Ești la zi cu planul de citire!',
     editPlan: 'Editează planul',
     weekFull: 'Săptămâna {n}',

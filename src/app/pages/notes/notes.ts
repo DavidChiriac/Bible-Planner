@@ -18,6 +18,7 @@ import { ProgressSpinner } from 'primeng/progressspinner';
 import { NotesService } from './notes.service';
 import { SessionStorageService } from 'ngx-webstorage';
 import { I18nService } from '../../shared/services/i18n.service';
+import type { Paragraph as DocxParagraph, TextRun as DocxTextRun, IParagraphOptions } from 'docx';
 
 type SortBy = 'createdDate' | 'chapter';
 type SortDir = 'asc' | 'desc';
@@ -88,7 +89,7 @@ export class Notes {
 
   draftSelectedBooks = signal<string[]>(this.sessionStorageService.retrieve('notes_selectedBooks') ?? []);
   draftSelectedChapters = signal<string[]>(this.sessionStorageService.retrieve('notes_selectedChapters') ?? []);
-  draftSort = signal<any>(this.sessionStorageService.retrieve('notes_sort') ?? null);
+  draftSort = signal<string | null>(this.sessionStorageService.retrieve('notes_sort') ?? null);
 
   chapters = computed(() => {
     const selectedBooks = this.selectedBooks();
@@ -254,7 +255,7 @@ export class Notes {
     this.selectedBooks.set([...this.draftSelectedBooks()]);
     this.selectedChapters.set([...this.draftSelectedChapters()]);
     this.selectedTags.set([...this.draftSelectedTags()]);
-    this.sort.set(this.draftSort());
+    this.sort.set(this.draftSort() ?? 'createdDate_desc');
     this.filtersDialogVisible.set(false);
 
     this.cursor.set({ offset: 0 });
@@ -268,51 +269,38 @@ export class Notes {
 
     const { Document, Packer, Paragraph, TextRun, HeadingLevel, BorderStyle, AlignmentType, LevelFormat } = await import('docx');
 
-    const children: InstanceType<typeof Paragraph>[] = [];
-
-    // Title
-    children.push(new Paragraph({
-      text: 'Notițe Biblie',
-      heading: HeadingLevel.TITLE,
-      alignment: AlignmentType.CENTER,
-      spacing: { after: 300 },
-    }));
-
-    for (let i = 0; i < notes.length; i++) {
-      const n = notes[i];
-      const tagStr = n.tags?.length ? ` [${n.tags.join(', ')}]` : '';
-      const dateStr = new Date(n.createdDate).toLocaleDateString('ro-RO');
-
-      // Chapter heading
-      children.push(new Paragraph({
-        children: [
-          new TextRun({ text: n.chapterLabel + tagStr, bold: true, size: 26, color: '4C362D' }),
-        ],
-        spacing: { before: 200 },
-      }));
-
-      // Parse HTML content into runs
-      const htmlContent = n.text || '';
-      const parsed = this.parseHtmlToRuns(htmlContent, TextRun, Paragraph);
-      children.push(...parsed);
-
-      // Date
-      children.push(new Paragraph({
-        children: [
-          new TextRun({ text: dateStr, italics: true, size: 18, color: '6B5A45' }),
-        ],
-        alignment: AlignmentType.RIGHT,
-        spacing: { after: 100 },
-      }));
-
-      // Separator between notes
-      if (i < notes.length - 1) {
-        children.push(new Paragraph({
-          border: { bottom: { style: BorderStyle.SINGLE, size: 1, color: 'B8A995' } },
-          spacing: { after: 200 },
-        }));
-      }
-    }
+    const children: InstanceType<typeof Paragraph>[] = [
+      new Paragraph({
+        text: 'Notițe Biblie',
+        heading: HeadingLevel.TITLE,
+        alignment: AlignmentType.CENTER,
+        spacing: { after: 300 },
+      }),
+      ...notes.flatMap((n, i) => {
+        const tagStr = n.tags?.length ? ` [${n.tags.join(', ')}]` : '';
+        const dateStr = new Date(n.createdDate).toLocaleDateString('ro-RO');
+        return [
+          new Paragraph({
+            children: [
+              new TextRun({ text: n.chapterLabel + tagStr, bold: true, size: 26, color: '4C362D' }),
+            ],
+            spacing: { before: 200 },
+          }),
+          ...this.parseHtmlToRuns(n.text || '', TextRun, Paragraph),
+          new Paragraph({
+            children: [
+              new TextRun({ text: dateStr, italics: true, size: 18, color: '6B5A45' }),
+            ],
+            alignment: AlignmentType.RIGHT,
+            spacing: { after: 100 },
+          }),
+          ...(i < notes.length - 1 ? [new Paragraph({
+            border: { bottom: { style: BorderStyle.SINGLE, size: 1, color: 'B8A995' } },
+            spacing: { after: 200 },
+          })] : []),
+        ];
+      }),
+    ];
 
     const doc = new Document({
       numbering: {
@@ -393,63 +381,50 @@ export class Notes {
     });
   }
 
-  private parseHtmlToRuns(html: string, TextRun: any, Paragraph: any): any[] {
-    const paragraphs: any[] = [];
-
-    // Strip outer tags and split by block elements
+  private parseHtmlToRuns(html: string, TextRun: typeof DocxTextRun, Paragraph: typeof DocxParagraph): DocxParagraph[] {
     const temp = document.createElement('div');
     temp.innerHTML = html;
 
     const blocks = temp.querySelectorAll('p, li, h1, h2, h3');
     if (blocks.length === 0) {
-      // Plain text fallback
       const text = temp.textContent || '';
-      if (text.trim()) {
-        paragraphs.push(new Paragraph({
-          children: [new TextRun({ text, size: 22 })],
-        }));
-      }
-      return paragraphs;
+      return text.trim()
+        ? [new Paragraph({ children: [new TextRun({ text, size: 22 })] })]
+        : [];
     }
 
-    blocks.forEach((block) => {
-      const runs: any[] = [];
-      this.extractRuns(block, runs, TextRun, false, false, false);
+    return Array.from(blocks).map((block) => {
+      const runs = this.extractRuns(block, TextRun, false, false, false);
       const isList = block.tagName === 'LI';
       const parent = block.parentElement;
       const isOrdered = parent?.tagName === 'OL';
 
-      const opts: any = {
+      const opts: IParagraphOptions = {
         children: runs.length ? runs : [new TextRun({ text: ' ', size: 22 })],
+        ...(isList ? {
+          numbering: {
+            reference: isOrdered ? 'notes-ordered' : 'notes-bullet',
+            level: 0,
+          },
+        } : {}),
       };
 
-      if (isList) {
-        opts.numbering = {
-          reference: isOrdered ? 'notes-ordered' : 'notes-bullet',
-          level: 0,
-        };
-      }
-
-      paragraphs.push(new Paragraph(opts));
+      return new Paragraph(opts);
     });
-
-    return paragraphs;
   }
 
-  private extractRuns(node: Node, runs: any[], TextRun: any, bold: boolean, italic: boolean, underline: boolean): void {
+  private extractRuns(node: Node, TextRun: typeof DocxTextRun, bold: boolean, italic: boolean, underline: boolean): DocxTextRun[] {
     if (node.nodeType === Node.TEXT_NODE) {
       const text = node.textContent || '';
-      if (text) {
-        runs.push(new TextRun({
-          text,
-          bold,
-          italics: italic,
-          underline: underline ? {} : undefined,
-          size: 22,
-          color: '4C362D',
-        }));
-      }
-      return;
+      if (!text) return [];
+      return [new TextRun({
+        text,
+        bold,
+        italics: italic,
+        underline: underline ? {} : undefined,
+        size: 22,
+        color: '4C362D',
+      })];
     }
 
     if (node.nodeType === Node.ELEMENT_NODE) {
@@ -459,9 +434,11 @@ export class Notes {
       const newItalic = italic || tag === 'EM' || tag === 'I';
       const newUnderline = underline || tag === 'U';
 
-      for (const child of Array.from(el.childNodes)) {
-        this.extractRuns(child, runs, TextRun, newBold, newItalic, newUnderline);
-      }
+      return Array.from(el.childNodes).flatMap(child =>
+        this.extractRuns(child, TextRun, newBold, newItalic, newUnderline)
+      );
     }
+
+    return [];
   }
 }

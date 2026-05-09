@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 
 @Injectable({ providedIn: 'root' })
 export class HapticsService {
@@ -13,7 +13,7 @@ export class HapticsService {
 
   async success() {
     if (!this.isNative) return;
-    await Haptics.notification({ type: 'SUCCESS' as any });
+    await Haptics.notification({ type: NotificationType.Success });
   }
 
   async light() {

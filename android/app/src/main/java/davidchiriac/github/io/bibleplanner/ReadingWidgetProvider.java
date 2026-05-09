@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,16 @@ import com.google.firebase.database.ValueEventListener;
 public class ReadingWidgetProvider extends AppWidgetProvider {
 
     private static final String PREFS_NAME = "BiblePlannerWidget";
+
+    private static final String KEY_PROGRESS     = "progress";
+    private static final String KEY_STATUS       = "status";
+    private static final String KEY_STEP         = "step";
+    private static final String KEY_STEP_TYPE    = "stepType";
+    private static final String KEY_TODAY        = "todayReading";
+
+    private static final String COLOR_AHEAD   = "#88937B";
+    private static final String COLOR_BEHIND  = "#A46447";
+    private static final String COLOR_DEFAULT = "#6B5A45";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -40,22 +51,7 @@ public class ReadingWidgetProvider extends AppWidgetProvider {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         try {
                             if (snapshot.exists()) {
-                                SharedPreferences.Editor editor =
-                                        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
-
-                                String progress = snapshot.child("progress").getValue(String.class);
-                                String status = snapshot.child("status").getValue(String.class);
-                                String step = snapshot.child("step").getValue(String.class);
-                                String stepType = snapshot.child("stepType").getValue(String.class);
-                                String todayReading = snapshot.child("todayReading").getValue(String.class);
-
-                                if (progress != null) editor.putString("progress", progress);
-                                if (status != null) editor.putString("status", status);
-                                if (step != null) editor.putString("step", step);
-                                if (stepType != null) editor.putString("stepType", stepType);
-                                if (todayReading != null) editor.putString("todayReading", todayReading);
-                                editor.apply();
-
+                                saveSnapshotToPrefs(context, snapshot);
                                 renderWidget(context, appWidgetManager, appWidgetIds);
                             }
                         } finally {
@@ -70,32 +66,61 @@ public class ReadingWidgetProvider extends AppWidgetProvider {
                 });
     }
 
+    private static void saveSnapshotToPrefs(Context context, DataSnapshot snapshot) {
+        SharedPreferences.Editor editor =
+                context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
+
+        String progress    = snapshot.child(KEY_PROGRESS).getValue(String.class);
+        String status       = snapshot.child(KEY_STATUS).getValue(String.class);
+        String step         = snapshot.child(KEY_STEP).getValue(String.class);
+        String stepType     = snapshot.child(KEY_STEP_TYPE).getValue(String.class);
+        String todayReading = snapshot.child(KEY_TODAY).getValue(String.class);
+
+        if (progress != null)     editor.putString(KEY_PROGRESS, progress);
+        if (status != null)       editor.putString(KEY_STATUS, status);
+        if (step != null)         editor.putString(KEY_STEP, step);
+        if (stepType != null)     editor.putString(KEY_STEP_TYPE, stepType);
+        if (todayReading != null) editor.putString(KEY_TODAY, todayReading);
+        editor.apply();
+    }
+
     static void renderWidget(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
-        String progress = prefs.getString("progress", "0");
-        String status = prefs.getString("status", "Progres citire");
-        String step = prefs.getString("step", "");
-        String stepType = prefs.getString("stepType", "ontrack");
-        String todayReading = prefs.getString("todayReading", "Deschide aplica\u021bia");
+        String progress     = prefs.getString(KEY_PROGRESS, "0");
+        String status       = prefs.getString(KEY_STATUS, "Progres citire");
+        String step         = prefs.getString(KEY_STEP, "");
+        String stepType     = prefs.getString(KEY_STEP_TYPE, "ontrack");
+        String todayReading = prefs.getString(KEY_TODAY, "Deschide aplica\u021bia");
 
         for (int appWidgetId : appWidgetIds) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_reading);
 
-            views.setTextViewText(R.id.widget_progress, progress + "%");
-            views.setTextViewText(R.id.widget_status, status);
-            views.setTextViewText(R.id.widget_step, step);
+            // Hide progress when no plan is configured (status is empty)
+            if (status.isEmpty()) {
+                views.setTextViewText(R.id.widget_progress, "");
+                views.setViewVisibility(R.id.widget_progress, View.GONE);
+                views.setViewVisibility(R.id.widget_status, View.GONE);
+                views.setViewVisibility(R.id.widget_step, View.GONE);
+            } else {
+                views.setTextViewText(R.id.widget_progress, progress + "%");
+                views.setViewVisibility(R.id.widget_progress, View.VISIBLE);
+                views.setTextViewText(R.id.widget_status, status);
+                views.setViewVisibility(R.id.widget_status, View.VISIBLE);
+                views.setTextViewText(R.id.widget_step, step);
+                views.setViewVisibility(R.id.widget_step, step.isEmpty() ? View.GONE : View.VISIBLE);
+            }
 
             int stepColor;
             switch (stepType) {
                 case "ahead":
-                    stepColor = Color.parseColor("#88937B");
+                    stepColor = Color.parseColor(COLOR_AHEAD);
                     break;
                 case "behind":
-                    stepColor = Color.parseColor("#A46447");
+                    stepColor = Color.parseColor(COLOR_BEHIND);
                     break;
                 default:
-                    stepColor = Color.parseColor("#6B5A45");
+                    stepColor = Color.parseColor(COLOR_DEFAULT);
                     break;
             }
             views.setInt(R.id.widget_step, "setTextColor", stepColor);

@@ -1,6 +1,5 @@
-import { effect, inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { effect, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { signal } from '@angular/core';
 import { I18N, LANG_LABELS, Lang, BOOK_NAMES_EN_SORTED } from '../i18n/translations';
 
 const STORAGE_KEY = 'bible-planner-lang';
@@ -26,9 +25,9 @@ export class I18nService {
 
   t(key: string, params?: Record<string, string | number>): string {
     const parts = key.split('.');
-    let value: any = I18N[this.lang()];
+    let value: unknown = I18N[this.lang()];
     for (const part of parts) {
-      value = value?.[part];
+      value = (value as Record<string, unknown>)?.[part];
     }
     if (typeof value !== 'string') return key;
     if (!params) return value;

@@ -44,7 +44,7 @@ export class NotesService {
     const updates: Record<string, { text: string; createdDate: string; tags?: NoteTag[] }> = {};
 
     for (const ch of chapters) {
-      const chapterNotes: Record<string, any> = existingData?.[ch] ?? {};
+      const chapterNotes: Record<string, { text: string; createdDate: string; tags?: NoteTag[] }> = existingData?.[ch] ?? {};
 
       const indices = Object.keys(chapterNotes)
         .map(Number)
@@ -142,7 +142,7 @@ export class NotesService {
       throw new Error('Note not found');
     }
 
-    const updates: Record<string, any> = { text: newText };
+    const updates: Record<string, string | NoteTag[] | null> = { text: newText };
     if (newTags !== undefined) updates['tags'] = newTags.length > 0 ? newTags : null;
 
     await update(noteItemRef, updates);
