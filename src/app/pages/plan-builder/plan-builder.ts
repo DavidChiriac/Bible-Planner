@@ -41,6 +41,11 @@ export class PlanBuilder {
   planStartDate: ReturnType<typeof signal<Date | null>>;
   planTargetDate: ReturnType<typeof signal<Date | null>>;
 
+  daysDisplay = signal<number | null>(null);
+  placesDisplay = signal<number | null>(null);
+  daysDefault = '0';
+  placesDefault = '1';
+
   excludeGenealogies: ReturnType<typeof signal<boolean>>;
   excludeLaw: ReturnType<typeof signal<boolean>>;
   excludeLand: ReturnType<typeof signal<boolean>>;
@@ -73,6 +78,8 @@ export class PlanBuilder {
 
     this.days = signal(existing?.days ?? 0);
     this.places = signal(existing?.places ?? 1);
+    this.daysDisplay.set(existing?.days ? existing.days : null);
+    this.placesDisplay.set(existing?.places && existing.places !== 1 ? existing.places : null);
     this.planStartDate = signal(
       existing?.startDate ? this.utils.startDateAsDate(existing.startDate) : new Date()
     );
@@ -100,11 +107,41 @@ export class PlanBuilder {
 
   onDaysChange(days: number) {
     this.days.set(days);
+    this.daysDisplay.set(days);
     const start = this.planStartDate();
     if (start && days > 0) {
       const target = new Date(start);
       target.setDate(target.getDate() + days - 1);
       this.planTargetDate.set(target);
+    }
+  }
+
+  onDaysFocus() {
+    if (this.days() === 0) {
+      this.daysDisplay.set(null);
+    }
+  }
+
+  onDaysBlur() {
+    if (this.daysDisplay() === null && this.days() === 0) {
+      this.daysDisplay.set(null);
+    }
+  }
+
+  onPlacesFocus() {
+    if (this.places() === 1) {
+      this.placesDisplay.set(null);
+    }
+  }
+
+  onPlacesChange(places: number) {
+    this.places.set(places);
+    this.placesDisplay.set(places);
+  }
+
+  onPlacesBlur() {
+    if (this.placesDisplay() === null && this.places() === 1) {
+      this.placesDisplay.set(null);
     }
   }
 
@@ -115,6 +152,7 @@ export class PlanBuilder {
       const diffDays = Math.round((target.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
       if (diffDays > 0) {
         this.days.set(diffDays);
+        this.daysDisplay.set(diffDays);
       }
     }
   }
