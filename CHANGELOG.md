@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.7](https://github.com/davidchiriac/Bible-Planner/compare/v4.0.6...v4.0.7) (2026-05-29)
+
+
+### Bug Fixes
+
+* make default value overridable ([b868009](https://github.com/davidchiriac/Bible-Planner/commit/b8680099f6ab8ea636a340e6c429905d18c461a8))
+
 ### [4.0.6](https://github.com/davidchiriac/Bible-Planner/compare/v4.0.5...v4.0.6) (2026-05-09)
 
 ### [4.0.5](https://github.com/davidchiriac/Bible-Planner/compare/v4.0.4...v4.0.5) (2026-05-06)
