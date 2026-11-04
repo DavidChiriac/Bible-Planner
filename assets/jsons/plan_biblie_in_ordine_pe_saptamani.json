@@ -1,7 +1,7 @@
 [
   {
     "week": 1,
-    "label": "Geneza 1-22",
+    "label": "Geneza 1 - 22",
     "days": [
       {
         "chapters": [
@@ -64,7 +64,7 @@
   },
   {
     "week": 2,
-    "label": "Geneza 23-46",
+    "label": "Geneza 23 - 46",
     "days": [
       {
         "chapters": [
@@ -129,7 +129,7 @@
   },
   {
     "week": 3,
-    "label": "Geneza 47-50, Exodul 1-20",
+    "label": "Geneza 47 - Exodul 20",
     "days": [
       {
         "chapters": [
@@ -194,7 +194,7 @@
   },
   {
     "week": 4,
-    "label": "Exodul 21-40, Leviticul 1-4",
+    "label": "Exodul 21 - Leviticul 4",
     "days": [
       {
         "chapters": [
@@ -259,7 +259,7 @@
   },
   {
     "week": 5,
-    "label": "Leviticul 5-27",
+    "label": "Leviticul 5 - 27",
     "days": [
       {
         "chapters": [
@@ -323,7 +323,7 @@
   },
   {
     "week": 6,
-    "label": "Numeri 1-24",
+    "label": "Numeri 1 - 24",
     "days": [
       {
         "chapters": [
@@ -388,7 +388,7 @@
   },
   {
     "week": 7,
-    "label": "Numeri 25-36, Deuteronomul 1-9",
+    "label": "Numeri 25 - Deuteronomul 9",
     "days": [
       {
         "chapters": [
@@ -450,7 +450,7 @@
   },
   {
     "week": 8,
-    "label": "Deuteronomul 10-31",
+    "label": "Deuteronomul 10 - 31",
     "days": [
       {
         "chapters": [
@@ -513,7 +513,7 @@
   },
   {
     "week": 9,
-    "label": "Deuteronomul 32-34, Iosua 1-18",
+    "label": "Deuteronomul 32 - Iosua 18",
     "days": [
       {
         "chapters": [
@@ -575,7 +575,7 @@
   },
   {
     "week": 10,
-    "label": "Iosua 19-24, Judecători 1-18",
+    "label": "Iosua 19 - Judecători 18",
     "days": [
       {
         "chapters": [
@@ -640,7 +640,7 @@
   },
   {
     "week": 11,
-    "label": "Judecători 19-21, Rut 1-4, 1 Samuel 1-16",
+    "label": "Judecători 19 - 1 Samuel 16",
     "days": [
       {
         "chapters": [
@@ -704,7 +704,7 @@
   },
   {
     "week": 12,
-    "label": "1 Samuel 17-31, 2 Samuel 1-12",
+    "label": "1 Samuel 17 - 2 Samuel 12",
     "days": [
       {
         "chapters": [
@@ -772,7 +772,7 @@
   },
   {
     "week": 13,
-    "label": "2 Samuel 13-24, 1 Împărați 1-10",
+    "label": "2 Samuel 13 - 1 Împărați 10",
     "days": [
       {
         "chapters": [
@@ -835,7 +835,7 @@
   },
   {
     "week": 14,
-    "label": "1 Împărați 11-22, 2 Împărați 1-10",
+    "label": "1 Împărați 11 - 2 Împărați 10",
     "days": [
       {
         "chapters": [
@@ -898,7 +898,7 @@
   },
   {
     "week": 15,
-    "label": "2 Împărați 11-25, 1 Cronici 1-6",
+    "label": "2 Împărați 11 - 1 Cronici 6",
     "days": [
       {
         "chapters": [
@@ -960,7 +960,7 @@
   },
   {
     "week": 16,
-    "label": "1 Cronici 7-29",
+    "label": "1 Cronici 7 - 29",
     "days": [
       {
         "chapters": [
@@ -1024,7 +1024,7 @@
   },
   {
     "week": 17,
-    "label": "2 Cronici 1-22",
+    "label": "2 Cronici 1 - 22",
     "days": [
       {
         "chapters": [
@@ -1087,7 +1087,7 @@
   },
   {
     "week": 18,
-    "label": "2 Cronici 23-36, Ezra 1-10",
+    "label": "2 Cronici 23 - Ezra 10",
     "days": [
       {
         "chapters": [
@@ -1152,7 +1152,7 @@
   },
   {
     "week": 19,
-    "label": "Neemia 1-13, Estera 1-10",
+    "label": "Neemia 1 - Estera 10",
     "days": [
       {
         "chapters": [
@@ -1216,7 +1216,7 @@
   },
   {
     "week": 20,
-    "label": "Iov 1-24",
+    "label": "Iov 1 - 24",
     "days": [
       {
         "chapters": [
@@ -1281,7 +1281,7 @@
   },
   {
     "week": 21,
-    "label": "Iov 25-42, Psalmii 1-6",
+    "label": "Iov 25 - Psalmii 6",
     "days": [
       {
         "chapters": [
@@ -1346,7 +1346,7 @@
   },
   {
     "week": 22,
-    "label": "Psalmii 7-27",
+    "label": "Psalmii 7 - 27",
     "days": [
       {
         "chapters": [
@@ -1408,7 +1408,7 @@
   },
   {
     "week": 23,
-    "label": "Psalmii 28-48",
+    "label": "Psalmii 28 - 48",
     "days": [
       {
         "chapters": [
@@ -1470,7 +1470,7 @@
   },
   {
     "week": 24,
-    "label": "Psalmii 49-69",
+    "label": "Psalmii 49 - 69",
     "days": [
       {
         "chapters": [
@@ -1532,7 +1532,7 @@
   },
   {
     "week": 25,
-    "label": "Psalmii 70-90",
+    "label": "Psalmii 70 - 90",
     "days": [
       {
         "chapters": [
@@ -1594,7 +1594,7 @@
   },
   {
     "week": 26,
-    "label": "Psalmii 91-111",
+    "label": "Psalmii 91 - 111",
     "days": [
       {
         "chapters": [
@@ -1656,7 +1656,7 @@
   },
   {
     "week": 27,
-    "label": "Psalmii 112-136",
+    "label": "Psalmii 112 - 136",
     "days": [
       {
         "chapters": [
@@ -1722,7 +1722,7 @@
   },
   {
     "week": 28,
-    "label": "Psalmii 137-150, Proverbe 1-11",
+    "label": "Psalmii 137 - Proverbe 11",
     "days": [
       {
         "chapters": [
@@ -1788,7 +1788,7 @@
   },
   {
     "week": 29,
-    "label": "Proverbe 12-31, Eclesiastul 1-3",
+    "label": "Proverbe 12 - Eclesiastul 3",
     "days": [
       {
         "chapters": [
@@ -1852,7 +1852,7 @@
   },
   {
     "week": 30,
-    "label": "Eclesiastul 4-12, Cântarea Cântărilor 1-8, Isaia 1-6",
+    "label": "Eclesiastul 4 - Isaia 6",
     "days": [
       {
         "chapters": [
@@ -1916,7 +1916,7 @@
   },
   {
     "week": 31,
-    "label": "Isaia 7-27",
+    "label": "Isaia 7 - 27",
     "days": [
       {
         "chapters": [
@@ -1978,7 +1978,7 @@
   },
   {
     "week": 32,
-    "label": "Isaia 28-48",
+    "label": "Isaia 28 - 48",
     "days": [
       {
         "chapters": [
@@ -2040,7 +2040,7 @@
   },
   {
     "week": 33,
-    "label": "Isaia 49-66, Ieremia 1-2",
+    "label": "Isaia 49 - Ieremia 2",
     "days": [
       {
         "chapters": [
@@ -2101,7 +2101,7 @@
   },
   {
     "week": 34,
-    "label": "Ieremia 3-26",
+    "label": "Ieremia 3 - 26",
     "days": [
       {
         "chapters": [
@@ -2166,7 +2166,7 @@
   },
   {
     "week": 35,
-    "label": "Ieremia 27-49",
+    "label": "Ieremia 27 - 49",
     "days": [
       {
         "chapters": [
@@ -2230,7 +2230,7 @@
   },
   {
     "week": 36,
-    "label": "Ieremia 50-52, Plângerile lui Ieremia 1-5, Ezechiel 1-18",
+    "label": "Ieremia 50 - Ezechiel 18",
     "days": [
       {
         "chapters": [
@@ -2297,7 +2297,7 @@
   },
   {
     "week": 37,
-    "label": "Ezechiel 19-39",
+    "label": "Ezechiel 19 - 39",
     "days": [
       {
         "chapters": [
@@ -2359,7 +2359,7 @@
   },
   {
     "week": 38,
-    "label": "Ezechiel 40-48, Daniel 1-12",
+    "label": "Ezechiel 40 - Daniel 12",
     "days": [
       {
         "chapters": [
@@ -2421,7 +2421,7 @@
   },
   {
     "week": 39,
-    "label": "Osea 1-14, Ioel 1-3, Amos 1-6",
+    "label": "Osea 1 - Amos 6",
     "days": [
       {
         "chapters": [
@@ -2485,7 +2485,7 @@
   },
   {
     "week": 40,
-    "label": "Amos 7-9, Obadia 1, Iona 1-4, Mica 1-7, Naum 1-3, Habacuc 1-3, Țefania 1-3",
+    "label": "Amos 7 - Țefania 3",
     "days": [
       {
         "chapters": [
@@ -2550,7 +2550,7 @@
   },
   {
     "week": 41,
-    "label": "Hagai 1-2, Zaharia 1-14, Maleahi 1-4, Matei 1-4",
+    "label": "Hagai 1 - Matei 4",
     "days": [
       {
         "chapters": [
@@ -2615,7 +2615,7 @@
   },
   {
     "week": 42,
-    "label": "Matei 5-28",
+    "label": "Matei 5 - 28",
     "days": [
       {
         "chapters": [
@@ -2680,7 +2680,7 @@
   },
   {
     "week": 43,
-    "label": "Marcu 1-16, Luca 1-6",
+    "label": "Marcu 1 - Luca 6",
     "days": [
       {
         "chapters": [
@@ -2743,7 +2743,7 @@
   },
   {
     "week": 44,
-    "label": "Luca 7-24, Ioan 1-6",
+    "label": "Luca 7 - Ioan 6",
     "days": [
       {
         "chapters": [
@@ -2808,7 +2808,7 @@
   },
   {
     "week": 45,
-    "label": "Ioan 7-21, Faptele Apostolilor 1-9",
+    "label": "Ioan 7 - Faptele Apostolilor 9",
     "days": [
       {
         "chapters": [
@@ -2873,7 +2873,7 @@
   },
   {
     "week": 46,
-    "label": "Faptele Apostolilor 10-26",
+    "label": "Faptele Apostolilor 10 - 26",
     "days": [
       {
         "chapters": [
@@ -2931,7 +2931,7 @@
   },
   {
     "week": 47,
-    "label": "Faptele Apostolilor 27-28, Romani 1-16, 1 Corinteni 1-8",
+    "label": "Faptele Apostolilor 27 - 1 Corinteni 8",
     "days": [
       {
         "chapters": [
@@ -2998,7 +2998,7 @@
   },
   {
     "week": 48,
-    "label": "1 Corinteni 9-16, 2 Corinteni 1-13, Galateni 1-3",
+    "label": "1 Corinteni 9 - Galateni 3",
     "days": [
       {
         "chapters": [
@@ -3063,7 +3063,7 @@
   },
   {
     "week": 49,
-    "label": "Galateni 4-6, Efeseni 1-6, Filipeni 1-4, Coloseni 1-4, 1 Tesaloniceni 1-5, 2 Tesaloniceni 1-3",
+    "label": "Galateni 4 - 2 Tesaloniceni 3",
     "days": [
       {
         "chapters": [
@@ -3129,7 +3129,7 @@
   },
   {
     "week": 50,
-    "label": "1 Timotei 1-6, 2 Timotei 1-4, Tit 1-3, Filimon 1, Evrei 1-4, Evrei 5-7",
+    "label": "1 Timotei 1 - Evrei 7",
     "days": [
       {
         "chapters": [
@@ -3191,7 +3191,7 @@
   },
   {
     "week": 51,
-    "label": "Evrei 8-13, Iacov 1-2, Iacov 3-5, 1 Petru 1-2, 1 Petru 3-5, 2 Petru 1-3",
+    "label": "Evrei 8 - 2 Petru 3",
     "days": [
       {
         "chapters": [
@@ -3251,7 +3251,7 @@
   },
   {
     "week": 52,
-    "label": "1 Ioan 1-5, 2 Ioan 1, 3 Ioan 1, Iuda 1, Apocalipsa 1-15",
+    "label": "1 Ioan 1 - Apocalipsa 15",
     "days": [
       {
         "chapters": [
@@ -3315,7 +3315,7 @@
   },
   {
     "week": 53,
-    "label": "Apocalipsa 16-22",
+    "label": "Apocalipsa 16 - 22",
     "days": [
       {
         "chapters": [
