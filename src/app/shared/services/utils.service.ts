@@ -124,6 +124,7 @@ export class Utils {
     dayChapters.every((chapter) => this.readSet().has(chapter));
 
   async setEntireDayRead(chapters: string[]) {
+    this.requireActivePlan();
     this.haptics.medium();
 
     const value = !this.isEntireDayRead(chapters);
@@ -146,9 +147,20 @@ export class Utils {
   }
 
   markAllAsRead(chapters: string[]) {
+    this.requireActivePlan();
     this.haptics.success();
     this.firebase.addChapters(chapters);
     this.readSet.set(new Set([...this.readSet(), ...chapters]));
+    this.updateWidget();
+  }
+
+  async recordReadChapters(chapters: string[]) {
+    const newChapters = chapters.filter(chapter => !this.isChapterRead(chapter));
+    if (newChapters.length === 0) return;
+
+    await this.firebase.addChapters(newChapters);
+    this.haptics.success();
+    this.readSet.update(read => new Set([...read, ...newChapters]));
     this.updateWidget();
   }
 
@@ -189,6 +201,7 @@ export class Utils {
 
   reset() {
     this.readSet.set(new Set());
+    this.customPlanConfig.set(null);
     this.months.set(null);
     this.selectedTranslation.set(null);
     this.loading.set(false);
@@ -199,6 +212,7 @@ export class Utils {
   }
 
   toggleChapterRead(chapter: string) {
+    this.requireActivePlan();
     const isRead = this.isChapterRead(chapter);
     this.haptics.light();
     if (isRead) {
@@ -209,6 +223,12 @@ export class Utils {
       this.readSet.set(new Set([...this.readSet(), chapter]));
     }
     this.updateWidget();
+  }
+
+  private requireActivePlan() {
+    if (!this.customPlanConfig()) {
+      throw new Error('Configure a reading plan before marking chapters as read.');
+    }
   }
 
   readPercentage() {
@@ -307,9 +327,10 @@ export class Utils {
     const fullDays = Math.floor(absDiff / places);
     const remainder = absDiff % places;
     const dayLabel = remainder > 0 ? `${fullDays} + (${remainder}/${places})` : `${fullDays}`;
+    const dayUnit = fullDays === 1 && remainder === 0 ? 'zi' : 'zile';
 
-    if (diff > 0) return { step: `\u25B2 ${dayLabel} zile înainte`, stepType: 'ahead' };
-    if (diff < 0) return { step: `\u25BC ${dayLabel} zile în urmă`, stepType: 'behind' };
+    if (diff > 0) return { step: `\u25B2 ${dayLabel} ${dayUnit} înainte`, stepType: 'ahead' };
+    if (diff < 0) return { step: `\u25BC ${dayLabel} ${dayUnit} în urmă`, stepType: 'behind' };
     return { step: '\u2713 La zi', stepType: 'ontrack' };
   }
 

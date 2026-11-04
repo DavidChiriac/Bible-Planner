@@ -42,6 +42,7 @@ export interface PlanHistoryEntry {
   books?: string[];
   days?: number;
   places?: number;
+  excludeCategories?: string[];
 }
 
 @Injectable({ providedIn: 'root' })

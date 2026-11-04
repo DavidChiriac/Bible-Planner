@@ -1,6 +1,7 @@
 import { Component, computed, DestroyRef, effect, inject, signal, untracked } from '@angular/core';
 import { Utils } from '../../shared/services/utils.service';
-import { FirebaseService, PlanHistoryEntry } from '../../shared/services/firebase.service';
+import { BIBLE_BOOKS, FirebaseService, PlanHistoryEntry } from '../../shared/services/firebase.service';
+import { OT_END_INDEX } from '../../shared/services/plan-generator.service';
 import { AccordionModule } from 'primeng/accordion';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -13,6 +14,7 @@ import { I18nService } from '../../shared/services/i18n.service';
 import { DialogModule } from 'primeng/dialog';
 import { take } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ReadChapterEntry } from '../../shared/components/read-chapter-entry/read-chapter-entry';
 
 @Component({
   selector: 'app-plans',
@@ -27,6 +29,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     RouterLink,
     TooltipModule,
     DialogModule,
+    ReadChapterEntry,
   ],
   templateUrl: './plans.html',
   styleUrl: './plans.scss',
@@ -111,6 +114,37 @@ export class Plans {
 
   toggleHistoryBooks(id: string) {
     this.expandedHistoryId.update(current => current === id ? null : id);
+  }
+
+  historyBookSummary(books: string[]) {
+    const selected = new Set(books);
+    const testaments = [
+      { label: 'planBuilder.oldTestament', books: BIBLE_BOOKS.slice(0, OT_END_INDEX) },
+      { label: 'planBuilder.newTestament', books: BIBLE_BOOKS.slice(OT_END_INDEX) },
+    ];
+    const missing = BIBLE_BOOKS.filter(book => !selected.has(book.title));
+    const hasCompleteTestament = testaments.some(testament =>
+      testament.books.every(book => selected.has(book.title))
+    );
+    if (missing.length === 0 || (!hasCompleteTestament && missing.length < 10)) {
+      return [{
+        label: 'home.entireBible',
+        complete: missing.length === 0,
+        except: missing.length > 0,
+        books: missing.map(book => book.title),
+      }];
+    }
+    return testaments.map(testament => {
+      const included = testament.books.filter(book => selected.has(book.title));
+      const excluded = testament.books.filter(book => !selected.has(book.title));
+      const except = hasCompleteTestament && excluded.length > 0 && excluded.length < 10;
+      return {
+        label: testament.label,
+        complete: excluded.length === 0,
+        except,
+        books: excluded.length === 0 ? [] : (except ? excluded : included).map(book => book.title),
+      };
+    }).filter(testament => testament.complete || testament.books.length > 0);
   }
 
   daysToComplete(entry: PlanHistoryEntry): number {
@@ -321,6 +355,7 @@ export class Plans {
         books: config?.books ?? [],
         days: config?.days,
         places: config?.places,
+        ...(config?.excludeCategories?.length ? { excludeCategories: config.excludeCategories } : {}),
       }).catch(() => {});
     }
 

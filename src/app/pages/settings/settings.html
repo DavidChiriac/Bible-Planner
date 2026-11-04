@@ -1,26 +1,5 @@
 <div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
     <div class="w-100 mt-5 flex flex-column align-items-center gap-3 justify-content-center" [ngClass]="{'mobile': utils.isMobile()}">
-        <div class="palette-section" [ngClass]="{'mt-3': !utils.isMobile(), 'mt-4': utils.isMobile()}">
-            <label class="palette-label">{{ i18n.t('settings.colorTheme') }}</label>
-            <div class="palette-grid">
-                @for (palette of theme.palettes; track palette.id) {
-                    <button
-                        class="palette-swatch"
-                        [class.active]="theme.selectedPaletteId() === palette.id"
-                        (click)="theme.setPalette(palette.id)"
-                        [attr.aria-label]="palette.label"
-                        [attr.aria-pressed]="theme.selectedPaletteId() === palette.id">
-                        <span class="swatch-bg" [style.background]="palette.bg">
-                            <span class="swatch-card" [style.background]="palette.card">
-                                <span class="swatch-accent" [style.background]="palette.accent"></span>
-                            </span>
-                        </span>
-                        <span class="swatch-name">{{ palette.label }}</span>
-                    </button>
-                }
-            </div>
-        </div>
-
         <div class="language-section" [ngClass]="{'mt-3': !utils.isMobile(), 'mt-4': utils.isMobile()}">
             <label class="palette-label">{{ i18n.t('settings.language') }}</label>
             <div class="lang-grid">

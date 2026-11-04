@@ -31,8 +31,6 @@ export const TRANSLATIONS: BibleTranslation[] = [
   // English
   { id: 'KJV', name: 'King James Version 1769', language: 'English' },
   { id: 'NKJV', name: 'New King James Version, 1982', language: 'English' },
-  { id: 'NIV', name: 'New International Version, 1984', language: 'English' },
-  { id: 'NIV2011', name: 'New International Version, 2011', language: 'English' },
   { id: 'ESV', name: 'English Standard Version', language: 'English' },
   { id: 'NASB', name: 'New American Standard Bible, 1995', language: 'English' },
   { id: 'NLT', name: 'New Living Translation, 2015', language: 'English' },

@@ -81,7 +81,16 @@
           (focus)="onPlacesFocus()" (blur)="onPlacesBlur()"
           [placeholder]="placesDefault"
           autocomplete="off" class="days-input" />
+        <button type="button" class="places-info-button"
+          [attr.aria-label]="i18n.t('planBuilder.readingSpotsInfoLabel')"
+          [attr.aria-expanded]="showPlacesInfo()" aria-controls="plan-places-info"
+          (click)="showPlacesInfo.set(!showPlacesInfo())">
+          <i class="pi pi-info-circle" aria-hidden="true"></i>
+        </button>
       </div>
+      <p id="plan-places-info" class="places-info" [hidden]="!showPlacesInfo()">
+        {{ i18n.t('planBuilder.readingSpotsInfo') }}
+      </p>
 
       @if (visibleExclusionCategories().size > 0) {
       <div class="exclude-section mt-3">
@@ -135,7 +144,7 @@
           <span>·</span>
           <span><strong>{{ totalVerses() }}</strong> {{ i18n.t('planBuilder.verses') }}</span>
           <span>·</span>
-          <span>~<strong>{{ versesPerDay() }}</strong> {{ i18n.t('planBuilder.versesPerDay') }}</span>
+          <span>~<strong>{{ versesPerDay() }}</strong> {{ i18n.t('planBuilder.versesPerDay') }}@if (places() > 1) { (x {{ places() }}) }</span>
         </div>
       }
     </div>

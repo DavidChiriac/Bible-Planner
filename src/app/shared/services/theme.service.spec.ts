@@ -25,14 +25,15 @@ describe('ThemeService', () => {
     expect(service.selectedPaletteId()).toBe('pergament');
   });
 
-  it('setPalette changes the selected palette', () => {
-    service.setPalette('noapte');
-    expect(service.selectedPaletteId()).toBe('noapte');
+  it('keeps Pergament selected when setting a removed palette', () => {
+    service.setPalette('laguna');
+    expect(service.selectedPaletteId()).toBe('pergament');
   });
 
   it('exposes all palettes', () => {
     expect(service.palettes).toEqual(PALETTES);
-    expect(service.palettes.length).toBe(5);
+    expect(service.palettes).toHaveLength(1);
+    expect(service.palettes[0].id).toBe('pergament');
   });
 
   it('palettes have required properties', () => {
@@ -46,6 +47,20 @@ describe('ThemeService', () => {
   });
 
   it('loads saved palette from localStorage', () => {
+    localStorage.setItem('bible-planner-palette', 'pergament');
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        ThemeService,
+        { provide: PLATFORM_ID, useValue: 'browser' },
+      ],
+    });
+    const freshService = TestBed.inject(ThemeService);
+    expect(freshService.selectedPaletteId()).toBe('pergament');
+  });
+
+  it('falls back to parchment for a removed saved palette', () => {
     localStorage.setItem('bible-planner-palette', 'ocean');
 
     TestBed.resetTestingModule();
@@ -56,6 +71,6 @@ describe('ThemeService', () => {
       ],
     });
     const freshService = TestBed.inject(ThemeService);
-    expect(freshService.selectedPaletteId()).toBe('ocean');
+    expect(freshService.selectedPaletteId()).toBe('pergament');
   });
 });

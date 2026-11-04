@@ -124,6 +124,26 @@ app-plan-builder {
   width: 100px;
 }
 
+.places-info-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--brown);
+  cursor: pointer;
+}
+
+.places-info {
+  margin: 0.5rem 0 0;
+  color: var(--brown);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
 .summary {
   display: flex;
   align-items: center;

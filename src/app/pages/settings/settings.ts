@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FirebaseService } from '../../shared/services/firebase.service';
 import { Utils } from '../../shared/services/utils.service';
-import { ThemeService } from '../../shared/services/theme.service';
 import { I18nService } from '../../shared/services/i18n.service';
 import { Lang } from '../../shared/i18n/translations';
 import { Router } from '@angular/router';
@@ -17,7 +16,6 @@ import { NgClass } from '@angular/common';
 })
 export class Settings {
   utils = inject(Utils);
-  theme = inject(ThemeService);
   i18n = inject(I18nService);
   private readonly firebase = inject(FirebaseService);
   private readonly router = inject(Router);
@@ -47,14 +45,21 @@ export class Settings {
     this.deletePlanVisible = true;
   }
 
-  confirmDeleteCustomPlan() {
+  async confirmDeleteCustomPlan() {
     this.deletePlanVisible = false;
 
-    this.firebase.deleteCustomPlanConfig()
-      .then(() => {
-        this.utils.customPlanConfig.set(null);
-        this.router.navigate(['/plan-builder']);
-      })
-      .catch(err => alert('Error deleting custom plan: ' + err.message));
+    try {
+      await this.firebase.resetProgress();
+      this.utils.readSet.set(new Set());
+      this.utils.favouriteWeeks.set([]);
+      this.utils.startDate.set(null);
+      this.utils.months.set(null);
+
+      await this.firebase.deleteCustomPlanConfig();
+      this.utils.customPlanConfig.set(null);
+      await this.router.navigate(['/plan-builder']);
+    } catch (err) {
+      alert('Error deleting custom plan and resetting progress: ' + (err instanceof Error ? err.message : String(err)));
+    }
   }
 }

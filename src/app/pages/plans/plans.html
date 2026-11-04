@@ -27,11 +27,11 @@
               </span>
             } @else if (currentStatus().sign > 0) {
               <span class="plan-status-badge plan-status-badge--ahead">
-                <i class="pi pi-arrow-up"></i> {{ i18n.t('home.daysAhead', { count: statusLabel() }) }}
+                <i class="pi pi-arrow-up"></i> {{ i18n.t(statusLabel() === '1' ? 'home.dayAhead' : 'home.daysAhead', { count: statusLabel() }) }}
               </span>
             } @else if (currentStatus().sign < 0) {
               <span class="plan-status-badge plan-status-badge--behind">
-                <i class="pi pi-arrow-down"></i> {{ i18n.t('home.daysBehind', { count: statusLabel() }) }}
+                <i class="pi pi-arrow-down"></i> {{ i18n.t(statusLabel() === '1' ? 'home.dayBehind' : 'home.daysBehind', { count: statusLabel() }) }}
               </span>
             } @else {
               <span class="plan-status-badge plan-status-badge--ontrack">
@@ -74,6 +74,10 @@
         }
 
       </div>
+    }
+
+    @if (utils.customPlanConfig() && !utils.hasCompletedPlan()) {
+      <app-read-chapter-entry></app-read-chapter-entry>
     }
 
     <div [ngClass]="utils.isMobile() ? 'card-mobile' : 'card'">
@@ -158,6 +162,7 @@
                                     } @else {
                                         <!-- Single-chapter day: flat row -->
                                         <div class="flex justify-content-between cursor-pointer row"
+                                            [style.padding-right.px]="day.chapters.length === 1 ? 36 : null"
                                             [ngClass]="{'mb-1': i < tab.days.length - 1}"
                                             (click)="toggleDay($event, day.chapters)" onkeydown="">
                                             <span class="flex gap-2 align-items-center" [ngClass]="{'read': utils.isEntireDayRead(day.chapters)}">
@@ -229,15 +234,37 @@
                     @if (entry.books && entry.books.length > 0) {
                         <button class="history-books-toggle" (click)="toggleHistoryBooks(entry.id)">
                             <i class="pi" [ngClass]="expandedHistoryId() === entry.id ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-                            Cărți incluse ({{ entry.books.length }})
+                            {{ i18n.t('home.includedBooks') }} ({{ entry.books.length }})
                         </button>
                         @if (expandedHistoryId() === entry.id) {
-                            <div class="history-books-list">
-                                @for (book of entry.books; track book) {
-                                    <span class="history-book-chip">{{ book }}</span>
+                            <div class="history-books-summary">
+                                @for (section of historyBookSummary(entry.books); track section.label) {
+                                    <div class="history-books-list">
+                                        <span>
+                                            {{ i18n.t(section.label) }}
+                                            @if (section.complete) {
+                                                <i class="pi pi-check" [attr.aria-label]="i18n.t('home.complete')"></i>
+                                            } @else if (section.except) {
+                                                {{ i18n.t('home.exceptBooks') }}:
+                                            } @else {
+                                                :
+                                            }
+                                        </span>
+                                        @for (book of section.books; track book) {
+                                            <span class="history-book-chip">{{ i18n.bookTitle(book) }}</span>
+                                        }
+                                    </div>
                                 }
                             </div>
                         }
+                    }
+                    @if (entry.excludeCategories?.length) {
+                        <div class="history-books-list">
+                            <span>{{ i18n.t('home.excludedSections') }}</span>
+                            @for (category of entry.excludeCategories; track category) {
+                                <span class="history-book-chip">{{ i18n.t('planBuilder.exclude' + category.charAt(0).toUpperCase() + category.slice(1)) }}</span>
+                            }
+                        </div>
                     }
                 </div>
             }

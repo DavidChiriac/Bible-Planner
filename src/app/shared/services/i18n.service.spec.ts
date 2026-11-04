@@ -52,6 +52,20 @@ describe('I18nService', () => {
     expect(typeof template).toBe('string');
   });
 
+  it.each([
+    ['en', 'dayBehind', '1', 'You are 1 day behind!'],
+    ['en', 'dayAhead', '1', 'You are 1 day ahead!'],
+    ['en', 'daysBehind', '2', 'You are 2 days behind!'],
+    ['en', 'daysAhead', '1 + (1/3)', 'You are 1 + (1/3) days ahead!'],
+    ['ro', 'dayBehind', '1', 'Ești cu 1 zi în urmă!'],
+    ['ro', 'dayAhead', '1', 'Ești cu 1 zi înainte!'],
+    ['ro', 'daysBehind', '2', 'Ești cu 2 zile în urmă!'],
+    ['ro', 'daysAhead', '1 + (1/3)', 'Ești cu 1 + (1/3) zile înainte!'],
+  ] as const)('translates %s %s with count %s', (lang, key, count, expected) => {
+    service.setLang(lang);
+    expect(service.t(`home.${key}`, { count })).toBe(expected);
+  });
+
   it('bookTitle returns Romanian title when lang is ro', () => {
     service.setLang('ro');
     expect(service.bookTitle('Geneza')).toBe('Geneza');

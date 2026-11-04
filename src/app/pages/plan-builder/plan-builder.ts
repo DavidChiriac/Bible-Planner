@@ -45,6 +45,7 @@ export class PlanBuilder {
   placesDisplay = signal<number | null>(null);
   daysDefault = '0';
   placesDefault = '1';
+  showPlacesInfo = signal(false);
 
   excludeGenealogies: ReturnType<typeof signal<boolean>>;
   excludeLaw: ReturnType<typeof signal<boolean>>;
@@ -134,8 +135,8 @@ export class PlanBuilder {
     }
   }
 
-  onPlacesChange(places: number) {
-    this.places.set(places);
+  onPlacesChange(places: number | null) {
+    this.places.set(places ?? 1);
     this.placesDisplay.set(places);
   }
 
@@ -305,7 +306,15 @@ export class PlanBuilder {
       ...(targetIso ? { targetDate: targetIso } : {}),
       ...(exclusions.length > 0 ? { excludeCategories: exclusions } : {}),
     };
+    const planChapters = new Set(
+      this.planGenerator.generate(config).flatMap(week => week.days.flatMap(day => day.chapters))
+    );
     await this.firebase.setCustomPlanConfig(config);
+    const chaptersToDelete = [...this.utils.readSet()].filter(chapter => !planChapters.has(chapter));
+    if (chaptersToDelete.length > 0) {
+      await this.firebase.deleteChapters(chaptersToDelete);
+      this.utils.readSet.update(chapters => new Set([...chapters].filter(chapter => planChapters.has(chapter))));
+    }
     this.utils.customPlanConfig.set(config);
     this.router.navigate(['/plans']);
   }
