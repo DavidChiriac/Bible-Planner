@@ -18,7 +18,7 @@
     "ship": "npm run commit && npm run release && node scripts/create-release-branch.js && git push --follow-tags origin HEAD",
     "prepare": "husky",
     "build:pages": "ng build --configuration production --base-href \"/Bible-Planner/\"",
-    "deploy": "npm run build:pages && npm run postbuild:pages && gh-pages -d dist/bible-planner/browser",
+    "deploy": "npm run build:pages && npm run postbuild:pages && gh-pages -d dist/bible-agenda/browser",
     "serve:ssr:bible-planner": "node dist/bible-planner/server/server.mjs"
   },
   "config": {
