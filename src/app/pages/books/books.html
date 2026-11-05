@@ -1,5 +1,5 @@
 <div [ngClass]="utils.isMobile() ? 'container-mobile' : 'container'">
-    <app-read-chapter-entry></app-read-chapter-entry>
+    <app-read-chapter-entry class="mx-auto" [ngClass]="utils.isMobile() ? 'w-11' : 'w-6'"></app-read-chapter-entry>
     <div class="mt-4">
         <app-book-completion-grid></app-book-completion-grid>
     </div>

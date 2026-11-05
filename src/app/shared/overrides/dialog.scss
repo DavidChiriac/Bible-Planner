@@ -5,6 +5,43 @@
         color: var(--brown-dark) !important;
     }
 
+    .ignored-chapters-dialog {
+        border: 1px solid var(--brown-light);
+        border-radius: 16px;
+        box-shadow: var(--shadow-soft);
+
+        .ignored-chapters-description {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.65rem;
+            margin: 0 0 1rem;
+            line-height: 1.6;
+
+            .pi {
+                margin-top: 0.3rem;
+                color: var(--terracotta);
+            }
+        }
+
+        .ignored-chapters-list {
+            margin: 0;
+            padding: 0.75rem 1rem 0.75rem 2rem;
+            border: 1px solid var(--brown-light);
+            border-radius: 12px;
+            background: var(--beige-card);
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+
+            li {
+                padding: 0.25rem 0;
+            }
+
+            li::marker {
+                color: var(--terracotta);
+            }
+        }
+    }
+
     .p-dialog-content {
         color: var(--brown-dark) !important;
     }

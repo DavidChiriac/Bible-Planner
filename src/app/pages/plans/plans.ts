@@ -88,6 +88,7 @@ export class Plans {
   restartConfirmVisible = signal(false);
   completeConfirmVisible = signal(false);
   savingCompletion = signal(false);
+  readonly ignoredChapters = signal<string[]>([]);
 
   isAlreadySaved = computed(() => {
     const startDate = this.utils.activeStartDate();

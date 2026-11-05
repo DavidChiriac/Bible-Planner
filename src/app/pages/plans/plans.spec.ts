@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
+import { signal } from '@angular/core';
 import { of } from 'rxjs';
 import { Plans } from './plans';
 import { BIBLE_BOOKS, FirebaseService } from '../../shared/services/firebase.service';
@@ -36,6 +37,7 @@ describe('Plans history book summary', () => {
         { provide: FirebaseService, useValue: { getPlanHistory$: () => of([]), savePlanHistory } },
       ],
     });
+
     plans = TestBed.runInInjectionContext(() => new Plans());
   });
 
@@ -91,5 +93,50 @@ describe('Plans history book summary', () => {
     expect(plans.historyBookSummary(old)).toEqual([
       { label: 'planBuilder.oldTestament', complete: true, except: false, books: [] },
     ]);
+  });
+});
+
+describe('Plans ignored chapter notification', () => {
+  it('keeps the notification visible when completing the plan hides chapter entry', () => {
+    const completed = signal(false);
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([]),
+        { provide: Utils, useValue: {
+          loading: () => true,
+          customPlanConfig: () => ({ books: ['Geneza'], days: 1 }),
+          customPlan: () => [],
+          activeStartDate: () => null,
+          isMobile: () => false,
+          hasCompletedPlan: completed,
+          readPercentage: () => completed() ? 100 : 0,
+          readSet: () => new Set(),
+          favouriteWeeks: () => [],
+        } },
+        { provide: I18nService, useValue: {
+          t: (key: string, params?: Record<string, string | number>) => params?.['chapters'] ?? key,
+          translateLabel: (label: string) => label,
+          bookTitle: (book: string) => book,
+          formatChapterRanges: I18nService.prototype.formatChapterRanges,
+        } },
+        { provide: FirebaseService, useValue: { getPlanHistory$: () => of([]) } },
+      ],
+    });
+    const fixture = TestBed.createComponent(Plans);
+    fixture.detectChanges();
+    const host: HTMLElement = fixture.nativeElement;
+    expect(host.querySelector('app-read-chapter-entry')).not.toBeNull();
+
+    fixture.componentInstance.ignoredChapters.set(['Exodul 2']);
+    completed.set(true);
+    fixture.detectChanges();
+
+    expect(host.querySelector('app-read-chapter-entry')).toBeNull();
+    expect(host.querySelector('.ignored-chapters-notice[role="status"]')?.textContent).toContain('Exodul 2');
+    const closeButton = host.querySelector<HTMLButtonElement>('.p-dialog-close-button');
+    expect(closeButton).not.toBeNull();
+    closeButton!.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.ignoredChapters()).toEqual([]);
   });
 });

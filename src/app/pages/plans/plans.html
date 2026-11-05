@@ -77,8 +77,28 @@
     }
 
     @if (utils.customPlanConfig() && !utils.hasCompletedPlan()) {
-      <app-read-chapter-entry></app-read-chapter-entry>
+      <app-read-chapter-entry [class.mobile]="utils.isMobile()"
+        (ignoredChaptersChange)="ignoredChapters.set($event)"></app-read-chapter-entry>
     }
+
+    <p-dialog [header]="i18n.t('readChapterEntry.ignoredTitle')"
+      styleClass="ignored-chapters-dialog"
+      [visible]="utils.hasCompletedPlan() && ignoredChapters().length > 0"
+      (visibleChange)="!$event && ignoredChapters.set([])"
+      [modal]="true" [draggable]="false" [resizable]="false"
+      [style]="{ width: '28rem', maxWidth: '92vw' }">
+      <div class="ignored-chapters-notice" role="status">
+        <p class="ignored-chapters-description">
+          <i class="pi pi-info-circle" aria-hidden="true"></i>
+          {{ i18n.t('readChapterEntry.ignoredDescription') }}
+        </p>
+        <ul class="ignored-chapters-list">
+          @for (range of i18n.formatChapterRanges(ignoredChapters()).split('; '); track range) {
+            <li>{{ range }}</li>
+          }
+        </ul>
+      </div>
+    </p-dialog>
 
     <div [ngClass]="utils.isMobile() ? 'card-mobile' : 'card'">
         <p-accordion [multiple]="true" [ngClass]="{'mobile': utils.isMobile()}" animationDuration="0"

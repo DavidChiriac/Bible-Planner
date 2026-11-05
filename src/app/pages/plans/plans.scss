@@ -1,6 +1,10 @@
-.card {
+.card,
+app-read-chapter-entry {
   width: 70%;
   margin: auto;
+}
+
+.card {
   overflow: hidden;
   background: var(--beige-card);
   border: 1px solid var(--brown-light);
@@ -12,7 +16,10 @@
 
 .card-mobile {
   @extend .card;
+}
 
+.card-mobile,
+app-read-chapter-entry.mobile {
   width: 95%;
 }
 

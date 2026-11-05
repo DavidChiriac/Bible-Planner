@@ -72,6 +72,29 @@ export class I18nService {
     return result;
   }
 
+  formatChapterRanges(chapters: string[]): string {
+    const books = new Map<string, Set<number>>();
+    for (const chapter of chapters) {
+      const separator = chapter.lastIndexOf(' ');
+      const book = chapter.slice(0, separator);
+      const number = Number(chapter.slice(separator + 1));
+      if (!books.has(book)) books.set(book, new Set());
+      books.get(book)!.add(number);
+    }
+
+    return [...books].map(([book, numbers]) => {
+      const sorted = [...numbers].sort((a, b) => a - b);
+      const ranges: string[] = [];
+      for (let index = 0; index < sorted.length; index++) {
+        const start = sorted[index];
+        let end = start;
+        while (sorted[index + 1] === end + 1) end = sorted[++index];
+        ranges.push(start === end ? `${start}` : `${start}-${end}`);
+      }
+      return `${this.bookTitle(book)} ${ranges.join(', ')}`;
+    }).join('; ');
+  }
+
   private loadSaved(): Lang {
     if (typeof localStorage === 'undefined') return 'ro';
     return (localStorage.getItem(STORAGE_KEY) as Lang) ?? 'ro';

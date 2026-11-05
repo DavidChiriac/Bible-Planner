@@ -102,6 +102,9 @@ const RO = {
     remove: 'Elimină selecția',
     invalidRange: 'Introdu cărți și capitole valide. Separă cărțile cu punct și virgulă.',
     alreadyRead: 'Capitolele selectate sunt deja marcate ca citite.',
+    outsidePlan: 'Capitole ignorate deoarece nu fac parte din planul curent: {chapters}.',
+    ignoredTitle: 'Capitole ignorate',
+    ignoredDescription: 'Următoarele capitole nu fac parte din planul curent și nu au fost marcate ca citite:',
     saveError: 'Nu s-au putut salva capitolele. Încearcă din nou.',
   },
   reader: {
@@ -298,6 +301,9 @@ const EN: typeof RO = {
     remove: 'Remove selection',
     invalidRange: 'Enter valid books and chapters. Separate books with semicolons.',
     alreadyRead: 'The selected chapters are already marked as read.',
+    outsidePlan: 'Chapters ignored because they are not part of the current plan: {chapters}.',
+    ignoredTitle: 'Ignored chapters',
+    ignoredDescription: 'The following chapters are not part of the current plan and were not marked as read:',
     saveError: 'Could not save the chapters. Please try again.',
   },
   reader: {

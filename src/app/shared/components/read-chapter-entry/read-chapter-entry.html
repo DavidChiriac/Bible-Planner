@@ -1,43 +1,64 @@
-<section class="read-entry-card">
-  <div class="read-entry-heading">
-    <span class="read-entry-icon"><i class="pi pi-book"></i></span>
+<details class="read-entry-card">
+  <summary class="read-entry-heading">
+    <span class="read-entry-icon"><i class="pi pi-book" aria-hidden="true"></i></span>
     <div>
       <h2>{{ i18n.t('readChapterEntry.title') }}</h2>
       <p>{{ i18n.t('readChapterEntry.description') }}</p>
     </div>
-  </div>
+    <i class="pi pi-chevron-down read-entry-chevron" aria-hidden="true"></i>
+  </summary>
 
-  <div class="read-entry-controls">
-    <label>
-      <span>{{ i18n.t('readChapterEntry.chapters') }}</span>
-      <input type="text" [ngModel]="chapterInput()" (ngModelChange)="chapterInput.set($event)"
-        [placeholder]="i18n.t('readChapterEntry.rangePlaceholder')"
-        [attr.aria-label]="i18n.t('readChapterEntry.chapters')"
-        (keydown.enter)="addEntry(); $event.preventDefault()" />
-    </label>
-    <button type="button" class="read-entry-add" (click)="addEntry()">
-      <i class="pi pi-plus"></i>{{ i18n.t('readChapterEntry.add') }}
-    </button>
-  </div>
-
-  @if (entries().length > 0) {
-    <div class="read-entry-list">
-      @for (entry of entries(); track entry.id) {
-        <span class="read-entry-chip">
-          {{ entry.input }}
-          <button type="button" [attr.aria-label]="i18n.t('readChapterEntry.remove')"
-            (click)="removeEntry(entry.id)">
-            <i class="pi pi-times"></i>
-          </button>
-        </span>
-      }
-      <button type="button" class="read-entry-save" [disabled]="saving()" (click)="saveAsRead()">
-        <i class="pi pi-check"></i>{{ i18n.t('readChapterEntry.save') }} ({{ selectedChapters().length }})
+  <div class="read-entry-body">
+    <div class="read-entry-controls">
+      <label>
+        <span>{{ i18n.t('readChapterEntry.chapters') }}</span>
+        <input type="text" [ngModel]="chapterInput()" (ngModelChange)="chapterInput.set($event)"
+          [placeholder]="i18n.t('readChapterEntry.rangePlaceholder')"
+          [attr.aria-label]="i18n.t('readChapterEntry.chapters')"
+          (keydown.enter)="addEntry(); $event.preventDefault()" />
+      </label>
+      <button type="button" class="read-entry-add" (click)="addEntry()">
+        <i class="pi pi-plus"></i>{{ i18n.t('readChapterEntry.add') }}
       </button>
     </div>
-  }
 
-  @if (error()) {
-    <p class="read-entry-error" role="alert">{{ i18n.t(error()) }}</p>
-  }
-</section>
+    @if (entries().length > 0) {
+      <div class="read-entry-list">
+        @for (entry of entries(); track entry.id) {
+          <span class="read-entry-chip">
+            {{ entry.input }}
+            <button type="button" [attr.aria-label]="i18n.t('readChapterEntry.remove')"
+              (click)="removeEntry(entry.id)">
+              <i class="pi pi-times"></i>
+            </button>
+          </span>
+        }
+        <button type="button" class="read-entry-save" [disabled]="saving()" (click)="saveAsRead()">
+          <i class="pi pi-check"></i>{{ i18n.t('readChapterEntry.save') }} ({{ selectedChapters().length }})
+        </button>
+      </div>
+    }
+
+    @if (error()) {
+      <p class="read-entry-error" role="alert">{{ i18n.t(error()) }}</p>
+    }
+  </div>
+</details>
+
+<p-dialog [header]="i18n.t('readChapterEntry.ignoredTitle')"
+  styleClass="ignored-chapters-dialog"
+  [visible]="ignoredChapters().length > 0" (visibleChange)="!$event && dismissIgnoredChapters()"
+  [modal]="true" [draggable]="false" [resizable]="false"
+  [style]="{ width: '28rem', maxWidth: '92vw' }">
+  <div role="status">
+    <p class="ignored-chapters-description">
+      <i class="pi pi-info-circle" aria-hidden="true"></i>
+      {{ i18n.t('readChapterEntry.ignoredDescription') }}
+    </p>
+    <ul class="ignored-chapters-list">
+      @for (range of i18n.formatChapterRanges(ignoredChapters()).split('; '); track range) {
+        <li>{{ range }}</li>
+      }
+    </ul>
+  </div>
+</p-dialog>

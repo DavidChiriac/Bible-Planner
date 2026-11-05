@@ -15,18 +15,51 @@ describe('ReadChapterEntry', () => {
   const recordReadChapters = jest.fn().mockResolvedValue(undefined);
   const utils = {
     isChapterRead: jest.fn().mockReturnValue(false),
+    planChaptersOrdered: jest.fn(),
     recordReadChapters,
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
+    utils.isChapterRead.mockReturnValue(false);
+    utils.planChaptersOrdered.mockReturnValue(BIBLE_BOOKS.flatMap(book => book.chapters));
     TestBed.configureTestingModule({
       providers: [
         { provide: Utils, useValue: utils },
-        { provide: I18nService, useValue: { t: (key: string) => key, bookTitle: (book: string) => book } },
+        { provide: I18nService, useValue: {
+          t: (key: string, params?: Record<string, string | number>) => `${key}${params?.['chapters'] ? ': ' + params['chapters'] : ''}`,
+          bookTitle: (book: string) => book,
+          translateLabel: (label: string) => label,
+          formatChapterRanges: I18nService.prototype.formatChapterRanges,
+        } },
       ],
     });
     component = TestBed.runInInjectionContext(() => new ReadChapterEntry());
+  });
+
+  it('starts collapsed and lets the heading expand and collapse the form without losing entries', async () => {
+    const fixture = TestBed.createComponent(ReadChapterEntry);
+    fixture.detectChanges();
+    const host: HTMLElement = fixture.nativeElement;
+    const details = host.querySelector('details')!;
+    const summary = host.querySelector('summary')!;
+
+    expect(details.open).toBe(false);
+    summary.click();
+    expect(details.open).toBe(true);
+
+    fixture.componentInstance.chapterInput.set('Geneza 1-3');
+    fixture.componentInstance.addEntry();
+    fixture.componentInstance.chapterInput.set('Exodul 2');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    summary.click();
+    expect(details.open).toBe(false);
+    summary.click();
+    expect(details.open).toBe(true);
+    expect(fixture.componentInstance.selectedChapters()).toEqual(['Geneza 1', 'Geneza 2', 'Geneza 3']);
+    expect(host.querySelector('input')!.value).toBe('Exodul 2');
   });
 
   it('adds chapter ranges and individual chapters from multiple books', () => {
@@ -59,6 +92,96 @@ describe('ReadChapterEntry', () => {
     component.addEntry();
     expect(component.entries()).toEqual([]);
     expect(component.error()).toBe('readChapterEntry.invalidRange');
+  });
+
+  it('ignores chapters outside the plan and saves only included chapters', async () => {
+    const ignoredChaptersChange = jest.fn();
+    component.ignoredChaptersChange.subscribe(ignoredChaptersChange);
+    utils.planChaptersOrdered.mockReturnValue(['Geneza 1', 'Geneza 3', 'Matei 2']);
+    component.chapterInput.set('Geneza 1-3; Exodul 2; Matei 2');
+    component.addEntry();
+
+    expect(component.selectedChapters()).toEqual(['Geneza 1', 'Geneza 2', 'Geneza 3', 'Exodul 2', 'Matei 2']);
+    expect(component.ignoredChapters()).toEqual([]);
+    await component.saveAsRead();
+    expect(recordReadChapters).toHaveBeenCalledWith(['Geneza 1', 'Geneza 3', 'Matei 2']);
+    expect(component.ignoredChapters()).toEqual(['Geneza 2', 'Exodul 2']);
+    expect(ignoredChaptersChange).toHaveBeenLastCalledWith(['Geneza 2', 'Exodul 2']);
+  });
+
+  it('filters a cross-book range against the actual plan chapters when saving', async () => {
+    utils.planChaptersOrdered.mockReturnValue(['Geneza 50', 'Exodul 2']);
+    component.chapterInput.set('Geneza 50 - Exodul 2');
+    component.addEntry();
+    expect(component.selectedChapters()).toEqual(['Geneza 50', 'Exodul 1', 'Exodul 2']);
+    await component.saveAsRead();
+    expect(recordReadChapters).toHaveBeenCalledWith(['Geneza 50', 'Exodul 2']);
+    expect(component.ignoredChapters()).toEqual(['Exodul 1']);
+  });
+
+  it('allows adding chapters even when all are outside the plan, then skips them on save', async () => {
+    utils.planChaptersOrdered.mockReturnValue(['Matei 1']);
+    component.chapterInput.set('Geneza 1-3');
+    component.addEntry();
+    expect(component.entries()).toHaveLength(1);
+    expect(component.chapterInput()).toBe('');
+    await component.saveAsRead();
+    expect(component.entries()).toEqual([]);
+    expect(recordReadChapters).not.toHaveBeenCalled();
+    expect(component.ignoredChapters()).toEqual(['Geneza 1', 'Geneza 2', 'Geneza 3']);
+    expect(component.error()).toBe('');
+  });
+
+  it('ignores all chapters when no plan is configured and lists them in a notification', async () => {
+    utils.planChaptersOrdered.mockReturnValue([]);
+    const fixture = TestBed.createComponent(ReadChapterEntry);
+    fixture.componentInstance.chapterInput.set('Geneza 1');
+    fixture.componentInstance.addEntry();
+    expect(fixture.componentInstance.entries()).toHaveLength(1);
+    await fixture.componentInstance.saveAsRead();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.entries()).toEqual([]);
+    expect(fixture.componentInstance.ignoredChapters()).toEqual(['Geneza 1']);
+    const host: HTMLElement = fixture.nativeElement;
+    expect(host.querySelector('[role="status"]')?.textContent).toContain('readChapterEntry.ignoredDescription');
+    expect(host.querySelector('[role="status"]')?.textContent).toContain('Geneza 1');
+    const closeButton = host.querySelector<HTMLButtonElement>('.p-dialog-close-button');
+    expect(closeButton).not.toBeNull();
+    closeButton!.click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.ignoredChapters()).toEqual([]);
+  });
+
+  it('revalidates the plan before saving', async () => {
+    component.chapterInput.set('Geneza 1-3');
+    component.addEntry();
+    utils.planChaptersOrdered.mockReturnValue(['Geneza 2']);
+    await component.saveAsRead();
+    expect(recordReadChapters).toHaveBeenCalledWith(['Geneza 2']);
+    expect(component.ignoredChapters()).toEqual(['Geneza 1', 'Geneza 3']);
+  });
+
+  it('displays ignored chapters as one bullet per book with consecutive ranges', async () => {
+    utils.planChaptersOrdered.mockReturnValue([]);
+    const fixture = TestBed.createComponent(ReadChapterEntry);
+    fixture.componentInstance.chapterInput.set('Geneza 1-3, 5; Exodul 2-4');
+    fixture.componentInstance.addEntry();
+    await fixture.componentInstance.saveAsRead();
+    fixture.detectChanges();
+    const host: HTMLElement = fixture.nativeElement;
+    expect([...host.querySelectorAll('.ignored-chapters-list li')].map(item => item.textContent?.trim()))
+      .toEqual(['Geneza 1-3, 5', 'Exodul 2-4']);
+  });
+
+  it('does not persist anything if the plan is removed before saving', async () => {
+    component.chapterInput.set('Geneza 1');
+    component.addEntry();
+    utils.planChaptersOrdered.mockReturnValue([]);
+    await component.saveAsRead();
+    expect(recordReadChapters).not.toHaveBeenCalled();
+    expect(component.entries()).toEqual([]);
+    expect(component.ignoredChapters()).toEqual(['Geneza 1']);
+    expect(component.error()).toBe('');
   });
 
   it('rejects invalid chapter ranges without adding chapters', () => {

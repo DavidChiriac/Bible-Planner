@@ -101,6 +101,28 @@ describe('I18nService', () => {
     expect(service.translateLabel('')).toBe('');
   });
 
+  it('groups consecutive chapters while preserving gaps and separate books', () => {
+    expect(service.formatChapterRanges([
+      'Geneza 3', 'Geneza 1', 'Exodul 2', 'Geneza 2', 'Geneza 5',
+      'Exodul 3', 'Exodul 4', 'Geneza 2', '1 Samuel 1',
+    ])).toBe('Geneza 1-3, 5; Exodul 2-4; 1 Samuel 1');
+  });
+
+  it('does not combine nonconsecutive chapters', () => {
+    expect(service.formatChapterRanges(['Geneza 1', 'Geneza 3', 'Geneza 5']))
+      .toBe('Geneza 1, 3, 5');
+  });
+
+  it('translates book names in chapter ranges', () => {
+    service.setLang('en');
+    expect(service.formatChapterRanges(['Geneza 1', 'Geneza 2', 'Exodul 4']))
+      .toBe('Genesis 1-2; Exodus 4');
+  });
+
+  it('formats an empty chapter selection as empty text', () => {
+    expect(service.formatChapterRanges([])).toBe('');
+  });
+
   it('tagLabel returns mapped tag labels', () => {
     const result = service.tagLabel('insight');
     expect(typeof result).toBe('string');

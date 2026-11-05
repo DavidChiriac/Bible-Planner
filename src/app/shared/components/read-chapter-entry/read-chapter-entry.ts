@@ -1,5 +1,6 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DialogModule } from 'primeng/dialog';
 import { BIBLE_BOOKS } from '../../services/firebase.service';
 import { I18nService } from '../../services/i18n.service';
 import { Utils } from '../../services/utils.service';
@@ -13,7 +14,7 @@ interface ChapterEntry {
 
 @Component({
   selector: 'app-read-chapter-entry',
-  imports: [FormsModule],
+  imports: [FormsModule, DialogModule],
   templateUrl: './read-chapter-entry.html',
   styleUrl: './read-chapter-entry.scss',
 })
@@ -28,6 +29,18 @@ export class ReadChapterEntry {
   ]);
   readonly saving = signal(false);
   readonly error = signal('');
+  readonly ignoredChapters = signal<string[]>([]);
+  readonly ignoredChaptersChange = output<string[]>();
+
+  dismissIgnoredChapters() {
+    this.ignoredChapters.set([]);
+    this.ignoredChaptersChange.emit([]);
+  }
+
+  private filterPlanChapters(chapters: string[]): string[] {
+    const planChapters = new Set(this.utils.planChaptersOrdered());
+    return chapters.filter(chapter => planChapters.has(chapter));
+  }
 
   private matchBookPrefix(value: string) {
     return BIBLE_BOOKS.flatMap(book => {
@@ -119,7 +132,10 @@ export class ReadChapterEntry {
       }
     }
 
+    this.ignoredChapters.set([]);
+    this.ignoredChaptersChange.emit([]);
     this.error.set('');
+
     this.entries.update(entries => [
       ...entries,
       {
@@ -136,7 +152,17 @@ export class ReadChapterEntry {
   }
 
   async saveAsRead() {
-    const unreadChapters = this.selectedChapters().filter(chapter => !this.utils.isChapterRead(chapter));
+    const selectedChapters = this.selectedChapters();
+    const includedChapters = this.filterPlanChapters(selectedChapters);
+    const includedSet = new Set(includedChapters);
+    this.ignoredChapters.set(selectedChapters.filter(chapter => !includedSet.has(chapter)));
+    this.ignoredChaptersChange.emit(this.ignoredChapters());
+    this.error.set('');
+    if (includedChapters.length === 0) {
+      this.entries.set([]);
+      return;
+    }
+    const unreadChapters = includedChapters.filter(chapter => !this.utils.isChapterRead(chapter));
     if (unreadChapters.length === 0) {
       this.error.set('readChapterEntry.alreadyRead');
       return;
