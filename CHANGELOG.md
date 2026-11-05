@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.1.1](https://github.com/davidchiriac/Bible-Planner/compare/v4.1.0...v4.1.1) (2026-11-05)
+
+
+### Bug Fixes
+
+* **component:** small fixes for the new add read chapters section ([9d18547](https://github.com/davidchiriac/Bible-Planner/commit/9d18547c05f5ce5c18f064662f1fe5679dada6db))
+
 ## [4.1.0](https://github.com/davidchiriac/Bible-Planner/compare/v4.0.7...v4.1.0) (2026-11-04)
 
 
