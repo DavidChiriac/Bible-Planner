@@ -277,21 +277,8 @@ export class Utils {
 
     const plan = this.getActivePlan();
     const totalReadingDays = plan.reduce((sum, w) => sum + w.days.length, 0);
-    
-    let targetDate: Date;
-    const customTargetDate = this.customPlanConfig()?.targetDate;
-    if (customTargetDate) {
-      targetDate = new Date(customTargetDate);
-    } else {
-      const months = this.months() ?? 12;
-      targetDate = new Date(startNorm);
-      targetDate.setMonth(targetDate.getMonth() + months);
-    }
-    
-    const totalCalendarDays = Math.ceil((targetDate.getTime() - startNorm.getTime()) / (1000 * 60 * 60 * 24));
-    const expectedDays = totalCalendarDays > 0
-      ? (diffDays * totalReadingDays) / totalCalendarDays
-      : diffDays;
+    const places = this.customPlanConfig()?.places ?? 1;
+    const expectedSlots = diffDays * places;
 
     let daysRead = 0;
     for (const week of plan) {
@@ -302,7 +289,7 @@ export class Utils {
       }
     }
 
-    const rawDiff = Math.round(daysRead - expectedDays);
+    const rawDiff = Math.round(daysRead - expectedSlots);
     const diff = Math.max(-totalReadingDays, Math.min(totalReadingDays, rawDiff));
     const { step, stepType } = this.resolveStep(diff);
 
