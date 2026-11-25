@@ -1,10 +1,18 @@
 #!/usr/bin/env node
-// Creates a release branch named after the current package.json version.
-// Intended to run after standard-version has committed the bump.
+// Renames the working branch to the release version after standard-version commits the bump.
 
-const { execSync } = require('child_process');
+const { execFileSync } = require('child_process');
 const version = require('../package.json').version;
 const branch = `release/v${version}`;
+const currentBranch = execFileSync('git', ['branch', '--show-current'], { encoding: 'utf8' }).trim();
 
-execSync(`git checkout -b ${branch}`, { stdio: 'inherit' });
-console.log(`Created branch: ${branch}`);
+if (!currentBranch) {
+  throw new Error('Cannot rename the release branch while in detached HEAD state.');
+}
+
+if (currentBranch === branch) {
+  console.log(`Already on release branch: ${branch}`);
+} else {
+  execFileSync('git', ['branch', '-m', branch], { stdio: 'inherit' });
+  console.log(`Renamed ${currentBranch} to ${branch}`);
+}
