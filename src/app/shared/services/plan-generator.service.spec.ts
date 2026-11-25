@@ -99,6 +99,36 @@ describe('PlanGeneratorService', () => {
       expect(allChapters.length).toBe(50);
     });
 
+    it('groups new plans by book and keeps all of a book’s reading days together', () => {
+      const plan = service.generate({
+        books: ['Geneza', 'Exodul'],
+        days: 20,
+        groupByBook: true,
+      });
+
+      expect(plan.map(group => group.book)).toEqual(['Geneza', 'Exodul']);
+      expect(plan[0].days.length).toBeGreaterThan(7);
+      expect(plan.reduce((total, group) => total + group.days.length, 0)).toBe(20);
+      for (const group of plan) {
+        expect(group.days.every(day =>
+          day.chapters.every(chapter => chapter.startsWith(`${group.book} `))
+        )).toBe(true);
+      }
+    });
+
+    it('allocates at least one day per book when there are more books than configured days', () => {
+      const plan = service.generate({
+        books: ['Geneza', 'Rut', 'Matei'],
+        days: 1,
+        groupByBook: true,
+      });
+
+      expect(plan).toHaveLength(3);
+      expect(plan.every(group => group.days.length >= 1)).toBe(true);
+      expect(plan.reduce((total, group) => total + group.days.length, 0)).toBe(3);
+      expect(plan.flatMap(group => group.days.flatMap(day => day.chapters))).toHaveLength(82);
+    });
+
     it('supports excludeCategories', () => {
       const config: CustomPlanConfig = {
         books: ['Geneza'],

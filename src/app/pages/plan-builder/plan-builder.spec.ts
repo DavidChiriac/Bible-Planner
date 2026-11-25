@@ -47,7 +47,19 @@ describe('PlanBuilder progress cleanup', () => {
     await builder.generate();
     expect(firebase.deleteChapters).toHaveBeenCalledWith(['Geneza 5', 'Exodul 1']);
     expect(utils.readSet()).toEqual(new Set(['Geneza 1']));
+    expect(firebase.setCustomPlanConfig).toHaveBeenLastCalledWith(expect.objectContaining({
+      groupByBook: false,
+    }));
     expect(router.navigate).toHaveBeenCalledWith(['/plans']);
+  });
+
+  it('uses book groups when the plan has multiple reading spots', async () => {
+    builder.onPlacesChange(2);
+    await builder.generate();
+
+    expect(firebase.setCustomPlanConfig).toHaveBeenLastCalledWith(expect.objectContaining({
+      groupByBook: true,
+    }));
   });
 
   it('does not delete anything when all read chapters belong to the new plan', async () => {
@@ -63,5 +75,18 @@ describe('PlanBuilder progress cleanup', () => {
     await expect(builder.generate()).rejects.toThrow('Deletion failed');
     expect(router.navigate).not.toHaveBeenCalled();
     expect(utils.readSet()).toEqual(new Set(['Exodul 1']));
+  });
+
+  it('requires at least one reading slot per selected book', () => {
+    builder.toggleBook('ot', 1);
+    builder.toggleBook('ot', 2);
+    builder.onDaysChange(1);
+    builder.onPlacesChange(2);
+    expect(builder.hasEnoughReadingSlots()).toBe(false);
+    expect(builder.canGenerate()).toBe(false);
+
+    builder.onPlacesChange(3);
+    expect(builder.hasEnoughReadingSlots()).toBe(true);
+    expect(builder.canGenerate()).toBe(true);
   });
 });

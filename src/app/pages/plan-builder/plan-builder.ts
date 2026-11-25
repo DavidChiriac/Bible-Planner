@@ -230,6 +230,12 @@ export class PlanBuilder {
   });
 
   totalPlanDays = computed(() => this.days() * this.places());
+  minimumDaysRequired = computed(() =>
+    Math.ceil(this.selectedBooks().length / Math.max(1, this.places()))
+  );
+  hasEnoughReadingSlots = computed(() =>
+    this.places() <= 1 || this.totalPlanDays() >= this.selectedBooks().length
+  );
 
   versesPerDay = computed(() => {
     const total = this.totalVerses();
@@ -244,7 +250,10 @@ export class PlanBuilder {
   });
 
   canGenerate = computed(() =>
-    this.selectedBooks().length > 0 && (this.days() > 0 || this.planTargetDate() !== null) && this.places() > 0
+    this.selectedBooks().length > 0 &&
+    (this.days() > 0 || this.planTargetDate() !== null) &&
+    this.places() > 0 &&
+    this.hasEnoughReadingSlots()
   );
 
   showPreview = signal(false);
@@ -255,6 +264,7 @@ export class PlanBuilder {
       books: this.selectedBooks().map(b => b.title),
       days: this.days(),
       places: this.places(),
+      groupByBook: this.places() > 1,
       excludeCategories: this.activeExclusions(),
     };
     return this.planGenerator.generate(config);
@@ -302,6 +312,7 @@ export class PlanBuilder {
       books: this.selectedBooks().map(b => b.title),
       days: this.days(),
       places: this.places(),
+      groupByBook: this.places() > 1,
       startDate: iso,
       ...(targetIso ? { targetDate: targetIso } : {}),
       ...(exclusions.length > 0 ? { excludeCategories: exclusions } : {}),

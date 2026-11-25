@@ -129,6 +129,10 @@ button,
       color: var(--brown-light);
       font-style: italic;
     }
+
+    &.ql-blank:focus::before {
+      content: none;
+    }
   }
 }
 

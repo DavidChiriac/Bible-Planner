@@ -395,7 +395,7 @@ export class FirebaseService {
 
   // --------------------- CUSTOM PLAN CONFIG ----------------
 
-  getCustomPlanConfig$(): Observable<{ books: string[]; days: number; places?: number; startDate?: string; targetDate?: string; excludeCategories?: string[] } | null> {
+  getCustomPlanConfig$(): Observable<{ books: string[]; days: number; places?: number; groupByBook?: boolean; startDate?: string; targetDate?: string; excludeCategories?: string[] } | null> {
     return this.user$.pipe(
       switchMap(u => {
         if (!u) return of(null);
@@ -406,7 +406,7 @@ export class FirebaseService {
     );
   }
 
-  async setCustomPlanConfig(config: { books: string[]; days: number; places?: number; startDate?: string; targetDate?: string; excludeCategories?: string[] }): Promise<void> {
+  async setCustomPlanConfig(config: { books: string[]; days: number; places?: number; groupByBook?: boolean; startDate?: string; targetDate?: string; excludeCategories?: string[] }): Promise<void> {
     const u = this.auth.currentUser;
     if (!u) throw new Error('Not logged in');
 

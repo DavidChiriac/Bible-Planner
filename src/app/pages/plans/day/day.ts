@@ -105,7 +105,9 @@ export class Day {
         const day = week.days[this.dayIndex];
         this.chapters = day.chapters;
         this.dayLabel = day.label;
-        this.weekLabel = `Săptămâna ${week.week} · ${week.label}`;
+        this.weekLabel = week.book
+          ? this.i18n.bookTitle(week.book)
+          : `Săptămâna ${week.week} · ${week.label}`;
 
         if (this.chapters.length === 1) {
           this.noteChapter = this.chapters[0];

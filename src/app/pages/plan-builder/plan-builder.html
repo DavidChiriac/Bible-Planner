@@ -147,6 +147,12 @@
           <span>~<strong>{{ versesPerDay() }}</strong> {{ i18n.t('planBuilder.versesPerDay') }}@if (places() > 1) { (x {{ places() }}) }</span>
         </div>
       }
+
+      @if (places() > 1 && selectedBooks().length > 0 && !hasEnoughReadingSlots()) {
+        <p class="plan-validation" role="alert">
+          {{ i18n.t('planBuilder.minimumDaysForBooks', { days: minimumDaysRequired() }) }}
+        </p>
+      }
     </div>
 
     <!-- Actions -->
@@ -162,17 +168,20 @@
     <!-- Preview -->
     @if (showPreview() && canGenerate()) {
       <div class="preview-card">
-        <h3 class="m-0 mb-3">{{ i18n.t('planBuilder.previewTitle') }} ({{ preview().length }} {{ i18n.t('planBuilder.weeks') }})</h3>
-        @for (week of preview(); track week.week) {
+        @let groupByBook = places() > 1;
+        <h3 class="m-0 mb-3">{{ i18n.t('planBuilder.previewTitle') }} ({{ preview().length }} {{ groupByBook ? i18n.t('common.books') : i18n.t('planBuilder.weeks') }})</h3>
+        @for (bookGroup of preview(); track bookGroup.week) {
           <div class="preview-week">
             <div class="preview-week-header">
-              <strong>{{ i18n.t('home.weekFull', { n: week.week }) }}</strong>
-              <span class="preview-week-label">{{ i18n.translateLabel(week.label) }}</span>
+              <strong>{{ groupByBook ? i18n.bookTitle(bookGroup.book ?? '') : i18n.t('home.weekFull', { n: bookGroup.week }) }}</strong>
+              @if (!groupByBook) {
+                <span class="preview-week-label">{{ i18n.translateLabel(bookGroup.label) }}</span>
+              }
             </div>
             <div class="preview-days">
-              @for (day of week.days; track day.label; let d = $index) {
+              @for (day of bookGroup.days; track day.label; let d = $index) {
                 <div class="preview-day">
-                  <span class="preview-day-num">{{ i18n.t('planBuilder.day') }} {{ (week.week - 1) * 7 + d + 1 }}</span>
+                  <span class="preview-day-num">{{ i18n.t('planBuilder.day') }} {{ groupByBook ? d + 1 : (bookGroup.week - 1) * 7 + d + 1 }}</span>
                   <span class="preview-day-label">{{ i18n.translateLabel(day.label) }}</span>
                   <span class="preview-day-verses">{{ dayVerses(day.chapters) }} {{ i18n.t('planBuilder.versesShort') }}</span>
                 </div>

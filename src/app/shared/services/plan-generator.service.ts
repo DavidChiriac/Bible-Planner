@@ -9,6 +9,7 @@ export interface CustomPlanConfig {
   books: string[];
   days: number;
   places?: number;
+  groupByBook?: boolean;
   startDate?: string;
   targetDate?: string;
   excludeCategories?: string[];
@@ -77,6 +78,10 @@ export class PlanGeneratorService {
     const selectedBooks = this.gatherBooks(config.books, config.excludeCategories);
     const totalDays = config.days * (config.places ?? 1);
     if (selectedBooks.length === 0 || totalDays <= 0) return [];
+
+    if (config.groupByBook) {
+      return this.groupByBook(selectedBooks, totalDays);
+    }
 
     const days = this.distributeByBookProportion(selectedBooks, totalDays);
     return this.groupIntoWeeks(days);
@@ -289,6 +294,66 @@ export class PlanGeneratorService {
     }
 
     return weeks;
+  }
+
+  private groupByBook(
+    books: { title: string; chapters: string[] }[],
+    totalDays: number
+  ): IPlan[] {
+    const bookVerses = books.map(book =>
+      book.chapters.reduce((sum, chapter) => sum + getVerseCount(chapter), 0)
+    );
+    const daysPerBook = this.allocateBookDays(bookVerses, totalDays);
+
+    return books.map((book, index) => ({
+      week: index + 1,
+      book: book.title,
+      label: this.buildDayLabel(book.chapters),
+      days: this.distributeBookChapters(book.chapters, daysPerBook[index]),
+    }));
+  }
+
+  private allocateBookDays(bookVerses: number[], totalDays: number): number[] {
+    if (bookVerses.length === 0) return [];
+
+    const weights = bookVerses.map(verses => Math.max(verses, 1));
+    const allocations = Array(weights.length).fill(0) as number[];
+    let remainingBooks = weights.map((_, index) => index);
+    let remainingDays = Math.max(totalDays, weights.length);
+
+    while (remainingBooks.length > 0) {
+      const remainingWeight = remainingBooks.reduce((sum, index) => sum + weights[index], 0);
+      const belowMinimum = remainingBooks.filter(index =>
+        remainingDays * weights[index] / remainingWeight < 1
+      );
+      if (belowMinimum.length === 0) break;
+
+      for (const index of belowMinimum) allocations[index] = 1;
+      remainingDays -= belowMinimum.length;
+      remainingBooks = remainingBooks.filter(index => !belowMinimum.includes(index));
+    }
+
+    if (remainingBooks.length === 0) return allocations;
+
+    const remainingWeight = remainingBooks.reduce((sum, index) => sum + weights[index], 0);
+    const shares = remainingBooks.map(index => ({
+      index,
+      exact: remainingDays * weights[index] / remainingWeight,
+    }));
+
+    for (const share of shares) {
+      allocations[share.index] = Math.floor(share.exact);
+    }
+
+    let extraDays = remainingDays - shares.reduce((sum, share) => sum + Math.floor(share.exact), 0);
+    shares.sort((a, b) => (b.exact % 1) - (a.exact % 1));
+    for (const share of shares) {
+      if (extraDays <= 0) break;
+      allocations[share.index]++;
+      extraDays--;
+    }
+
+    return allocations;
   }
 
   /** Build a human-readable label for a day's chapters */

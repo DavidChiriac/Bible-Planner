@@ -206,35 +206,17 @@ app-read-chapter-entry.mobile {
 }
 
 .day-action-btn {
-  width: 38px;
-  height: 38px;
+  width: 30px;
+  height: 30px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
-  font-size: 1.1rem;
-  color: var(--brown-dark);
-  cursor: pointer;
-  transition: all 0.2s ease;
   border: 1.5px solid var(--brown-light);
+  border-radius: 8px;
   background: var(--beige-bg);
-
-  &:hover {
-    background: var(--brown-dark);
-    border-color: var(--brown-dark);
-    color: #fff;
-  }
-
-  &:active {
-    transform: scale(0.9);
-  }
-
-  &--sm {
-    width: 32px;
-    height: 32px;
-    font-size: 0.9rem;
-    border-radius: 8px;
-  }
+  color: var(--brown-dark);
+  font-size: 0.9rem;
+  cursor: pointer;
 }
 
 // Individual chapter rows inside sub-accordion

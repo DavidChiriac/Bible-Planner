@@ -154,6 +154,12 @@ app-plan-builder {
   flex-wrap: wrap;
 }
 
+.plan-validation {
+  margin: 0.75rem 0 0;
+  color: var(--terracotta);
+  font-size: 0.85rem;
+}
+
 // Exclusion toggles
 .exclude-section {
   border-top: 1px solid var(--brown-light);

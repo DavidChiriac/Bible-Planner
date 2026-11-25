@@ -115,7 +115,9 @@
                                         <i class="pi pi-bookmark" (click)="$event.stopPropagation(); addBookmark(tab)" onkeydown=""></i>
                                     }
                                     <span class="flex gap-2" [ngClass]="utils.isMobile() ? 'flex-column align-items-start' : 'align-items-center'">
-                                        @if (utils.isMobile()) {
+                                        @if (utils.customPlanConfig()?.groupByBook && tab.book) {
+                                            <h4 class="m-0">{{ i18n.bookTitle(tab.book) }}</h4>
+                                        } @else if (utils.isMobile()) {
                                             <h4 class="m-0">
                                                 {{ i18n.t('home.weekShort', { n: tab.week }) }}
                                             </h4>
@@ -137,9 +139,11 @@
                                         }
                                     </span>
                                 </div>
-                                <span class="week-label w-6 text-right flex align-items-center justify-content-end">
-                                    {{ i18n.translateLabel(tab.label) }}
-                                </span>
+                                @if (!utils.customPlanConfig()?.groupByBook) {
+                                    <span class="week-label w-6 text-right flex align-items-center justify-content-end">
+                                        {{ i18n.translateLabel(tab.label) }}
+                                    </span>
+                                }
                             </div>
                         </p-accordion-header>
 
